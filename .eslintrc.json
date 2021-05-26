@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json.schemastore.org/eslintrc.json",
+  "noInlineConfig": true,
+  "ignorePatterns": "",
+  "env": {
+    "browser": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "arrow-parens": "error",
+    "arrow-spacing": "error",
+    "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+    "dot-notation": "error",
+    "eqeqeq": "error",
+    "indent": ["error", 4, { "SwitchCase": 1 }],
+    "keyword-spacing": "error",
+    "no-alert": "error",
+    "no-await-in-loop": "off",
+    "no-implicit-coercion": "off",
+    "no-loop-func": "error",
+    "no-multi-spaces": "error",
+    "no-multi-str": "error",
+    "no-multiple-empty-lines": "error",
+    "no-trailing-spaces": "error",
+    "no-useless-return": "off",
+    "no-var": "error",
+    "prefer-arrow-callback": "error",
+    "prefer-const": "error",
+    "quotes": [2, "single", { "avoidEscape": true }],
+    "require-await": "error",
+    "semi": "error",
+    "space-in-parens": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-misused-promises": "error",
+    "func-call-spacing": "error",
+    "no-param-reassign": "error",
+    "no-tabs": "error",
+    "no-undefined": "error",
+    "no-unneeded-ternary": "error",
+    "no-unused-expressions": "error"
+  }
+}
