@@ -9,7 +9,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Using Node 14 
+    - name: Using Node 14
       uses: actions/setup-node@v1
       with:
         node-version: 14
@@ -18,6 +18,6 @@ jobs:
     - name: Install dependencies
       run: npm install
     - name: Compile
-      run: npm run build-all
+      run: npm run build
     - name: Run tests
       run: npm run test
