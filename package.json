@@ -1,18 +1,14 @@
 {
-  "name": "template",
+  "name": "generate-headers",
   "version": "1.0.0",
-  "description": "template repository for userscripters' projects",
+  "description": "Userscript manager header generator",
   "icon": "",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha -r ts-node/register test/**/*.spec.ts",
     "lint": "eslint src --fix --ext .js,.ts",
     "clean": "rm -rf dist",
     "prebuild": "npm run lint && npm run clean",
-    "uglify-modern": "uglifyjs dist/modern/* --compress --mangle -o dist/modern/index.min.js",
-    "uglify-legacy": "uglifyjs dist/legacy/* --compress --mangle -o dist/legacy/index.min.js",
-    "build-modern": "tsc --outDir dist/modern && npm run uglify-modern",
-    "build-legacy": "tsc --target es5 --outDir dist/legacy && npm run uglify-legacy",
-    "build-all": "npm run prebuild && npm run build-legacy && npm run build-modern"
+    "build": "npm run prebuild && tsc --outDir dist"
   },
   "repository": {
     "type": "git",
@@ -20,6 +16,9 @@
   },
   "keywords": [
     "userscripts",
+    "tampermonkey",
+    "greasemonkey",
+    "violentmonkey",
     "stackoverflow"
   ],
   "author": "Oleg Valter",
@@ -30,6 +29,8 @@
   },
   "homepage": "https://github.com/userscripters/template#readme",
   "devDependencies": {
+    "@types/chai": "^4.2.18",
+    "@types/mocha": "^8.2.2",
     "@types/node": "^15.6.1",
     "@types/tampermonkey": "^4.0.0",
     "@types/yargs": "^17.0.0",
@@ -45,5 +46,6 @@
   "dependencies": {
     "chalk": "^4.1.1",
     "yargs": "^16.2.0"
-  }
+  },
+  "main": "dist/index.js"
 }
