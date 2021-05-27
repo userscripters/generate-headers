@@ -2,6 +2,7 @@ import { bgRed } from "chalk";
 import { writeFile } from "fs/promises";
 import * as yargs from "yargs";
 import {
+  generateGreasemnonkeyHeaders,
   generateTampermonkeyHeaders,
   generateViolentMonkeyHeaders,
   GeneratorMap,
@@ -9,7 +10,11 @@ import {
 } from "./generators";
 import { getPackage } from "./utils";
 
-const names: UserScriptManagerName[] = ["tampermonkey", "violentmonkey"];
+const names: UserScriptManagerName[] = [
+  "greasemonkey",
+  "tampermonkey",
+  "violentmonkey",
+];
 
 type ParsedArgs = Partial<{
   output: string;
@@ -41,6 +46,7 @@ export const generate = async () => {
   const { type, output, package: path } = <ParsedArgs>parsed;
 
   const managerTypeMap: GeneratorMap = {
+    greasemonkey: generateGreasemnonkeyHeaders,
     tampermonkey: generateTampermonkeyHeaders,
     violentmonkey: generateViolentMonkeyHeaders,
   };
