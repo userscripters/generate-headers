@@ -1,5 +1,4 @@
 import { bgRed } from "chalk";
-// import { ENOENT } from "constants";
 import { appendFile } from "fs/promises";
 import * as yargs from "yargs";
 import { hideBin } from "yargs/helpers";
