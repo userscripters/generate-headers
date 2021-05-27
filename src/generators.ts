@@ -70,8 +70,8 @@ type ListOfHeaders<T> = readonly T[keyof T][];
 const makeMonkeyTags = (
   name = "UserScript"
 ): readonly [openTag: string, closeTag: string] => [
-  `==${name}==`,
-  `==/${name}==`,
+  `// ==${name}==`,
+  `// ==/${name}==`,
 ];
 
 const makeMonkeyHeader = <K extends keyof TampermonkeyHeaders>([name, value]: [
