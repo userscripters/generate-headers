@@ -1,67 +1,77 @@
-import { bgRed } from "chalk";
-import { writeFile } from "fs/promises";
-import * as yargs from "yargs";
+import { bgRed } from 'chalk';
+// import { ENOENT } from "constants";
+import { appendFile } from 'fs/promises';
+import * as yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import {
-  generateGreasemnonkeyHeaders,
-  generateTampermonkeyHeaders,
-  generateViolentMonkeyHeaders,
-  GeneratorMap,
-  UserScriptManagerName,
-} from "./generators";
-import { getPackage } from "./utils";
+    generateGreasemnonkeyHeaders,
+    generateTampermonkeyHeaders,
+    generateViolentMonkeyHeaders,
+    GeneratorMap,
+    UserScriptManagerName,
+} from './generators';
+import { getPackage, scase } from './utils';
 
 const names: UserScriptManagerName[] = [
-  "greasemonkey",
-  "tampermonkey",
-  "violentmonkey",
+    'greasemonkey',
+    'tampermonkey',
+    'violentmonkey',
 ];
 
-type ParsedArgs = Partial<{
-  output: string;
-  package: string;
-  type: UserScriptManagerName;
-}>;
+export const generate = async (
+    type: UserScriptManagerName,
+    packagePath: string,
+    output: string
+) => {
+    const managerTypeMap: GeneratorMap = {
+        greasemonkey: generateGreasemnonkeyHeaders,
+        tampermonkey: generateTampermonkeyHeaders,
+        violentmonkey: generateViolentMonkeyHeaders,
+    };
 
-const cli = yargs(process.argv.slice(2));
-cli.option("o", {
-  alias: "output",
-  default: "./dist/headers.js",
-});
-cli.option("p", {
-  alias: "package",
-  default: "./package.json",
-  type: "string",
-});
-cli.option("t", {
-  alias: "type",
-  choices: names,
-  description: "choose userscript type",
-  demandOption: true,
-  type: "string",
-});
+    try {
+        const parsedPackage = await getPackage(packagePath);
 
-export const generate = async () => {
-  const parsed = await cli.parse();
+        if (!parsedPackage) return console.log(bgRed`missing or corrupted package`);
 
-  const { type, output, package: path } = <ParsedArgs>parsed;
+        const content = managerTypeMap[type!](parsedPackage);
 
-  const managerTypeMap: GeneratorMap = {
-    greasemonkey: generateGreasemnonkeyHeaders,
-    tampermonkey: generateTampermonkeyHeaders,
-    violentmonkey: generateViolentMonkeyHeaders,
-  };
+        await appendFile(output!, content, { encoding: 'utf-8', flag: 'w+' });
+    } catch (error) {
+        const { code, name } = error;
+        const errMap: {
+      [code: string]: (err: NodeJS.ErrnoException) => [string, string];
+    } = {
+        ENOENT: ({ path }) => ['Missing path:', path!],
+    };
 
-  try {
-    const parsedPackage = await getPackage(path!);
+        const [postfix, message] = errMap[code](error);
 
-    if (!parsedPackage) return console.log(bgRed`missing or corrupted package`);
-
-    const content = managerTypeMap[type!](parsedPackage);
-
-    await writeFile(output!, content, { encoding: "utf-8" });
-  } catch ({ message }) {
-    console.log(bgRed`failed to generate headers: ${message}`);
-  }
+        console.log(bgRed`[${name}] ${postfix}` + `\n\n${message}`);
+    }
 };
 
-generate();
+const cli = yargs(hideBin(process.argv));
+
+const sharedOpts = {
+    o: {
+        alias: 'output',
+        default: './dist/headers.js',
+    },
+    p: {
+        alias: 'package',
+        default: './package.json',
+        type: 'string',
+    },
+} as const;
+
+names.forEach((name) =>
+    cli.command(
+        name,
+        `generates ${scase(name)} headers`,
+        sharedOpts,
+        ({ o, p }) => generate(name, p, o)
+    )
+);
+
+cli.demandCommand().help().parse();
