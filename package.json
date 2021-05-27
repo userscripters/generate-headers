@@ -1,6 +1,6 @@
 {
-  "name": "generate-headers",
-  "version": "1.0.0",
+  "name": "@userscripters/generate-headers",
+  "version": "1.0.3",
   "description": "Userscript manager header generator",
   "icon": "",
   "scripts": {
@@ -8,7 +8,8 @@
     "lint": "eslint src --fix --ext .js,.ts",
     "clean": "rm -rf dist",
     "prebuild": "npm run lint && npm run clean",
-    "build": "npm run prebuild && tsc --outDir dist"
+    "build": "npm run prebuild && tsc --outDir dist",
+    "executable": "sed -i '1s;^;#!/usr/bin/env node\\n;' dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -47,5 +48,8 @@
     "chalk": "^4.1.1",
     "yargs": "^16.2.0"
   },
-  "main": "dist/index.js"
+  "main": "dist/index.js",
+  "bin": {
+    "generate": "./dist/index.js"
+  }
 }

@@ -3,81 +3,81 @@ import { appendFile } from "fs/promises";
 import * as yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import {
-    generateGreasemnonkeyHeaders,
-    generateTampermonkeyHeaders,
-    generateViolentMonkeyHeaders,
-    GeneratorMap,
-    UserScriptManagerName,
+  generateGreasemnonkeyHeaders,
+  generateTampermonkeyHeaders,
+  generateViolentMonkeyHeaders,
+  GeneratorMap,
+  UserScriptManagerName,
 } from "./generators";
 import { getPackage, scase } from "./utils";
 
 const names: UserScriptManagerName[] = [
-    "greasemonkey",
-    "tampermonkey",
-    "violentmonkey",
+  "greasemonkey",
+  "tampermonkey",
+  "violentmonkey",
 ];
 
 export const generate = async (
-    type: UserScriptManagerName,
-    packagePath: string,
-    output: string
+  type: UserScriptManagerName,
+  packagePath: string,
+  output: string
 ) => {
-    const managerTypeMap: GeneratorMap = {
-        greasemonkey: generateGreasemnonkeyHeaders,
-        tampermonkey: generateTampermonkeyHeaders,
-        violentmonkey: generateViolentMonkeyHeaders,
-    };
+  const managerTypeMap: GeneratorMap = {
+    greasemonkey: generateGreasemnonkeyHeaders,
+    tampermonkey: generateTampermonkeyHeaders,
+    violentmonkey: generateViolentMonkeyHeaders,
+  };
 
-    try {
-        const parsedPackage = await getPackage(packagePath);
+  try {
+    const parsedPackage = await getPackage(packagePath);
 
-        if (!parsedPackage) {
-            console.log(bgRed`missing or corrupted package`);
-            return "";
-        }
+    if (!parsedPackage) {
+      console.log(bgRed`missing or corrupted package`);
+      return "";
+    }
 
-        const content = managerTypeMap[type!](parsedPackage);
+    const content = managerTypeMap[type!](parsedPackage);
 
-        await appendFile(output!, content, { encoding: "utf-8", flag: "w+" });
+    await appendFile(output!, content, { encoding: "utf-8", flag: "w+" });
 
-        return content;
-    } catch (error) {
-        const { code, name } = error;
-        const errMap: {
+    return content;
+  } catch (error) {
+    const { code, name } = error;
+    const errMap: {
       [code: string]: (err: NodeJS.ErrnoException) => [string, string];
     } = {
-        ENOENT: ({ path }) => ["Missing path:", path!],
+      ENOENT: ({ path }) => ["Missing path:", path!],
     };
 
-        const [postfix, message] = errMap[code](error);
+    const [postfix, message] = errMap[code](error);
 
-        console.log(bgRed`[${name}] ${postfix}` + `\n\n${message}`);
+    console.log(bgRed`[${name}] ${postfix}` + `\n\n${message}`);
 
-        return "";
-    }
+    return "";
+  }
 };
 
 const cli = yargs(hideBin(process.argv));
 
 const sharedOpts = {
-    o: {
-        alias: "output",
-        default: "./dist/headers.js",
-    },
-    p: {
-        alias: "package",
-        default: "./package.json",
-        type: "string",
-    },
+  o: {
+    alias: "output",
+    default: "./dist/headers.js",
+  },
+  p: {
+    alias: "package",
+    default: "./package.json",
+    type: "string",
+  },
 } as const;
 
 names.forEach((name) =>
-    cli.command(
-        name,
-        `generates ${scase(name)} headers`,
-        sharedOpts,
-        ({ o, p }) => generate(name, p, o)
-    )
+  cli.command(
+    name,
+    `generates ${scase(name)} headers`,
+    sharedOpts,
+    ({ o, p }) => generate(name, p, o)
+  )
 );
 
 cli.demandCommand().help().parse();
