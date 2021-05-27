@@ -1,9 +1,9 @@
-import { formatAuthor, PackageInfo, parseAuthor } from './utils';
+import { formatAuthor, PackageInfo, parseAuthor } from "./utils";
 
 export type UserScriptManagerName =
-  | 'tampermonkey'
-  | 'violentmonkey'
-  | 'greasemonkey';
+  | "tampermonkey"
+  | "violentmonkey"
+  | "greasemonkey";
 
 export type HeaderGenerator = (info: PackageInfo) => string;
 
@@ -16,7 +16,7 @@ type CommonHeaders<T extends object> = T & {
   include: string[];
   name: string;
   namespace: string;
-  noframes: '';
+  noframes: "";
   resource: string[];
   require: string[];
   version: `${number}.${number}.${number}`;
@@ -26,41 +26,41 @@ type CustomHeaders = { contributors: string };
 
 type GreasemonkeyHeaders = CustomHeaders &
   CommonHeaders<{
-    'grant': 'none'[];
-    'run-at': 'document-start' | 'document-end' | 'document-idle';
+    "grant": "none"[];
+    "run-at": "document-start" | "document-end" | "document-idle";
   }>;
 
 type TampermonkeyHeaders = CustomHeaders &
   CommonHeaders<{
-    'author': string;
-    'homepage': string;
-    'homepageURL': string;
-    'website': string;
-    'source': string;
-    'iconURL': string;
-    'defaulticon': string;
-    'icon64': string;
-    'icon64URL': string;
-    'updateURL': string;
-    'downloadURL': string;
-    'supportURL': string;
-    'connect': string[];
-    'run-at':
-      | 'context-menu'
-      | 'document-start'
-      | 'document-body'
-      | 'document-end'
-      | 'document-idle';
-    'grant': (
-      | 'none'
-      | 'unsafeWindow'
-      | 'window.close'
-      | 'window.focus'
-      | 'window.onurlchange'
+    "author": string;
+    "homepage": string;
+    "homepageURL": string;
+    "website": string;
+    "source": string;
+    "iconURL": string;
+    "defaulticon": string;
+    "icon64": string;
+    "icon64URL": string;
+    "updateURL": string;
+    "downloadURL": string;
+    "supportURL": string;
+    "connect": string[];
+    "run-at":
+      | "context-menu"
+      | "document-start"
+      | "document-body"
+      | "document-end"
+      | "document-idle";
+    "grant": (
+      | "none"
+      | "unsafeWindow"
+      | "window.close"
+      | "window.focus"
+      | "window.onurlchange"
     )[];
-    'antifeature': `${'ads' | 'tracking' | 'miner'} ${string}`[];
-    'unwrap': '';
-    'nocompat': 'Chrome' | 'Opera' | 'FireFox';
+    "antifeature": `${"ads" | "tracking" | "miner"} ${string}`[];
+    "unwrap": "";
+    "nocompat": "Chrome" | "Opera" | "FireFox";
   }>;
 
 type HeaderEntries<T> = [keyof T, T[keyof T]][];
@@ -68,7 +68,7 @@ type HeaderEntries<T> = [keyof T, T[keyof T]][];
 type ListOfHeaders<T> = readonly T[keyof T][];
 
 const makeMonkeyTags = (
-    name = 'UserScript'
+    name = "UserScript"
 ): readonly [openTag: string, closeTag: string] => [
     `// ==${name}==`,
     `// ==/${name}==`,
@@ -90,7 +90,7 @@ export const generateGreasemnonkeyHeaders: HeaderGenerator = () => {
 
     return `
 ${openTag}
-${parsedHeaders.join('\n')}
+${parsedHeaders.join("\n")}
 ${closeTag}
 `;
 };
@@ -111,22 +111,22 @@ export const generateTampermonkeyHeaders: HeaderGenerator = ({
     const parsedAuthor = parseAuthor(author);
 
     const headers: HeaderEntries<TampermonkeyHeaders> = [
-        ['author', formatAuthor(parsedAuthor)],
-        ['description', description],
-        ['homepage', homepage],
-        ['name', name],
-        ['source', source],
-        ['supportURL', supportURL],
-        ['version', version],
+        ["author", formatAuthor(parsedAuthor)],
+        ["description", description],
+        ["homepage", homepage],
+        ["name", name],
+        ["source", source],
+        ["supportURL", supportURL],
+        ["version", version],
     ];
 
-    if (icon) headers.push(['icon', icon]);
+    if (icon) headers.push(["icon", icon]);
 
     if (contributors) {
         const formatted = contributors.map((contributor) =>
             formatAuthor(parseAuthor(contributor))
         );
-        headers.push(['contributors', formatted]);
+        headers.push(["contributors", formatted]);
     }
 
     const parsedHeaders: ListOfHeaders<TampermonkeyHeaders> =
@@ -152,12 +152,12 @@ export const generateTampermonkeyHeaders: HeaderGenerator = ({
 
     return `
 ${openTag}
-${parsedHeaders.join('\n')}
+${parsedHeaders.join("\n")}
 ${closeTag}
 `;
 };
 
 //TODO: finish creating the processor
 export const generateViolentMonkeyHeaders: HeaderGenerator = ({}) => {
-    return '';
+    return "";
 };

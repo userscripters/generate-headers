@@ -1,4 +1,4 @@
-import { readFile } from 'fs/promises';
+import { readFile } from "fs/promises";
 
 type PackagePerson =
   | string
@@ -21,14 +21,14 @@ export type PackageInfo = {
     url: string;
   };
   repository: {
-    type: 'git' | 'https';
+    type: "git" | "https";
     url: string;
   };
 };
 
 export const getPackage = async (path: string): Promise<PackageInfo | null> => {
     try {
-        const contents = await readFile(path, { encoding: 'utf-8' });
+        const contents = await readFile(path, { encoding: "utf-8" });
         return JSON.parse(contents);
     } catch (error) {
         return null;
@@ -44,13 +44,13 @@ export const formatAuthor = ({
     name,
     email,
     url,
-}: Exclude<PackageInfo['author'], string>) =>
-    name + (email ? ` <${email}>` : '') + (url ? ` (${url})` : '');
+}: Exclude<PackageInfo["author"], string>) =>
+    name + (email ? ` <${email}>` : "") + (url ? ` (${url})` : "");
 
 export const parseAuthor = (
-    info: PackageInfo['author']
-): Exclude<PackageInfo['author'], string> => {
-    if (typeof info === 'object') return info;
+    info: PackageInfo["author"]
+): Exclude<PackageInfo["author"], string> => {
+    if (typeof info === "object") return info;
 
     const authorRegex = /(\w+\s\w+)(?:\s<(.+?)>)?(?:\s\((.+?)\))?$/i;
 

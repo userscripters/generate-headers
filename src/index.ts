@@ -1,21 +1,21 @@
-import { bgRed } from 'chalk';
+import { bgRed } from "chalk";
 // import { ENOENT } from "constants";
-import { appendFile } from 'fs/promises';
-import * as yargs from 'yargs';
-import { hideBin } from 'yargs/helpers';
+import { appendFile } from "fs/promises";
+import * as yargs from "yargs";
+import { hideBin } from "yargs/helpers";
 import {
     generateGreasemnonkeyHeaders,
     generateTampermonkeyHeaders,
     generateViolentMonkeyHeaders,
     GeneratorMap,
     UserScriptManagerName,
-} from './generators';
-import { getPackage, scase } from './utils';
+} from "./generators";
+import { getPackage, scase } from "./utils";
 
 const names: UserScriptManagerName[] = [
-    'greasemonkey',
-    'tampermonkey',
-    'violentmonkey',
+    "greasemonkey",
+    "tampermonkey",
+    "violentmonkey",
 ];
 
 export const generate = async (
@@ -32,22 +32,29 @@ export const generate = async (
     try {
         const parsedPackage = await getPackage(packagePath);
 
-        if (!parsedPackage) return console.log(bgRed`missing or corrupted package`);
+        if (!parsedPackage) {
+            console.log(bgRed`missing or corrupted package`);
+            return "";
+        }
 
         const content = managerTypeMap[type!](parsedPackage);
 
-        await appendFile(output!, content, { encoding: 'utf-8', flag: 'w+' });
+        await appendFile(output!, content, { encoding: "utf-8", flag: "w+" });
+
+        return content;
     } catch (error) {
         const { code, name } = error;
         const errMap: {
       [code: string]: (err: NodeJS.ErrnoException) => [string, string];
     } = {
-        ENOENT: ({ path }) => ['Missing path:', path!],
+        ENOENT: ({ path }) => ["Missing path:", path!],
     };
 
         const [postfix, message] = errMap[code](error);
 
         console.log(bgRed`[${name}] ${postfix}` + `\n\n${message}`);
+
+        return "";
     }
 };
 
@@ -55,13 +62,13 @@ const cli = yargs(hideBin(process.argv));
 
 const sharedOpts = {
     o: {
-        alias: 'output',
-        default: './dist/headers.js',
+        alias: "output",
+        default: "./dist/headers.js",
     },
     p: {
-        alias: 'package',
-        default: './package.json',
-        type: 'string',
+        alias: "package",
+        default: "./package.json",
+        type: "string",
     },
 } as const;
 
