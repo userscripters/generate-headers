@@ -1,13 +1,17 @@
 import { readFile } from "fs/promises";
 
+type PackagePerson =
+  | string
+  | {
+      name: string;
+      email?: string;
+      url?: string;
+    };
+
 export type PackageInfo = {
-  author:
-    | string
-    | {
-        name: string;
-        email?: string;
-        url?: string;
-      };
+  author: PackagePerson;
+  contributors?: PackagePerson[];
+  icon?: string;
   license: string;
   homepage: string;
   name: string;
@@ -35,6 +39,13 @@ export const scase = (text: string) =>
   `${text[0].toUpperCase()}${text.slice(1).toLowerCase()}`;
 
 export const mdLink = (lbl: string, href: string) => `[${lbl}](${href})`;
+
+export const formatAuthor = ({
+  name,
+  email,
+  url,
+}: Exclude<PackageInfo["author"], string>) =>
+  name + (email ? ` <${email}>` : "") + (url ? ` (${url})` : "");
 
 export const parseAuthor = (
   info: PackageInfo["author"]
