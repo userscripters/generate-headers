@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "strict": true,
+    "declaration": true,
     "removeComments": true,
     "allowJs": true,
     "checkJs": true,
