@@ -21,15 +21,18 @@ exports.generateGreasemnonkeyHeaders = generateGreasemnonkeyHeaders;
 const generateTampermonkeyHeaders = ({ author, contributors, icon, name, description, homepage, bugs: { url: supportURL }, repository: { url: source }, version, }, spaces) => {
     const [openTag, closeTag] = makeMonkeyTags();
     const parsedAuthor = utils_1.parseAuthor(author);
+    const { packageName, scope } = utils_1.parseName(name);
     const headers = [
         ["author", utils_1.formatAuthor(parsedAuthor)],
         ["description", description],
         ["homepage", homepage],
-        ["name", name],
+        ["name", packageName],
         ["source", source],
         ["supportURL", supportURL],
         ["version", version],
     ];
+    if (scope)
+        headers.push(["namespace", scope]);
     if (icon)
         headers.push(["icon", icon]);
     if (contributors && contributors.length) {
@@ -38,7 +41,7 @@ const generateTampermonkeyHeaders = ({ author, contributors, icon, name, descrip
     }
     const longest = utils_1.getLongest(headers.map(([key]) => key)) + spaces;
     const indentedHeaders = headers.map(([key, val]) => [key.padEnd(longest), val]);
-    const parsedHeaders = indentedHeaders.map(makeMonkeyHeader);
+    const parsedHeaders = indentedHeaders.map(makeMonkeyHeader).sort();
     return `
 ${openTag}
 ${parsedHeaders.join("\n")}

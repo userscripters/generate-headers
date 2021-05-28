@@ -26,4 +26,8 @@ export declare const scase: (text: string) => string;
 export declare const mdLink: (lbl: string, href: string) => string;
 export declare const formatAuthor: ({ name, email, url, }: Exclude<PackageInfo["author"], string>) => string;
 export declare const parseAuthor: (info: PackageInfo["author"]) => Exclude<PackageInfo["author"], string>;
+export declare const parseName: (name: string) => {
+    scope: string;
+    packageName: string;
+};
 export {};

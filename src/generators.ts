@@ -1,4 +1,10 @@
-import { formatAuthor, getLongest, PackageInfo, parseAuthor } from "./utils";
+import {
+    formatAuthor,
+    getLongest,
+    PackageInfo,
+    parseAuthor,
+    parseName,
+} from "./utils";
 
 declare global {
   interface String {
@@ -11,7 +17,7 @@ export type UserScriptManagerName =
   | "violentmonkey"
   | "greasemonkey";
 
-export type HeaderGenerator = (info: PackageInfo, spaces:number) => string;
+export type HeaderGenerator = (info: PackageInfo, spaces: number) => string;
 
 export type GeneratorMap = { [P in UserScriptManagerName]: HeaderGenerator };
 
@@ -100,30 +106,36 @@ ${closeTag}
 `;
 };
 
-export const generateTampermonkeyHeaders: HeaderGenerator = ({
-    author,
-    contributors,
-    icon,
-    name,
-    description,
-    homepage,
-    bugs: { url: supportURL },
-    repository: { url: source },
-    version,
-}, spaces) => {
+export const generateTampermonkeyHeaders: HeaderGenerator = (
+    {
+        author,
+        contributors,
+        icon,
+        name,
+        description,
+        homepage,
+        bugs: { url: supportURL },
+        repository: { url: source },
+        version,
+    },
+    spaces
+) => {
     const [openTag, closeTag] = makeMonkeyTags();
 
     const parsedAuthor = parseAuthor(author);
+    const { packageName, scope } = parseName(name);
 
     const headers: HeaderEntries<TampermonkeyHeaders> = [
         ["author", formatAuthor(parsedAuthor)],
         ["description", description],
         ["homepage", homepage],
-        ["name", name],
+        ["name", packageName],
         ["source", source],
         ["supportURL", supportURL],
         ["version", version],
     ];
+
+    if (scope) headers.push(["namespace", scope]);
 
     if (icon) headers.push(["icon", icon]);
 
@@ -140,10 +152,9 @@ export const generateTampermonkeyHeaders: HeaderGenerator = ({
         ([key, val]) => [key.padEnd(longest), val]
     );
 
-    const parsedHeaders: MonkeyHeader[] = indentedHeaders.map(makeMonkeyHeader);
+    const parsedHeaders: MonkeyHeader[] = indentedHeaders.map(makeMonkeyHeader).sort();
 
     //Unused headers:
-    // @namespace
     // @icon64 and @icon64URL
     // @updateURL
     // @downloadURL

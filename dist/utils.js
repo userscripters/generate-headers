@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseAuthor = exports.formatAuthor = exports.mdLink = exports.scase = exports.getLongest = exports.getPackage = void 0;
+exports.parseName = exports.parseAuthor = exports.formatAuthor = exports.mdLink = exports.scase = exports.getLongest = exports.getPackage = void 0;
 const promises_1 = require("fs/promises");
 const getPackage = async (path) => {
     try {
@@ -35,3 +35,8 @@ const parseAuthor = (info) => {
     };
 };
 exports.parseAuthor = parseAuthor;
+const parseName = (name) => {
+    const [, scope, packageName] = name.match(/(?:@([\w-]+)\/)?([\w-]+)/) || [];
+    return { scope, packageName };
+};
+exports.parseName = parseName;
