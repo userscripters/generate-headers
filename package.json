@@ -10,9 +10,9 @@
     "prebuild": "npm run lint && npm run clean",
     "build": "npm run prebuild && tsc --outDir dist && npm run executable",
     "executable": "sed -i \"1s/^/#!\\/usr\\/bin\\/env node\\n/\" dist/index.js",
-    "publish:patch": "npm run build && npm version patch && git push",
-    "publish:minor": "npm run build && npm version minor && git push",
-    "publish:major": "npm run build && npm version major && git push"
+    "version:patch": "npm run build && npm version patch",
+    "version:minor": "npm run build && npm version minor",
+    "version:major": "npm run build && npm version major"
   },
   "repository": {
     "type": "git",
