@@ -11,7 +11,10 @@ describe("main", () => {
   describe("Tampermonkey", async () => {
     const artefacts: string[] = [];
 
-    afterEach(() => Promise.all(artefacts.map(unlink)));
+    afterEach(() => {
+      Promise.all(artefacts.map(unlink));
+      artefacts.length = 0;
+    });
 
     const base = process.cwd();
     const testPkg = join(base, "/package.json");
