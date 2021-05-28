@@ -9,7 +9,8 @@
     "clean": "rm -rf dist",
     "prebuild": "npm run lint && npm run clean",
     "build": "npm run prebuild && tsc --outDir dist && npm run executable",
-    "executable": "sed -i \"1s/^/#!\\/usr\\/bin\\/env node\\n/\" dist/index.js"
+    "executable": "sed -i \"1s/^/#!\\/usr\\/bin\\/env node\\n/\" dist/index.js",
+    "publish:patch": "npm run build && npm version patch && git push"
   },
   "repository": {
     "type": "git",
