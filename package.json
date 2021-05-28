@@ -1,6 +1,6 @@
 {
   "name": "@userscripters/generate-headers",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Userscript manager header generator",
   "icon": "",
   "scripts": {
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/userscripters/template.git"
+    "url": "git+https://github.com/userscripters/generate-headers.git"
   },
   "keywords": [
     "userscripts",
@@ -29,9 +29,9 @@
   "contributors": [],
   "license": "GPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/userscripters/template/issues"
+    "url": "https://github.com/userscripters/generate-headers/issues"
   },
-  "homepage": "https://github.com/userscripters/template#readme",
+  "homepage": "https://github.com/userscripters/generate-headers#readme",
   "devDependencies": {
     "@types/chai": "^4.2.18",
     "@types/mocha": "^8.2.2",
