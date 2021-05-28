@@ -52,9 +52,13 @@ export const parseAuthor = (
 ): Exclude<PackageInfo["author"], string> => {
     if (typeof info === "object") return info;
 
-    const authorRegex = /(\w+\s\w+)(?:\s<(.+?)>)?(?:\s\((.+?)\))?$/i;
+    const authorRegex = /(\w+(?:\s\w+)?)(?:\s<(.+?)>)?(?:\s\((.+?)\))?$/i;
 
-    const [_full, name, email, url] = authorRegex.exec(info)!;
+    const match = authorRegex.exec(info);
+
+    if (!match) throw new Error(`unable to parse author field: ${info}`);
+
+    const [_full, name, email, url] = match;
 
     return {
         name,
