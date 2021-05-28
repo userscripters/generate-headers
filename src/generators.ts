@@ -11,7 +11,7 @@ export type UserScriptManagerName =
   | "violentmonkey"
   | "greasemonkey";
 
-export type HeaderGenerator = (info: PackageInfo) => string;
+export type HeaderGenerator = (info: PackageInfo, spaces:number) => string;
 
 export type GeneratorMap = { [P in UserScriptManagerName]: HeaderGenerator };
 
@@ -110,7 +110,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator = ({
     bugs: { url: supportURL },
     repository: { url: source },
     version,
-}) => {
+}, spaces) => {
     const [openTag, closeTag] = makeMonkeyTags();
 
     const parsedAuthor = parseAuthor(author);
@@ -134,7 +134,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator = ({
         headers.push(["contributors", formatted]);
     }
 
-    const longest = getLongest(headers.map(([key]) => key)) + 4;
+    const longest = getLongest(headers.map(([key]) => key)) + spaces;
 
     const indentedHeaders: HeaderEntries<TampermonkeyHeaders> = headers.map(
         ([key, val]) => [key.padEnd(longest), val]

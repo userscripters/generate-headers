@@ -5,7 +5,7 @@ declare global {
     }
 }
 export declare type UserScriptManagerName = "tampermonkey" | "violentmonkey" | "greasemonkey";
-export declare type HeaderGenerator = (info: PackageInfo) => string;
+export declare type HeaderGenerator = (info: PackageInfo, spaces: number) => string;
 export declare type GeneratorMap = {
     [P in UserScriptManagerName]: HeaderGenerator;
 };

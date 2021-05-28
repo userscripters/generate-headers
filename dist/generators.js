@@ -18,7 +18,7 @@ ${closeTag}
 `;
 };
 exports.generateGreasemnonkeyHeaders = generateGreasemnonkeyHeaders;
-const generateTampermonkeyHeaders = ({ author, contributors, icon, name, description, homepage, bugs: { url: supportURL }, repository: { url: source }, version, }) => {
+const generateTampermonkeyHeaders = ({ author, contributors, icon, name, description, homepage, bugs: { url: supportURL }, repository: { url: source }, version, }, spaces) => {
     const [openTag, closeTag] = makeMonkeyTags();
     const parsedAuthor = utils_1.parseAuthor(author);
     const headers = [
@@ -36,7 +36,7 @@ const generateTampermonkeyHeaders = ({ author, contributors, icon, name, descrip
         const formatted = contributors.map((contributor) => utils_1.formatAuthor(utils_1.parseAuthor(contributor)));
         headers.push(["contributors", formatted]);
     }
-    const longest = utils_1.getLongest(headers.map(([key]) => key)) + 4;
+    const longest = utils_1.getLongest(headers.map(([key]) => key)) + spaces;
     const indentedHeaders = headers.map(([key, val]) => [key.padEnd(longest), val]);
     const parsedHeaders = indentedHeaders.map(makeMonkeyHeader);
     return `

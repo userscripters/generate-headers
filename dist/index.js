@@ -13,7 +13,7 @@ const names = [
     "tampermonkey",
     "violentmonkey",
 ];
-const generate = async (type, packagePath, output) => {
+const generate = async (type, packagePath, output, spaces = 4) => {
     const managerTypeMap = {
         greasemonkey: generators_1.generateGreasemnonkeyHeaders,
         tampermonkey: generators_1.generateTampermonkeyHeaders,
@@ -25,7 +25,7 @@ const generate = async (type, packagePath, output) => {
             console.log(chalk_1.bgRed `missing or corrupted package`);
             return "";
         }
-        const content = managerTypeMap[type](parsedPackage);
+        const content = managerTypeMap[type](parsedPackage, spaces);
         await promises_1.appendFile(output, content, { encoding: "utf-8", flag: "w+" });
         return content;
     }
@@ -53,6 +53,11 @@ const sharedOpts = {
         default: "./package.json",
         type: "string",
     },
+    s: {
+        alias: "spaces",
+        default: 4,
+        type: "number"
+    }
 };
-names.forEach((name) => cli.command(name, `generates ${utils_1.scase(name)} headers`, sharedOpts, ({ o, p }) => exports.generate(name, p, o)));
+names.forEach((name) => cli.command(name, `generates ${utils_1.scase(name)} headers`, sharedOpts, ({ o, p, s }) => exports.generate(name, p, o, s)));
 cli.demandCommand().help().parse();

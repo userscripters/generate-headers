@@ -20,7 +20,8 @@ const names: UserScriptManagerName[] = [
 export const generate = async (
     type: UserScriptManagerName,
     packagePath: string,
-    output: string
+    output: string,
+    spaces = 4 //TODO: avoid magic string
 ) => {
     const managerTypeMap: GeneratorMap = {
         greasemonkey: generateGreasemnonkeyHeaders,
@@ -36,7 +37,7 @@ export const generate = async (
             return "";
         }
 
-        const content = managerTypeMap[type!](parsedPackage);
+        const content = managerTypeMap[type!](parsedPackage, spaces);
 
         await appendFile(output!, content, { encoding: "utf-8", flag: "w+" });
 
@@ -72,6 +73,11 @@ const sharedOpts = {
         default: "./package.json",
         type: "string",
     },
+    s: {
+        alias: "spaces",
+        default: 4,
+        type: "number"
+    }
 } as const;
 
 names.forEach((name) =>
@@ -79,7 +85,7 @@ names.forEach((name) =>
         name,
         `generates ${scase(name)} headers`,
         sharedOpts,
-        ({ o, p }) => generate(name, p, o)
+        ({ o, p, s }) => generate(name, p, o, s)
     )
 );
 
