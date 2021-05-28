@@ -21,6 +21,7 @@ export declare type PackageInfo = {
     };
 };
 export declare const getPackage: (path: string) => Promise<PackageInfo | null>;
+export declare const getLongest: (words: string[]) => number;
 export declare const scase: (text: string) => string;
 export declare const mdLink: (lbl: string, href: string) => string;
 export declare const formatAuthor: ({ name, email, url, }: Exclude<PackageInfo["author"], string>) => string;

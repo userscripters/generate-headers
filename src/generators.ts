@@ -1,4 +1,10 @@
-import { formatAuthor, PackageInfo, parseAuthor } from "./utils";
+import { formatAuthor, getLongest, PackageInfo, parseAuthor } from "./utils";
+
+declare global {
+  interface String {
+    padEnd<T extends string>(maxLength: number, fillString?: string): T;
+  }
+}
 
 export type UserScriptManagerName =
   | "tampermonkey"
@@ -65,7 +71,7 @@ type TampermonkeyHeaders = CustomHeaders &
 
 type HeaderEntries<T> = [keyof T, T[keyof T]][];
 
-type ListOfHeaders<T> = readonly T[keyof T][];
+type MonkeyHeader = `// @${string} ${string}` | `// @${string}`;
 
 const makeMonkeyTags = (
     name = "UserScript"
@@ -77,7 +83,7 @@ const makeMonkeyTags = (
 const makeMonkeyHeader = <K extends keyof TampermonkeyHeaders>([name, value]: [
   K,
   TampermonkeyHeaders[K]
-]) => (value ? `// @${name} ${value}` : `// @${name}`);
+]) => <MonkeyHeader>(value ? `// @${name} ${value}` : `// @${name}`);
 
 //TODO: finish creating the processor
 export const generateGreasemnonkeyHeaders: HeaderGenerator = () => {
@@ -85,8 +91,7 @@ export const generateGreasemnonkeyHeaders: HeaderGenerator = () => {
 
     const headers: HeaderEntries<GreasemonkeyHeaders> = [];
 
-    const parsedHeaders: ListOfHeaders<GreasemonkeyHeaders> =
-    headers.map(makeMonkeyHeader);
+    const parsedHeaders: MonkeyHeader[] = headers.map(makeMonkeyHeader);
 
     return `
 ${openTag}
@@ -122,15 +127,20 @@ export const generateTampermonkeyHeaders: HeaderGenerator = ({
 
     if (icon) headers.push(["icon", icon]);
 
-    if (contributors) {
+    if (contributors && contributors.length) {
         const formatted = contributors.map((contributor) =>
             formatAuthor(parseAuthor(contributor))
         );
         headers.push(["contributors", formatted]);
     }
 
-    const parsedHeaders: ListOfHeaders<TampermonkeyHeaders> =
-    headers.map(makeMonkeyHeader);
+    const longest = getLongest(headers.map(([key]) => key)) + 4;
+
+    const indentedHeaders: HeaderEntries<TampermonkeyHeaders> = headers.map(
+        ([key, val]) => [key.padEnd(longest), val]
+    );
+
+    const parsedHeaders: MonkeyHeader[] = indentedHeaders.map(makeMonkeyHeader);
 
     //Unused headers:
     // @namespace

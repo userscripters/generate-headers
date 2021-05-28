@@ -35,6 +35,9 @@ export const getPackage = async (path: string): Promise<PackageInfo | null> => {
     }
 };
 
+export const getLongest = (words: string[]) =>
+    Math.max(...words.map(({ length }) => length));
+
 export const scase = (text: string) =>
     `${text[0].toUpperCase()}${text.slice(1).toLowerCase()}`;
 

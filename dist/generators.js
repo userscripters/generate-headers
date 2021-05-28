@@ -32,11 +32,13 @@ const generateTampermonkeyHeaders = ({ author, contributors, icon, name, descrip
     ];
     if (icon)
         headers.push(["icon", icon]);
-    if (contributors) {
+    if (contributors && contributors.length) {
         const formatted = contributors.map((contributor) => utils_1.formatAuthor(utils_1.parseAuthor(contributor)));
         headers.push(["contributors", formatted]);
     }
-    const parsedHeaders = headers.map(makeMonkeyHeader);
+    const longest = utils_1.getLongest(headers.map(([key]) => key)) + 4;
+    const indentedHeaders = headers.map(([key, val]) => [key.padEnd(longest), val]);
+    const parsedHeaders = indentedHeaders.map(makeMonkeyHeader);
     return `
 ${openTag}
 ${parsedHeaders.join("\n")}

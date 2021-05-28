@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseAuthor = exports.formatAuthor = exports.mdLink = exports.scase = exports.getPackage = void 0;
+exports.parseAuthor = exports.formatAuthor = exports.mdLink = exports.scase = exports.getLongest = exports.getPackage = void 0;
 const promises_1 = require("fs/promises");
 const getPackage = async (path) => {
     try {
@@ -12,6 +12,8 @@ const getPackage = async (path) => {
     }
 };
 exports.getPackage = getPackage;
+const getLongest = (words) => Math.max(...words.map(({ length }) => length));
+exports.getLongest = getLongest;
 const scase = (text) => `${text[0].toUpperCase()}${text.slice(1).toLowerCase()}`;
 exports.scase = scase;
 const mdLink = (lbl, href) => `[${lbl}](${href})`;

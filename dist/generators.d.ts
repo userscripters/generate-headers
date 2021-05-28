@@ -1,4 +1,9 @@
 import { PackageInfo } from "./utils";
+declare global {
+    interface String {
+        padEnd<T extends string>(maxLength: number, fillString?: string): T;
+    }
+}
 export declare type UserScriptManagerName = "tampermonkey" | "violentmonkey" | "greasemonkey";
 export declare type HeaderGenerator = (info: PackageInfo) => string;
 export declare type GeneratorMap = {
