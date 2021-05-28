@@ -1,6 +1,6 @@
 {
   "name": "@userscripters/generate-headers",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Userscript manager header generator",
   "icon": "",
   "scripts": {
@@ -50,6 +50,6 @@
   },
   "main": "dist/index.js",
   "bin": {
-    "generate": "./dist/index.js"
+    "generate": "dist/index.js"
   }
 }
