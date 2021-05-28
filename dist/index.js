@@ -33,8 +33,10 @@ const generate = async (type, packagePath, output) => {
         const { code, name } = error;
         const errMap = {
             ENOENT: ({ path }) => ["Missing path:", path],
+            default: ({ message }) => ["Something went wrong:", message],
         };
-        const [postfix, message] = errMap[code](error);
+        const handler = errMap[code] || errMap.default;
+        const [postfix, message] = handler(error);
         console.log(chalk_1.bgRed `[${name}] ${postfix}` + `\n\n${message}`);
         return "";
     }
