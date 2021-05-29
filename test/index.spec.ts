@@ -1,31 +1,58 @@
-import { expect } from "chai";
+import { expect, use } from "chai";
+import * as cpr from "chai-as-promised";
 import { exec } from "child_process";
-import { readFile, unlink } from "fs/promises";
+import { readFile, stat, unlink } from "fs/promises";
 import { join } from "path";
 import { promisify } from "util";
 import { generate } from "../src";
 import { getLongest } from "../src/utils";
+
+use(cpr);
 
 const aexec = promisify(exec);
 
 describe("main", () => {
   const base = process.cwd();
   const pkg = join(base, "/package.json");
-  const out = join(base, "/test/headers.js");
+  const output = join(base, "/test/headers.js");
   const entry = "./src/index.ts";
+
+  const common = { output, packagePath: pkg };
 
   describe.skip("Greasemonkey", async () => {
     //TODO: add once other commands ready
   });
 
-  describe("CLI Options", async () => {
-    it("-s option should control number of spaces added", async function () {
-      this.timeout(5e3);
+  describe("CLI Options", async function () {
+    this.timeout(5e3);
 
+    afterEach(async () =>
+      stat(output)
+        .then(() => unlink(output))
+        .catch(() => {})
+    );
+
+    it("-d option should forgo file generation", async () => {
+      const content = await aexec(`ts-node ${entry} tampermonkey -p ${pkg} -d`);
+      expect(!!content).to.be.true;
+      expect(stat(output)).to.eventually.be.rejected;
+    });
+
+    it("-d option should override -o", async () => {
+      const content = await aexec(
+        `ts-node ${entry} tampermonkey -p ${pkg} -o ${output} -d`
+      );
+      expect(content);
+      expect(stat(output)).to.eventually.be.rejected;
+    });
+
+    it("-s option should control number of spaces added", async () => {
       const sp = 8;
 
-      await aexec(`ts-node ${entry} tampermonkey -s ${sp} -p ${pkg} -o ${out}`);
-      const contents = await readFile(out, { encoding: "utf-8" });
+      await aexec(
+        `ts-node ${entry} tampermonkey -s ${sp} -p ${pkg} -o ${output}`
+      );
+      const contents = await readFile(output, { encoding: "utf-8" });
 
       const lines = contents.split("\n");
 
@@ -54,16 +81,16 @@ describe("main", () => {
     });
 
     it("headers are generated correctly", async () => {
-      artefacts.push(out);
+      artefacts.push(output);
 
-      const content = await generate("tampermonkey", pkg, out);
+      const content = await generate("tampermonkey", common);
       expect(!!content).to.be.true;
     });
 
     it("header names should be equally indented", async () => {
-      artefacts.push(out);
+      artefacts.push(output);
 
-      const content = await generate("tampermonkey", pkg, out);
+      const content = await generate("tampermonkey", common);
 
       const headerMatcher = /(?<=^\/\/\s@\w+\s+)\w/;
 

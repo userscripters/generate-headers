@@ -17,11 +17,16 @@ const names: UserScriptManagerName[] = [
     "violentmonkey",
 ];
 
+type GeneratorOptions = {
+  packagePath: string;
+  output: string;
+  spaces?: number;
+  direct?: boolean;
+};
+
 export const generate = async (
     type: UserScriptManagerName,
-    packagePath: string,
-    output: string,
-    spaces = 4 //TODO: avoid magic string
+    { packagePath, output, spaces = 4, direct = false }: GeneratorOptions
 ) => {
     const managerTypeMap: GeneratorMap = {
         greasemonkey: generateGreasemnonkeyHeaders,
@@ -38,6 +43,8 @@ export const generate = async (
         }
 
         const content = managerTypeMap[type!](parsedPackage, spaces);
+
+        if (direct) return content;
 
         await appendFile(output!, content, { encoding: "utf-8", flag: "w+" });
 
@@ -64,9 +71,15 @@ export const generate = async (
 const cli = yargs(hideBin(process.argv));
 
 const sharedOpts = {
+    d: {
+        alias: "direct",
+        default: false,
+        type: "boolean",
+    },
     o: {
         alias: "output",
         default: "./dist/headers.js",
+        type: "string",
     },
     p: {
         alias: "package",
@@ -76,8 +89,8 @@ const sharedOpts = {
     s: {
         alias: "spaces",
         default: 4,
-        type: "number"
-    }
+        type: "number",
+    },
 } as const;
 
 names.forEach((name) =>
@@ -85,8 +98,21 @@ names.forEach((name) =>
         name,
         `generates ${scase(name)} headers`,
         sharedOpts,
-        ({ o, p, s }) => generate(name, p, o, s)
+        ({ d, o, p, s }) =>
+            generate(name, {
+                direct: !!d,
+                output: o,
+                packagePath: p,
+                spaces: s,
+            })
     )
 );
 
-cli.demandCommand().help().parse();
+cli
+    .middleware(({ d, o }) => {
+        console.log({ d, o }, process.argv);
+
+    })
+    .demandCommand()
+    .help()
+    .parse();

@@ -13,7 +13,7 @@ const names = [
     "tampermonkey",
     "violentmonkey",
 ];
-const generate = async (type, packagePath, output, spaces = 4) => {
+const generate = async (type, { packagePath, output, spaces = 4, direct = false }) => {
     const managerTypeMap = {
         greasemonkey: generators_1.generateGreasemnonkeyHeaders,
         tampermonkey: generators_1.generateTampermonkeyHeaders,
@@ -26,6 +26,8 @@ const generate = async (type, packagePath, output, spaces = 4) => {
             return "";
         }
         const content = managerTypeMap[type](parsedPackage, spaces);
+        if (direct)
+            return content;
         await promises_1.appendFile(output, content, { encoding: "utf-8", flag: "w+" });
         return content;
     }
@@ -44,9 +46,15 @@ const generate = async (type, packagePath, output, spaces = 4) => {
 exports.generate = generate;
 const cli = yargs(helpers_1.hideBin(process.argv));
 const sharedOpts = {
+    d: {
+        alias: "direct",
+        default: false,
+        type: "boolean",
+    },
     o: {
         alias: "output",
         default: "./dist/headers.js",
+        type: "string",
     },
     p: {
         alias: "package",
@@ -56,8 +64,19 @@ const sharedOpts = {
     s: {
         alias: "spaces",
         default: 4,
-        type: "number"
-    }
+        type: "number",
+    },
 };
-names.forEach((name) => cli.command(name, `generates ${utils_1.scase(name)} headers`, sharedOpts, ({ o, p, s }) => exports.generate(name, p, o, s)));
-cli.demandCommand().help().parse();
+names.forEach((name) => cli.command(name, `generates ${utils_1.scase(name)} headers`, sharedOpts, ({ d, o, p, s }) => exports.generate(name, {
+    direct: !!d,
+    output: o,
+    packagePath: p,
+    spaces: s,
+})));
+cli
+    .middleware(({ d, o }) => {
+    console.log({ d, o }, process.argv);
+})
+    .demandCommand()
+    .help()
+    .parse();
