@@ -109,10 +109,6 @@ names.forEach((name) =>
 );
 
 cli
-    .middleware(({ d, o }) => {
-        console.log({ d, o }, process.argv);
-
-    })
     .demandCommand()
     .help()
     .parse();

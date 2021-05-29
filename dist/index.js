@@ -74,9 +74,6 @@ names.forEach((name) => cli.command(name, `generates ${utils_1.scase(name)} head
     spaces: s,
 })));
 cli
-    .middleware(({ d, o }) => {
-    console.log({ d, o }, process.argv);
-})
     .demandCommand()
     .help()
     .parse();
