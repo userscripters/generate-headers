@@ -26,6 +26,8 @@ const generate = async (type, { packagePath, output, spaces = 4, direct = false 
             return "";
         }
         const content = managerTypeMap[type](parsedPackage, spaces);
+        if (direct && require.main === module)
+            process.stdout.write(content);
         if (direct)
             return content;
         await promises_1.appendFile(output, content, { encoding: "utf-8", flag: "w+" });

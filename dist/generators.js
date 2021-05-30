@@ -18,6 +18,7 @@ ${closeTag}
 `;
 };
 exports.generateGreasemnonkeyHeaders = generateGreasemnonkeyHeaders;
+const LN = "\n";
 const generateTampermonkeyHeaders = ({ author, contributors, icon, name, description, homepage, bugs: { url: supportURL }, repository: { url: source }, version, }, spaces) => {
     const [openTag, closeTag] = makeMonkeyTags();
     const parsedAuthor = utils_1.parseAuthor(author);
@@ -42,11 +43,7 @@ const generateTampermonkeyHeaders = ({ author, contributors, icon, name, descrip
     const longest = utils_1.getLongest(headers.map(([key]) => key)) + spaces;
     const indentedHeaders = headers.map(([key, val]) => [key.padEnd(longest), val]);
     const parsedHeaders = indentedHeaders.map(makeMonkeyHeader).sort();
-    return `
-${openTag}
-${parsedHeaders.join("\n")}
-${closeTag}
-`;
+    return [openTag, ...parsedHeaders, closeTag].join(LN);
 };
 exports.generateTampermonkeyHeaders = generateTampermonkeyHeaders;
 const generateViolentMonkeyHeaders = ({}) => {

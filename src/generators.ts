@@ -106,6 +106,8 @@ ${closeTag}
 `;
 };
 
+const LN = "\n";
+
 export const generateTampermonkeyHeaders: HeaderGenerator = (
     {
         author,
@@ -171,11 +173,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator = (
     // @unwrap
     // @nocompat
 
-    return `
-${openTag}
-${parsedHeaders.join("\n")}
-${closeTag}
-`;
+    return [openTag, ...parsedHeaders, closeTag].join(LN);
 };
 
 //TODO: finish creating the processor

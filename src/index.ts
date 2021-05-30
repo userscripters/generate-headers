@@ -7,7 +7,7 @@ import {
     generateTampermonkeyHeaders,
     generateViolentMonkeyHeaders,
     GeneratorMap,
-    UserScriptManagerName,
+    UserScriptManagerName
 } from "./generators";
 import { getPackage, scase } from "./utils";
 
@@ -43,6 +43,9 @@ export const generate = async (
         }
 
         const content = managerTypeMap[type!](parsedPackage, spaces);
+
+        //running from CLI with file emit disabled
+        if (direct && require.main === module) process.stdout.write(content);
 
         if (direct) return content;
 

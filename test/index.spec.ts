@@ -33,16 +33,15 @@ describe("main", () => {
     );
 
     it("-d option should forgo file generation", async () => {
-      const content = await aexec(`ts-node ${entry} tampermonkey -p ${pkg} -d`);
-      expect(!!content).to.be.true;
+      const { stdout } = await aexec(
+        `ts-node ${entry} tampermonkey -p ${pkg} -d`
+      );
+      expect(!!stdout).to.be.true;
       expect(stat(output)).to.eventually.be.rejected;
     });
 
     it("-d option should override -o", async () => {
-      const content = await aexec(
-        `ts-node ${entry} tampermonkey -p ${pkg} -o ${output} -d`
-      );
-      expect(content);
+      await aexec(`ts-node ${entry} tampermonkey -p ${pkg} -o ${output} -d`);
       expect(stat(output)).to.eventually.be.rejected;
     });
 
