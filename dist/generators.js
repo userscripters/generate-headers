@@ -23,7 +23,7 @@ const generateTampermonkeyHeaders = ({ author, contributors, icon, name, descrip
     const [openTag, closeTag] = makeMonkeyTags();
     const parsedAuthor = utils_1.parseAuthor(author);
     const { packageName, scope } = utils_1.parseName(name);
-    const matchHeaders = matches.map((uri) => ["matches", uri]);
+    const matchHeaders = matches.map((uri) => ["match", uri]);
     const headers = [
         ["author", utils_1.formatAuthor(parsedAuthor)],
         ["description", description],
