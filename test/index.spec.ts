@@ -67,7 +67,7 @@ describe("main", () => {
                 `ts-node ${entry} tampermonkey ${mOpts} -p ${pkg} -o ${output} -d`
             );
 
-            const matched = stdout.match(/@matches\s+(.+)/g) || [];
+            const matched = stdout.match(/@match\s+(.+)/g) || [];
             expect(matched).length(9);
         });
 
@@ -134,7 +134,7 @@ describe("main", () => {
                 matches,
             });
 
-            const matched = content.match(/@matches\s+(.+)/g) || [];
+            const matched = content.match(/@match\s+(.+)/g) || [];
             expect(matched).length(9);
         });
 

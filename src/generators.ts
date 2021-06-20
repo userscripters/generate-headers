@@ -31,7 +31,7 @@ type CommonHeaders<T extends object> = T & {
     exclude: string[];
     icon: string;
     include: string[];
-    matches: string[];
+    match: string[];
     name: string;
     namespace: string;
     noframes: "";
@@ -134,7 +134,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator = (
     const { packageName, scope } = parseName(name);
 
     const matchHeaders: HeaderEntries<TampermonkeyHeaders> = matches.map(
-        (uri) => ["matches", uri]
+        (uri) => ["match", uri]
     );
 
     const headers: HeaderEntries<TampermonkeyHeaders> = [
