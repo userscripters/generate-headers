@@ -1,79 +1,85 @@
+import { GeneratorOptions } from ".";
 import {
     formatAuthor,
     getLongest,
     PackageInfo,
     parseAuthor,
     parseName,
+    RequiredProps,
 } from "./utils";
 
 declare global {
-  interface String {
-    padEnd<T extends string>(maxLength: number, fillString?: string): T;
-  }
+    interface String {
+        padEnd<T extends string>(maxLength: number, fillString?: string): T;
+    }
 }
 
 export type UserScriptManagerName =
-  | "tampermonkey"
-  | "violentmonkey"
-  | "greasemonkey";
+    | "tampermonkey"
+    | "violentmonkey"
+    | "greasemonkey";
 
-export type HeaderGenerator = (info: PackageInfo, spaces: number) => string;
+export type HeaderGenerator = (
+    info: PackageInfo,
+    options: RequiredProps<GeneratorOptions, "spaces">
+) => string;
 
 export type GeneratorMap = { [P in UserScriptManagerName]: HeaderGenerator };
 
 type CommonHeaders<T extends object> = T & {
-  description: string;
-  exclude: string[];
-  icon: string;
-  include: string[];
-  name: string;
-  namespace: string;
-  noframes: "";
-  resource: string[];
-  require: string[];
-  version: `${number}.${number}.${number}`;
+    description: string;
+    exclude: string[];
+    icon: string;
+    include: string[];
+    matches: string[];
+    name: string;
+    namespace: string;
+    noframes: "";
+    resource: string[];
+    require: string[];
+    version: `${number}.${number}.${number}`;
 };
 
 type CustomHeaders = { contributors: string };
 
 type GreasemonkeyHeaders = CustomHeaders &
-  CommonHeaders<{
-    "grant": "none"[];
-    "run-at": "document-start" | "document-end" | "document-idle";
-  }>;
+    CommonHeaders<{
+        "grant": "none"[];
+        "run-at": "document-start" | "document-end" | "document-idle";
+    }>;
 
 type TampermonkeyHeaders = CustomHeaders &
-  CommonHeaders<{
-    "author": string;
-    "homepage": string;
-    "homepageURL": string;
-    "website": string;
-    "source": string;
-    "iconURL": string;
-    "defaulticon": string;
-    "icon64": string;
-    "icon64URL": string;
-    "updateURL": string;
-    "downloadURL": string;
-    "supportURL": string;
-    "connect": string[];
-    "run-at":
-      | "context-menu"
-      | "document-start"
-      | "document-body"
-      | "document-end"
-      | "document-idle";
-    "grant": (
-      | "none"
-      | "unsafeWindow"
-      | "window.close"
-      | "window.focus"
-      | "window.onurlchange"
-    )[];
-    "antifeature": `${"ads" | "tracking" | "miner"} ${string}`[];
-    "unwrap": "";
-    "nocompat": "Chrome" | "Opera" | "FireFox";
-  }>;
+    CommonHeaders<{
+        "author": string;
+        "homepage": string;
+        "homepageURL": string;
+        "website": string;
+        "source": string;
+        "iconURL": string;
+        "defaulticon": string;
+        "icon64": string;
+        "icon64URL": string;
+        "updateURL": string;
+        "downloadURL": string;
+        "supportURL": string;
+        "connect": string[];
+        "run-at":
+            | "context-menu"
+            | "document-start"
+            | "document-body"
+            | "document-end"
+            | "document-idle";
+        "grant": (
+            | "none"
+            | "unsafeWindow"
+            | "window.close"
+            | "window.focus"
+            | "window.onurlchange"
+        )[];
+        "antifeature": `${"ads" | "tracking" | "miner"} ${string}`[];
+        "unwrap": "";
+        "nocompat": "Chrome" | "Opera" | "FireFox";
+    }>;
 
 type HeaderEntries<T> = [keyof T, T[keyof T]][];
 
@@ -87,8 +93,8 @@ const makeMonkeyTags = (
 ];
 
 const makeMonkeyHeader = <K extends keyof TampermonkeyHeaders>([name, value]: [
-  K,
-  TampermonkeyHeaders[K]
+    K,
+    TampermonkeyHeaders[K]
 ]) => <MonkeyHeader>(value ? `// @${name} ${value}` : `// @${name}`);
 
 //TODO: finish creating the processor
@@ -120,17 +126,22 @@ export const generateTampermonkeyHeaders: HeaderGenerator = (
         repository: { url: source },
         version,
     },
-    spaces
+    { spaces, matches = [] }
 ) => {
     const [openTag, closeTag] = makeMonkeyTags();
 
     const parsedAuthor = parseAuthor(author);
     const { packageName, scope } = parseName(name);
 
+    const matchHeaders: HeaderEntries<TampermonkeyHeaders> = matches.map(
+        (uri) => ["matches", uri]
+    );
+
     const headers: HeaderEntries<TampermonkeyHeaders> = [
         ["author", formatAuthor(parsedAuthor)],
         ["description", description],
         ["homepage", homepage],
+        ...matchHeaders,
         ["name", packageName],
         ["source", source],
         ["supportURL", supportURL],
@@ -154,14 +165,15 @@ export const generateTampermonkeyHeaders: HeaderGenerator = (
         ([key, val]) => [key.padEnd(longest), val]
     );
 
-    const parsedHeaders: MonkeyHeader[] = indentedHeaders.map(makeMonkeyHeader).sort();
+    const parsedHeaders: MonkeyHeader[] = indentedHeaders
+        .map(makeMonkeyHeader)
+        .sort();
 
     //Unused headers:
     // @icon64 and @icon64URL
     // @updateURL
     // @downloadURL
     // @include
-    // @match
     // @exclude
     // @require
     // @resource

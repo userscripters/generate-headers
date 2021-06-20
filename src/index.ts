@@ -7,7 +7,7 @@ import {
     generateTampermonkeyHeaders,
     generateViolentMonkeyHeaders,
     GeneratorMap,
-    UserScriptManagerName
+    UserScriptManagerName,
 } from "./generators";
 import { getPackage, scase } from "./utils";
 
@@ -17,16 +17,23 @@ const names: UserScriptManagerName[] = [
     "violentmonkey",
 ];
 
-type GeneratorOptions = {
-  packagePath: string;
-  output: string;
-  spaces?: number;
-  direct?: boolean;
+export type GeneratorOptions = {
+    packagePath: string;
+    output: string;
+    spaces?: number;
+    matches?: string[];
+    direct?: boolean;
 };
 
 export const generate = async (
     type: UserScriptManagerName,
-    { packagePath, output, spaces = 4, direct = false }: GeneratorOptions
+    {
+        packagePath,
+        output,
+        spaces = 4,
+        direct = false,
+        ...rest
+    }: GeneratorOptions
 ) => {
     const managerTypeMap: GeneratorMap = {
         greasemonkey: generateGreasemnonkeyHeaders,
@@ -42,7 +49,12 @@ export const generate = async (
             return "";
         }
 
-        const content = managerTypeMap[type!](parsedPackage, spaces);
+        const content = managerTypeMap[type!](parsedPackage, {
+            ...rest,
+            spaces,
+            packagePath,
+            output,
+        });
 
         //running from CLI with file emit disabled
         if (direct && require.main === module) process.stdout.write(content);
@@ -55,11 +67,11 @@ export const generate = async (
     } catch (error) {
         const { code, name } = error;
         const errMap: {
-      [code: string]: (err: NodeJS.ErrnoException) => [string, string];
-    } = {
-        ENOENT: ({ path }) => ["Missing path:", path!],
-        default: ({ message }) => ["Something went wrong:", message],
-    };
+            [code: string]: (err: NodeJS.ErrnoException) => [string, string];
+        } = {
+            ENOENT: ({ path }) => ["Missing path:", path!],
+            default: ({ message }) => ["Something went wrong:", message],
+        };
 
         const handler = errMap[code] || errMap.default;
 
@@ -78,6 +90,10 @@ const sharedOpts = {
         alias: "direct",
         default: false,
         type: "boolean",
+    },
+    m: {
+        alias: "match",
+        type: "array",
     },
     o: {
         alias: "output",
@@ -101,9 +117,10 @@ names.forEach((name) =>
         name,
         `generates ${scase(name)} headers`,
         sharedOpts,
-        ({ d, o, p, s }) =>
+        ({ d, m, o, p, s }) =>
             generate(name, {
                 direct: !!d,
+                matches: m?.map(String) || [],
                 output: o,
                 packagePath: p,
                 spaces: s,
@@ -111,7 +128,4 @@ names.forEach((name) =>
     )
 );
 
-cli
-    .demandCommand()
-    .help()
-    .parse();
+cli.demandCommand().help().parse();
