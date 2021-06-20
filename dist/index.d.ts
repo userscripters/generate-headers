@@ -1,9 +1,9 @@
 import { UserScriptManagerName } from "./generators";
-declare type GeneratorOptions = {
+export declare type GeneratorOptions = {
     packagePath: string;
     output: string;
     spaces?: number;
+    matches?: string[];
     direct?: boolean;
 };
-export declare const generate: (type: UserScriptManagerName, { packagePath, output, spaces, direct }: GeneratorOptions) => Promise<string>;
-export {};
+export declare const generate: (type: UserScriptManagerName, { packagePath, output, spaces, direct, ...rest }: GeneratorOptions) => Promise<string>;

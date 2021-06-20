@@ -1,3 +1,6 @@
+export declare type RequiredProps<T, K extends keyof T = keyof T> = T & {
+    [P in K]-?: T[P];
+};
 declare type PackagePerson = string | {
     name: string;
     email?: string;

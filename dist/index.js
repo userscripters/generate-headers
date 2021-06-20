@@ -13,7 +13,7 @@ const names = [
     "tampermonkey",
     "violentmonkey",
 ];
-const generate = async (type, { packagePath, output, spaces = 4, direct = false }) => {
+const generate = async (type, { packagePath, output, spaces = 4, direct = false, ...rest }) => {
     const managerTypeMap = {
         greasemonkey: generators_1.generateGreasemnonkeyHeaders,
         tampermonkey: generators_1.generateTampermonkeyHeaders,
@@ -25,7 +25,12 @@ const generate = async (type, { packagePath, output, spaces = 4, direct = false 
             console.log(chalk_1.bgRed `missing or corrupted package`);
             return "";
         }
-        const content = managerTypeMap[type](parsedPackage, spaces);
+        const content = managerTypeMap[type](parsedPackage, {
+            ...rest,
+            spaces,
+            packagePath,
+            output,
+        });
         if (direct && require.main === module)
             process.stdout.write(content);
         if (direct)
@@ -53,6 +58,10 @@ const sharedOpts = {
         default: false,
         type: "boolean",
     },
+    m: {
+        alias: "match",
+        type: "array",
+    },
     o: {
         alias: "output",
         default: "./dist/headers.js",
@@ -69,13 +78,11 @@ const sharedOpts = {
         type: "number",
     },
 };
-names.forEach((name) => cli.command(name, `generates ${utils_1.scase(name)} headers`, sharedOpts, ({ d, o, p, s }) => exports.generate(name, {
+names.forEach((name) => cli.command(name, `generates ${utils_1.scase(name)} headers`, sharedOpts, ({ d, m, o, p, s }) => exports.generate(name, {
     direct: !!d,
+    matches: (m === null || m === void 0 ? void 0 : m.map(String)) || [],
     output: o,
     packagePath: p,
     spaces: s,
 })));
-cli
-    .demandCommand()
-    .help()
-    .parse();
+cli.demandCommand().help().parse();
