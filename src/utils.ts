@@ -1,29 +1,34 @@
 import { readFile } from "fs/promises";
 
-type PackagePerson =
-  | string
-  | {
-      name: string;
-      email?: string;
-      url?: string;
+export type RequiredProps<T, K extends keyof T = keyof T> = T &
+    {
+        [P in K]-?: T[P];
     };
 
+type PackagePerson =
+    | string
+    | {
+          name: string;
+          email?: string;
+          url?: string;
+      };
+
 export type PackageInfo = {
-  author: PackagePerson;
-  contributors?: PackagePerson[];
-  icon?: string;
-  license: string;
-  homepage: string;
-  name: string;
-  version: `${number}.${number}.${number}`;
-  description: string;
-  bugs: {
-    url: string;
-  };
-  repository: {
-    type: "git" | "https";
-    url: string;
-  };
+    author: PackagePerson;
+    contributors?: PackagePerson[];
+    icon?: string;
+    license: string;
+    homepage: string;
+    name: string;
+    version: `${number}.${number}.${number}`;
+    description: string;
+    bugs: {
+        url: string;
+    };
+    repository: {
+        type: "git" | "https";
+        url: string;
+    };
 };
 
 export const getPackage = async (path: string): Promise<PackageInfo | null> => {
@@ -70,7 +75,7 @@ export const parseAuthor = (
     };
 };
 
-export const parseName = (name:string) => {
-    const [, scope, packageName ] = name.match(/(?:@([\w-]+)\/)?([\w-]+)/) || [];
+export const parseName = (name: string) => {
+    const [, scope, packageName] = name.match(/(?:@([\w-]+)\/)?([\w-]+)/) || [];
     return { scope, packageName };
 };
