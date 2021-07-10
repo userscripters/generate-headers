@@ -26,7 +26,12 @@
     "stackoverflow"
   ],
   "author": "Oleg Valter",
-  "contributors": [],
+  "contributors": [
+    {
+      "name": "double beep",
+      "url": "https://github.com/double-beep"
+    }
+  ],
   "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/userscripters/generate-headers/issues"
