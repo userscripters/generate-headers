@@ -142,7 +142,7 @@ const LN = "\n";
 export const generateTampermonkeyHeaders: HeaderGenerator = (
     {
         author,
-        contributors,
+        contributors = [],
         icon,
         name,
         description,
@@ -195,11 +195,11 @@ export const generateTampermonkeyHeaders: HeaderGenerator = (
 
     if (icon) headers.push(["icon", icon]);
 
-    if (contributors && contributors.length) {
+    if (contributors.length) {
         const formatted = contributors.map((contributor) =>
             formatAuthor(parseAuthor(contributor))
         );
-        headers.push(["contributors", formatted]);
+        headers.push(["contributors", formatted.join(", ")]);
     }
 
     const longest = getLongest(headers.map(([key]) => key)) + spaces;
