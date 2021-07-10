@@ -20,6 +20,19 @@ describe("main", () => {
 
     const common: GeneratorOptions = { output, packagePath: pkg };
 
+    //@see https://developer.chrome.com/docs/extensions/mv2/match_patterns/
+    const allMatches: string[] = [
+        "http://*/*",
+        "http://*/foo*",
+        "https://*.google.com/foo*bar",
+        "http://example.org/foo/bar.html",
+        "file:///foo*",
+        "http://127.0.0.1/*",
+        "*://mail.google.com/*",
+        "urn:*",
+        "<all_urls>",
+    ];
+
     const grantsTM: TampermonkeyGrants[] = [
         "GM_getValue",
         "GM_setValue",
@@ -99,27 +112,14 @@ describe("main", () => {
         });
 
         it("-m options should correctly add @matches", async () => {
-            //@see https://developer.chrome.com/docs/extensions/mv2/match_patterns/
-            const matches: string[] = [
-                "http://*/*",
-                "http://*/foo*",
-                "https://*.google.com/foo*bar",
-                "http://example.org/foo/bar.html",
-                "file:///foo*",
-                "http://127.0.0.1/*",
-                "*://mail.google.com/*",
-                "urn:*",
-                "<all_urls>",
-            ];
-
-            const mOpts = matches.map((m) => `-m "${m}"`).join(" ");
+            const mOpts = allMatches.map((m) => `-m "${m}"`).join(" ");
 
             const { stdout } = await aexec(
                 `ts-node ${entry} tampermonkey ${mOpts} -p ${pkg} -o ${output} -d`
             );
 
             const matched = stdout.match(/@match\s+(.+)/g) || [];
-            expect(matched).length(matches.length);
+            expect(matched).length(allMatches.length);
         });
 
         it("-s option should control number of spaces added", async () => {
@@ -167,26 +167,13 @@ describe("main", () => {
         });
 
         it("@match headers should be generated", async () => {
-            //@see https://developer.chrome.com/docs/extensions/mv2/match_patterns/
-            const matches: string[] = [
-                "http://*/*",
-                "http://*/foo*",
-                "https://*.google.com/foo*bar",
-                "http://example.org/foo/bar.html",
-                "file:///foo*",
-                "http://127.0.0.1/*",
-                "*://mail.google.com/*",
-                "urn:*",
-                "<all_urls>",
-            ];
-
             const content = await generate("tampermonkey", {
                 ...directCommon,
-                matches,
+                matches: allMatches,
             });
 
             const matched = content.match(/@match\s+(.+)/g) || [];
-            expect(matched).length(matches.length);
+            expect(matched).length(allMatches.length);
         });
 
         it("@grant headers should be generated", async () => {
