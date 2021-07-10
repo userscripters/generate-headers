@@ -7,6 +7,7 @@ import {
     generateTampermonkeyHeaders,
     generateViolentMonkeyHeaders,
     GeneratorMap,
+    GrantOptions,
     UserScriptManagerName,
 } from "./generators";
 import { getPackage, scase } from "./utils";
@@ -22,6 +23,7 @@ export type GeneratorOptions = {
     output: string;
     spaces?: number;
     matches?: string[];
+    grants?: GrantOptions[];
     direct?: boolean;
 };
 
@@ -91,6 +93,10 @@ const sharedOpts = {
         default: false,
         type: "boolean",
     },
+    g: {
+        alias: "grant",
+        type: "array",
+    },
     m: {
         alias: "match",
         type: "array",
@@ -117,10 +123,11 @@ names.forEach((name) =>
         name,
         `generates ${scase(name)} headers`,
         sharedOpts,
-        ({ d, m, o, p, s }) =>
+        ({ d, g = [], m = [], o, p, s }) =>
             generate(name, {
                 direct: !!d,
-                matches: m?.map(String) || [],
+                matches: m.map(String),
+                grants: g as GrantOptions[],
                 output: o,
                 packagePath: p,
                 spaces: s,

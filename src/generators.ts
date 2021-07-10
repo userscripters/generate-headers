@@ -19,6 +19,37 @@ export type UserScriptManagerName =
     | "violentmonkey"
     | "greasemonkey";
 
+export type GrantOptions =
+    | "get"
+    | "set"
+    | "list"
+    | "delete"
+    | "unsafe"
+    | "close"
+    | "focus"
+    | "change";
+
+type CommonGrants = "none";
+
+/** {@link https://wiki.greasespot.net/@grant} */
+export type GreasemonkeyGrants =
+    | CommonGrants
+    | "GM.setValue"
+    | "GM.getValue"
+    | "GM.listValues"
+    | "GM.deleteValue";
+
+export type TampermonkeyGrants =
+    | CommonGrants
+    | "GM_setValue"
+    | "GM_getValue"
+    | "GM_listValues"
+    | "GM_deleteValue"
+    | "unsafeWindow"
+    | "window.close"
+    | "window.focus"
+    | "window.onurlchange";
+
 export type HeaderGenerator = (
     info: PackageInfo,
     options: RequiredProps<GeneratorOptions, "spaces">
@@ -44,7 +75,7 @@ type CustomHeaders = { contributors: string };
 
 type GreasemonkeyHeaders = CustomHeaders &
     CommonHeaders<{
-        "grant": "none"[];
+        "grant": GreasemonkeyGrants[];
         "run-at": "document-start" | "document-end" | "document-idle";
     }>;
 
@@ -69,13 +100,7 @@ type TampermonkeyHeaders = CustomHeaders &
             | "document-body"
             | "document-end"
             | "document-idle";
-        "grant": (
-            | "none"
-            | "unsafeWindow"
-            | "window.close"
-            | "window.focus"
-            | "window.onurlchange"
-        )[];
+        "grant": TampermonkeyGrants[];
         "antifeature": `${"ads" | "tracking" | "miner"} ${string}`[];
         "unwrap": "";
         "nocompat": "Chrome" | "Opera" | "FireFox";
@@ -126,7 +151,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator = (
         repository: { url: source },
         version,
     },
-    { spaces, matches = [] }
+    { spaces, matches = [], grants = [] }
 ) => {
     const [openTag, closeTag] = makeMonkeyTags();
 
@@ -137,11 +162,29 @@ export const generateTampermonkeyHeaders: HeaderGenerator = (
         (uri) => ["match", uri]
     );
 
+    const grantMap: Record<GrantOptions, TampermonkeyGrants> = {
+        set: "GM_setValue",
+        get: "GM_getValue",
+        delete: "GM_deleteValue",
+        list: "GM_listValues",
+        unsafe: "unsafeWindow",
+        change: "window.onurlchange",
+        close: "window.close",
+        focus: "window.focus",
+    };
+
+    const grantHeaders: HeaderEntries<TampermonkeyHeaders> = grants.map(
+        (grant) => ["grant", grantMap[grant]]
+    );
+
+    if (!grantHeaders.length) grantHeaders.push(["grant", "none"]);
+
     const headers: HeaderEntries<TampermonkeyHeaders> = [
         ["author", formatAuthor(parsedAuthor)],
         ["description", description],
         ["homepage", homepage],
         ...matchHeaders,
+        ...grantHeaders,
         ["name", packageName],
         ["source", source],
         ["supportURL", supportURL],
@@ -179,7 +222,6 @@ export const generateTampermonkeyHeaders: HeaderGenerator = (
     // @resource
     // @connect
     // @run-at
-    // @grant
     // @antifeature
     // @noframes
     // @unwrap

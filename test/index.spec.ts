@@ -5,6 +5,7 @@ import { readFile, stat, unlink } from "fs/promises";
 import { join } from "path";
 import { promisify } from "util";
 import { generate, GeneratorOptions } from "../src";
+import { GrantOptions, TampermonkeyGrants } from "../src/generators";
 import { getLongest } from "../src/utils";
 
 use(cpr);
@@ -18,6 +19,28 @@ describe("main", () => {
     const entry = "./src/index.ts";
 
     const common: GeneratorOptions = { output, packagePath: pkg };
+
+    const grantsTM: TampermonkeyGrants[] = [
+        "GM_getValue",
+        "GM_setValue",
+        "GM_deleteValue",
+        "GM_listValues",
+        "unsafeWindow",
+        "window.close",
+        "window.focus",
+        "window.onurlchange",
+    ];
+
+    const allGrantOptions: GrantOptions[] = [
+        "get",
+        "set",
+        "list",
+        "delete",
+        "unsafe",
+        "close",
+        "focus",
+        "change",
+    ];
 
     describe.skip("Greasemonkey", async () => {
         //TODO: add once other commands ready
@@ -47,6 +70,34 @@ describe("main", () => {
             expect(stat(output)).to.eventually.be.rejected;
         });
 
+        it("-g options should correctly add @grant", async () => {
+            const gOpts = allGrantOptions.map((g) => `-g "${g}"`).join(" ");
+
+            const { stdout } = await aexec(
+                `ts-node ${entry} tampermonkey ${gOpts} -p ${pkg} -o ${output} -d`
+            );
+
+            const matched = stdout.match(/@grant\s+(.+)/g) || [];
+            expect(matched).length(allGrantOptions.length);
+
+            const allAreTampermonkeyHeaders = matched.every((grant) =>
+                grantsTM.includes(
+                    grant.replace(/@grant\s+/, "") as TampermonkeyGrants
+                )
+            );
+
+            expect(allAreTampermonkeyHeaders).to.be.true;
+        });
+
+        it('no -g options should add @grant "none"', async () => {
+            const { stdout } = await aexec(
+                `ts-node ${entry} tampermonkey -p ${pkg} -o ${output} -d`
+            );
+
+            const isNone = /@grant\s+none/.test(stdout);
+            expect(isNone).to.be.true;
+        });
+
         it("-m options should correctly add @matches", async () => {
             //@see https://developer.chrome.com/docs/extensions/mv2/match_patterns/
             const matches: string[] = [
@@ -68,7 +119,7 @@ describe("main", () => {
             );
 
             const matched = stdout.match(/@match\s+(.+)/g) || [];
-            expect(matched).length(9);
+            expect(matched).length(matches.length);
         });
 
         it("-s option should control number of spaces added", async () => {
@@ -115,7 +166,7 @@ describe("main", () => {
             expect(!!content).to.be.true;
         });
 
-        it("@matches headers should be generated", async () => {
+        it("@match headers should be generated", async () => {
             //@see https://developer.chrome.com/docs/extensions/mv2/match_patterns/
             const matches: string[] = [
                 "http://*/*",
@@ -135,7 +186,17 @@ describe("main", () => {
             });
 
             const matched = content.match(/@match\s+(.+)/g) || [];
-            expect(matched).length(9);
+            expect(matched).length(matches.length);
+        });
+
+        it("@grant headers should be generated", async () => {
+            const content = await generate("tampermonkey", {
+                ...directCommon,
+                grants: allGrantOptions,
+            });
+
+            const matched = content.match(/@grant\s+(.+)/g) || [];
+            expect(matched).length(allGrantOptions.length);
         });
 
         it("header names should be equally indented", async () => {

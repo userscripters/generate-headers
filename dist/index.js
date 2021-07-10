@@ -58,6 +58,10 @@ const sharedOpts = {
         default: false,
         type: "boolean",
     },
+    g: {
+        alias: "grant",
+        type: "array",
+    },
     m: {
         alias: "match",
         type: "array",
@@ -78,9 +82,10 @@ const sharedOpts = {
         type: "number",
     },
 };
-names.forEach((name) => cli.command(name, `generates ${utils_1.scase(name)} headers`, sharedOpts, ({ d, m, o, p, s }) => exports.generate(name, {
+names.forEach((name) => cli.command(name, `generates ${utils_1.scase(name)} headers`, sharedOpts, ({ d, g = [], m = [], o, p, s }) => exports.generate(name, {
     direct: !!d,
-    matches: (m === null || m === void 0 ? void 0 : m.map(String)) || [],
+    matches: m.map(String),
+    grants: g,
     output: o,
     packagePath: p,
     spaces: s,

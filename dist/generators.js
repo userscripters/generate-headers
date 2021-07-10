@@ -19,16 +19,30 @@ ${closeTag}
 };
 exports.generateGreasemnonkeyHeaders = generateGreasemnonkeyHeaders;
 const LN = "\n";
-const generateTampermonkeyHeaders = ({ author, contributors, icon, name, description, homepage, bugs: { url: supportURL }, repository: { url: source }, version, }, { spaces, matches = [] }) => {
+const generateTampermonkeyHeaders = ({ author, contributors, icon, name, description, homepage, bugs: { url: supportURL }, repository: { url: source }, version, }, { spaces, matches = [], grants = [] }) => {
     const [openTag, closeTag] = makeMonkeyTags();
     const parsedAuthor = utils_1.parseAuthor(author);
     const { packageName, scope } = utils_1.parseName(name);
     const matchHeaders = matches.map((uri) => ["match", uri]);
+    const grantMap = {
+        set: "GM_setValue",
+        get: "GM_getValue",
+        delete: "GM_deleteValue",
+        list: "GM_listValues",
+        unsafe: "unsafeWindow",
+        change: "window.onurlchange",
+        close: "window.close",
+        focus: "window.focus",
+    };
+    const grantHeaders = grants.map((grant) => ["grant", grantMap[grant]]);
+    if (!grantHeaders.length)
+        grantHeaders.push(["grant", "none"]);
     const headers = [
         ["author", utils_1.formatAuthor(parsedAuthor)],
         ["description", description],
         ["homepage", homepage],
         ...matchHeaders,
+        ...grantHeaders,
         ["name", packageName],
         ["source", source],
         ["supportURL", supportURL],
