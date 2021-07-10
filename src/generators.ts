@@ -31,6 +31,8 @@ export type GrantOptions =
 
 type CommonGrants = "none";
 
+type CommonRunAt = "document-start" | "document-end" | "document-idle";
+
 /** {@link https://wiki.greasespot.net/@grant} */
 export type GreasemonkeyGrants =
     | CommonGrants
@@ -76,7 +78,7 @@ type CustomHeaders = { contributors: string };
 type GreasemonkeyHeaders = CustomHeaders &
     CommonHeaders<{
         "grant": GreasemonkeyGrants[];
-        "run-at": "document-start" | "document-end" | "document-idle";
+        "run-at": CommonRunAt;
     }>;
 
 type TampermonkeyHeaders = CustomHeaders &
@@ -94,12 +96,7 @@ type TampermonkeyHeaders = CustomHeaders &
         "downloadURL": string;
         "supportURL": string;
         "connect": string[];
-        "run-at":
-            | "context-menu"
-            | "document-start"
-            | "document-body"
-            | "document-end"
-            | "document-idle";
+        "run-at": CommonRunAt | "context-menu" | "document-body";
         "grant": TampermonkeyGrants[];
         "antifeature": `${"ads" | "tracking" | "miner"} ${string}`[];
         "unwrap": "";
