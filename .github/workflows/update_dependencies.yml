@@ -1,0 +1,37 @@
+name: Update dependencies
+
+on:
+  schedule:
+    - cron: "00 23 * * 6"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Using Node 14
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Update npm version to latest
+        run: npm install -g npm@latest # stop showing warnings about the lockfile
+      - name: Install dependencies
+        run: |
+          npm config set //npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN
+          npm install
+        env:
+          NODE_AUTH_TOKEN: ${{github.token}}
+      - name: Update to the latest minor/patch version
+        run: npx npm-check-updates -u --target minor
+      - name: Install updated dependencies & update lockfile
+        run: npm install && npm update
+      - name: Make sure everything's ok
+        run: npm test
+      - name: Push changes to GitHub
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git diff --quiet && git diff --staged --quiet || git commit -am "$(date +%F) Automated dependencies update"
+          git push
