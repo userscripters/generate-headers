@@ -12,7 +12,8 @@
     "executable": "sed -i \"1s/^/#!\\/usr\\/bin\\/env node\\n/\" dist/index.js",
     "version:patch": "npm run build && npm version patch",
     "version:minor": "npm run build && npm version minor",
-    "version:major": "npm run build && npm version major"
+    "version:major": "npm run build && npm version major",
+    "postversion": "generate-readme && git add . && git commit --amend --no-edit"
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,10 @@
     "violentmonkey",
     "stackoverflow"
   ],
-  "author": "Oleg Valter",
+  "author": {
+    "name": "Oleg Valter",
+    "email": "oleg.a.valter@gmail.com"
+  },
   "contributors": [
     {
       "name": "double beep",
@@ -46,6 +50,7 @@
     "@types/yargs": "^17.0.2",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.28.4",
+    "@userscripters/generate-readme": "^1.1.0",
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
     "eslint": "^7.31.0",
