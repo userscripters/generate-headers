@@ -45,7 +45,7 @@
     "@types/chai": "^4.2.21",
     "@types/chai-as-promised": "^7.1.4",
     "@types/mocha": "^8.2.3",
-    "@types/node": "^16.4.9",
+    "@types/node": "^16.4.10",
     "@types/tampermonkey": "^4.0.2",
     "@types/yargs": "^17.0.2",
     "@typescript-eslint/eslint-plugin": "^4.28.5",
