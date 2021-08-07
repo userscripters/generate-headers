@@ -45,11 +45,11 @@
     "@types/chai": "^4.2.21",
     "@types/chai-as-promised": "^7.1.4",
     "@types/mocha": "^8.2.3",
-    "@types/node": "^16.4.9",
+    "@types/node": "^16.4.13",
     "@types/tampermonkey": "^4.0.2",
     "@types/yargs": "^17.0.2",
-    "@typescript-eslint/eslint-plugin": "^4.28.5",
-    "@typescript-eslint/parser": "^4.28.5",
+    "@typescript-eslint/eslint-plugin": "^4.29.0",
+    "@typescript-eslint/parser": "^4.29.0",
     "@userscripters/generate-readme": "^1.1.0",
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
@@ -61,7 +61,7 @@
   },
   "dependencies": {
     "chalk": "^4.1.2",
-    "yargs": "^17.0.1"
+    "yargs": "^17.1.0"
   },
   "main": "dist/index.js",
   "bin": {
