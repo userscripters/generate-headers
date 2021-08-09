@@ -3,13 +3,13 @@ import { appendFile } from "fs/promises";
 import * as yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import {
-    generateGreasemnonkeyHeaders,
-    generateTampermonkeyHeaders,
-    generateViolentMonkeyHeaders,
     GeneratorMap,
     GrantOptions,
     UserScriptManagerName,
 } from "./generators";
+import { generateGreasemonkeyHeaders } from "./generators/greasemonkey";
+import { generateTampermonkeyHeaders } from "./generators/tampermonkey";
+import { generateViolentMonkeyHeaders } from "./generators/violentmonkey";
 import { getPackage, scase } from "./utils";
 
 const names: UserScriptManagerName[] = [
@@ -38,7 +38,7 @@ export const generate = async (
     }: GeneratorOptions
 ) => {
     const managerTypeMap: GeneratorMap = {
-        greasemonkey: generateGreasemnonkeyHeaders,
+        greasemonkey: generateGreasemonkeyHeaders,
         tampermonkey: generateTampermonkeyHeaders,
         violentmonkey: generateViolentMonkeyHeaders,
     };
