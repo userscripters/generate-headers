@@ -3,8 +3,8 @@ import { appendFile } from "fs/promises";
 import * as yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import {
-    CommonGrantOptions,
-    GeneratorMap,
+    GrantOptions,
+    HeaderGenerator,
     UserScriptManagerName,
 } from "./generators";
 import { generateGreasemonkeyHeaders } from "./generators/greasemonkey";
@@ -19,16 +19,16 @@ const names: UserScriptManagerName[] = [
     "violentmonkey",
 ];
 
-export type GeneratorOptions<T extends CommonGrantOptions[]> = {
+export type GeneratorOptions<T extends GrantOptions> = {
     packagePath: string;
     output: string;
     spaces?: number;
     matches?: string[];
-    grants?: T;
+    grants?: T[];
     direct?: boolean;
 };
 
-export const generate = async <T extends CommonGrantOptions[]>(
+export const generate = async <T extends GrantOptions>(
     type: UserScriptManagerName,
     {
         packagePath,
@@ -38,7 +38,7 @@ export const generate = async <T extends CommonGrantOptions[]>(
         ...rest
     }: GeneratorOptions<T>
 ) => {
-    const managerTypeMap: GeneratorMap = {
+    const managerTypeMap = {
         greasemonkey: generateGreasemonkeyHeaders,
         tampermonkey: generateTampermonkeyHeaders,
         violentmonkey: generateViolentMonkeyHeaders,
@@ -52,7 +52,9 @@ export const generate = async <T extends CommonGrantOptions[]>(
             return "";
         }
 
-        const content = managerTypeMap[type!](parsedPackage, {
+        const handler = managerTypeMap[type] as HeaderGenerator<T>;
+
+        const content = handler(parsedPackage, {
             ...rest,
             spaces,
             packagePath,
@@ -125,10 +127,10 @@ names.forEach((name) =>
         `generates ${scase(name)} headers`,
         sharedOpts,
         ({ d, g = [], m = [], o, p, s }) =>
-            generate(name, {
+            generate<GrantOptions>(name, {
                 direct: !!d,
                 matches: m.map(String),
-                grants: g as CommonGrantOptions[],
+                grants: g as GrantOptions[],
                 output: o,
                 packagePath: p,
                 spaces: s,

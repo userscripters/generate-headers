@@ -1,6 +1,8 @@
 import { GeneratorOptions } from "..";
 import { RequiredProps } from "../utils/common";
 import { PackageInfo } from "../utils/package";
+import { GreasemonkeyGrantOptions } from "./greasemonkey/types";
+import { TampermonkeyGrantOptions } from "./tampermonkey/types";
 
 declare global {
     interface String {
@@ -8,23 +10,26 @@ declare global {
     }
 }
 
+export type CommonGrantOptions = "get" | "set" | "list" | "delete" | "unsafe";
+
+export type GrantOptions =
+    | GreasemonkeyGrantOptions
+    | TampermonkeyGrantOptions
+    | CommonGrantOptions;
+
 export type UserScriptManagerName =
     | "tampermonkey"
     | "violentmonkey"
     | "greasemonkey";
 
-export type CommonGrantOptions = "get" | "set" | "list" | "delete" | "unsafe";
-
 export type CommonGrants = "none" | "unsafeWindow";
 
 export type CommonRunAt = "document-start" | "document-end" | "document-idle";
 
-export type HeaderGenerator = (
+export type HeaderGenerator<T extends GrantOptions> = (
     info: PackageInfo,
-    options: RequiredProps<GeneratorOptions, "spaces">
+    options: RequiredProps<GeneratorOptions<T>, "spaces">
 ) => string;
-
-export type GeneratorMap = { [P in UserScriptManagerName]: HeaderGenerator };
 
 export type CommonHeaders<T extends object = {}> = T & {
     description: string;
@@ -52,7 +57,7 @@ export type HeaderEntries<T> = HeaderEntry<T>[];
  */
 export const generateGrantHeaders = <
     T extends CommonHeaders,
-    U extends string = CommonGrantOptions
+    U extends GrantOptions
 >(
     grantMap: Record<U, T["grant"]>,
     grants: U[]

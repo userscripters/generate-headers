@@ -7,27 +7,25 @@ import {
 } from "./types";
 
 //TODO: finish creating the processor
-export const generateGreasemonkeyHeaders: HeaderGenerator = (
-    _packageInfo,
-    { grants = [] }
-) => {
-    const grantMap: Record<GreasemonkeyGrantOptions, GreasemonkeyGrants> = {
-        set: "GM.setValue",
-        get: "GM.getValue",
-        delete: "GM.deleteValue",
-        list: "GM.listValues",
-        notify: "GM.notification",
-        clip: "GM.setClipboard",
-        fetch: "GM.xmlHttpRequest",
-        unsafe: "unsafeWindow",
+export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptions> =
+    (_packageInfo, { grants = [] }) => {
+        const grantMap: Record<GreasemonkeyGrantOptions, GreasemonkeyGrants> = {
+            set: "GM.setValue",
+            get: "GM.getValue",
+            delete: "GM.deleteValue",
+            list: "GM.listValues",
+            notify: "GM.notification",
+            clip: "GM.setClipboard",
+            fetch: "GM.xmlHttpRequest",
+            unsafe: "unsafeWindow",
+        };
+
+        const grantHeaders = generateGrantHeaders<
+            GreasemonkeyHeaders,
+            GreasemonkeyGrantOptions
+        >(grantMap, grants);
+
+        const headers: HeaderEntries<GreasemonkeyHeaders> = [...grantHeaders];
+
+        return finalizeMonkeyHeaders(headers, 4);
     };
-
-    const grantHeaders = generateGrantHeaders<GreasemonkeyHeaders>(
-        grantMap,
-        grants
-    );
-
-    const headers: HeaderEntries<GreasemonkeyHeaders> = [...grantHeaders];
-
-    return finalizeMonkeyHeaders(headers, 4);
-};
