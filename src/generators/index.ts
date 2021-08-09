@@ -48,12 +48,12 @@ export type CommonHeaders<T extends object = {}> = T & {
 
 export type CustomHeaders = { contributors: string };
 
-export type HeaderEntry<T> = [keyof T & string, T[keyof T]];
+export type HeaderEntry<T> = [keyof T & string, string];
 
 export type HeaderEntries<T> = HeaderEntry<T>[];
 
 /**
- * @summary abstract header generator
+ * @summary abstract '@grant' header generator
  */
 export const generateGrantHeaders = <
     T extends CommonHeaders,
@@ -70,4 +70,13 @@ export const generateGrantHeaders = <
     return grantHeaders.length
         ? grantHeaders
         : ([["grant", "none"]] as HeaderEntries<Pick<T, "grant">>);
+};
+
+/**
+ * @summary abstract '@match' header generator
+ */
+export const generateMatchHeaders = <T extends CommonHeaders>(
+    matches: string[]
+): HeaderEntries<T> => {
+    return matches.map((uri) => ["match", uri]);
 };

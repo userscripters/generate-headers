@@ -1,4 +1,4 @@
-import { generateGrantHeaders, HeaderEntries, HeaderGenerator } from "..";
+import { generateGrantHeaders, generateMatchHeaders, HeaderEntries, HeaderGenerator } from "..";
 import { formatAuthor, parseAuthor } from "../../utils/author";
 import { parseName } from "../../utils/common";
 import { finalizeMonkeyHeaders } from "../common/monkey";
@@ -26,9 +26,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
         const parsedAuthor = parseAuthor(author);
         const { packageName, scope } = parseName(name);
 
-        const matchHeaders: HeaderEntries<TampermonkeyHeaders> = matches.map(
-            (uri) => ["match", uri]
-        );
+        const matchHeaders = generateMatchHeaders(matches);
 
         const grantMap: Record<TampermonkeyGrantOptions, TampermonkeyGrants> = {
             set: "GM_setValue",
