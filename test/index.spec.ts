@@ -5,8 +5,15 @@ import { readFile, stat, unlink } from "fs/promises";
 import { join } from "path";
 import { promisify } from "util";
 import { generate, GeneratorOptions } from "../src";
-import { GrantOptions, GreasemonkeyGrants } from "../src/generators";
-import { TampermonkeyGrants } from "../src/generators/tampermonkey/types";
+import { CommonGrantOptions } from "../src/generators";
+import {
+    GreasemonkeyGrantOptions,
+    GreasemonkeyGrants,
+} from "../src/generators/greasemonkey/types";
+import {
+    TampermonkeyGrantOptions,
+    TampermonkeyGrants,
+} from "../src/generators/tampermonkey/types";
 import { getLongest } from "../src/utils/common";
 
 use(cpr);
@@ -19,7 +26,10 @@ describe("main", () => {
     const output = join(base, "/test/headers.js");
     const entry = "./src/index.ts";
 
-    const common: GeneratorOptions = { output, packagePath: pkg };
+    const common: GeneratorOptions<CommonGrantOptions> = {
+        output,
+        packagePath: pkg,
+    };
 
     //@see https://developer.chrome.com/docs/extensions/mv2/match_patterns/
     const allMatches: string[] = [
@@ -45,20 +55,34 @@ describe("main", () => {
         "window.onurlchange",
     ];
 
-    const allGrantOptions: GrantOptions[] = [
+    const grantsGM: GreasemonkeyGrants[] = [
+        "GM.deleteValue",
+        "GM.getValue",
+        "GM.listValues",
+        "GM.setValue",
+    ];
+
+    const grantOptionsCommon: CommonGrantOptions[] = [
         "get",
         "set",
         "list",
         "delete",
         "unsafe",
+    ];
+
+    const grantOptionsTM: TampermonkeyGrantOptions[] = [
+        ...grantOptionsCommon,
         "close",
         "focus",
         "change",
     ];
 
-    describe.skip("Greasemonkey", async () => {
-        //TODO: add once other commands ready
-    });
+    const grantOptionsGM: GreasemonkeyGrantOptions[] = [
+        ...grantOptionsCommon,
+        "clip",
+        "fetch",
+        "notify",
+    ];
 
     describe("CLI Options", async function () {
         this.timeout(5e3);
@@ -85,14 +109,14 @@ describe("main", () => {
         });
 
         it("-g options should correctly add @grant", async () => {
-            const gOpts = allGrantOptions.map((g) => `-g "${g}"`).join(" ");
+            const gOpts = grantOptionsTM.map((g) => `-g "${g}"`).join(" ");
 
             const { stdout } = await aexec(
                 `ts-node ${entry} tampermonkey ${gOpts} -p ${pkg} -o ${output} -d`
             );
 
             const matched = stdout.match(/@grant\s+(.+)/g) || [];
-            expect(matched).length(allGrantOptions.length);
+            expect(matched).length(grantOptionsTM.length);
 
             const allAreTampermonkeyHeaders = matched.every((grant) =>
                 grantsTM.includes(
@@ -152,7 +176,10 @@ describe("main", () => {
     describe("Tampermonkey", async () => {
         const artefacts: string[] = [];
 
-        const directCommon: GeneratorOptions = { ...common, direct: true };
+        const directCommon: GeneratorOptions<TampermonkeyGrantOptions> = {
+            ...common,
+            direct: true,
+        };
 
         //make sure test output will be cleared
         beforeEach(() => artefacts.push(output));
@@ -180,11 +207,11 @@ describe("main", () => {
         it("@grant headers should be generated", async () => {
             const content = await generate("tampermonkey", {
                 ...directCommon,
-                grants: allGrantOptions,
+                grants: grantOptionsTM,
             });
 
             const matched = content.match(/@grant\s+(.+)/g) || [];
-            expect(matched).length(allGrantOptions.length);
+            expect(matched).length(grantOptionsTM.length);
         });
 
         it("header names should be equally indented", async () => {
@@ -203,6 +230,53 @@ describe("main", () => {
                 (index) => index === firstIndex
             );
             expect(allSameChar).to.be.true;
+        });
+    });
+
+    describe("Greasemonkey", async () => {
+        const artefacts: string[] = [];
+
+        const directCommon: GeneratorOptions<GreasemonkeyGrantOptions> = {
+            ...common,
+            direct: true,
+        };
+
+        //make sure test output will be cleared
+        beforeEach(() => artefacts.push(output));
+
+        afterEach(() => {
+            Promise.all(artefacts.map(unlink));
+            artefacts.length = 0;
+        });
+
+        it("headers are generated correctly", async () => {
+            const content = await generate("greasemonkey", directCommon);
+            expect(!!content).to.be.true;
+        });
+
+        it("@match headers should be generated", async () => {
+            const content = await generate("greasemonkey", {
+                ...directCommon,
+                matches: allMatches,
+            });
+
+            const matched = content.match(/@match\s+(.+)/g) || [];
+            expect(matched).length(allMatches.length);
+        });
+
+        it("@grant headers should be generated", async () => {
+            const content = await generate("greasemonkey", {
+                ...directCommon,
+                grants: grantOptionsGM,
+            });
+
+            const matched = content.match(/@grant\s+(.+)/g) || [];
+            expect(matched).length(grantOptionsGM.length);
+
+            grantsGM.forEach((grant) => {
+                expect(new RegExp(`\\b${grant}\\b`, "m").test(grant)).to.be
+                    .true;
+            });
         });
     });
 

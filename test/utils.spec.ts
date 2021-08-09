@@ -15,16 +15,20 @@ describe("validators", () => {
         ];
 
         it("should correctly validate valid headers", () => {
-            const valid = validateMatchHeaders(sampleMatches);
-            expect(valid).to.be.true;
+            const { status, invalid } = validateMatchHeaders(sampleMatches);
+            expect(status).to.be.true;
+            expect(invalid).to.be.empty;
         });
 
         it("should correctly validate invalid headers", () => {
-            const valid = validateMatchHeaders([
+            const typo = "http//typo.ed/*";
+
+            const { status, invalid } = validateMatchHeaders([
                 ...sampleMatches,
-                "http//typo.ed/*",
+                typo,
             ]);
-            expect(valid).to.be.false;
+            expect(status).to.be.false;
+            expect(invalid).to.contain(typo);
         });
     });
 });

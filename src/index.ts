@@ -12,6 +12,7 @@ import { generateTampermonkeyHeaders } from "./generators/tampermonkey";
 import { generateViolentMonkeyHeaders } from "./generators/violentmonkey";
 import { scase } from "./utils/common";
 import { getPackage } from "./utils/package";
+import { validateMatchHeaders } from "./utils/validators";
 
 const names: UserScriptManagerName[] = [
     "greasemonkey",
@@ -35,6 +36,7 @@ export const generate = async <T extends GrantOptions>(
         output,
         spaces = 4,
         direct = false,
+        matches = [],
         ...rest
     }: GeneratorOptions<T>
 ) => {
@@ -52,10 +54,16 @@ export const generate = async <T extends GrantOptions>(
             return "";
         }
 
+        const { invalid, status, valid } = validateMatchHeaders(matches);
+        if (!status) {
+            console.log(bgRed`Invalid @match headers:\n` + invalid.join("\n"));
+        }
+
         const handler = managerTypeMap[type] as HeaderGenerator<T>;
 
         const content = handler(parsedPackage, {
             ...rest,
+            matches: valid,
             spaces,
             packagePath,
             output,
