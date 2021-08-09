@@ -1,4 +1,16 @@
-import { CommonGrants, CommonHeaders, CommonRunAt, CustomHeaders } from "..";
+import {
+    CommonGrantOptions,
+    CommonGrants,
+    CommonHeaders,
+    CommonRunAt,
+    CustomHeaders,
+} from "..";
+
+export type TampermonkeyGrantOptions =
+    | CommonGrantOptions
+    | "close"
+    | "focus"
+    | "change";
 
 export type TampermonkeyGrants =
     | CommonGrants
@@ -6,7 +18,6 @@ export type TampermonkeyGrants =
     | "GM_getValue"
     | "GM_listValues"
     | "GM_deleteValue"
-    | "unsafeWindow"
     | "window.close"
     | "window.focus"
     | "window.onurlchange";

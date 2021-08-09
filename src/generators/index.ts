@@ -13,27 +13,11 @@ export type UserScriptManagerName =
     | "violentmonkey"
     | "greasemonkey";
 
-export type GrantOptions =
-    | "get"
-    | "set"
-    | "list"
-    | "delete"
-    | "unsafe"
-    | "close"
-    | "focus"
-    | "change";
+export type CommonGrantOptions = "get" | "set" | "list" | "delete" | "unsafe";
 
-export type CommonGrants = "none";
+export type CommonGrants = "none" | "unsafeWindow";
 
 export type CommonRunAt = "document-start" | "document-end" | "document-idle";
-
-/** {@link https://wiki.greasespot.net/@grant} */
-export type GreasemonkeyGrants =
-    | CommonGrants
-    | "GM.setValue"
-    | "GM.getValue"
-    | "GM.listValues"
-    | "GM.deleteValue";
 
 export type HeaderGenerator = (
     info: PackageInfo,
@@ -66,9 +50,12 @@ export type HeaderEntries<T> = HeaderEntry<T>[];
 /**
  * @summary abstract header generator
  */
-export const generateGrantHeaders = <T extends CommonHeaders>(
-    grantMap: Record<GrantOptions, T["grant"]>,
-    grants: GrantOptions[]
+export const generateGrantHeaders = <
+    T extends CommonHeaders,
+    U extends string = CommonGrantOptions
+>(
+    grantMap: Record<U, T["grant"]>,
+    grants: U[]
 ) => {
     const grantHeaders: HeaderEntries<T> = grants.map((grant) => [
         "grant",

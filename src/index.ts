@@ -3,8 +3,8 @@ import { appendFile } from "fs/promises";
 import * as yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import {
+    CommonGrantOptions,
     GeneratorMap,
-    GrantOptions,
     UserScriptManagerName,
 } from "./generators";
 import { generateGreasemonkeyHeaders } from "./generators/greasemonkey";
@@ -19,16 +19,16 @@ const names: UserScriptManagerName[] = [
     "violentmonkey",
 ];
 
-export type GeneratorOptions = {
+export type GeneratorOptions<T extends CommonGrantOptions[]> = {
     packagePath: string;
     output: string;
     spaces?: number;
     matches?: string[];
-    grants?: GrantOptions[];
+    grants?: T;
     direct?: boolean;
 };
 
-export const generate = async (
+export const generate = async <T extends CommonGrantOptions[]>(
     type: UserScriptManagerName,
     {
         packagePath,
@@ -36,7 +36,7 @@ export const generate = async (
         spaces = 4,
         direct = false,
         ...rest
-    }: GeneratorOptions
+    }: GeneratorOptions<T>
 ) => {
     const managerTypeMap: GeneratorMap = {
         greasemonkey: generateGreasemonkeyHeaders,
@@ -128,7 +128,7 @@ names.forEach((name) =>
             generate(name, {
                 direct: !!d,
                 matches: m.map(String),
-                grants: g as GrantOptions[],
+                grants: g as CommonGrantOptions[],
                 output: o,
                 packagePath: p,
                 spaces: s,

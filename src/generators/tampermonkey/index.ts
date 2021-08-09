@@ -1,13 +1,12 @@
 import {
     generateGrantHeaders,
-    GrantOptions,
     HeaderEntries,
     HeaderGenerator,
 } from "..";
 import { parseName } from "../../utils/common";
 import { formatAuthor, parseAuthor } from "../../utils/author";
 import { finalizeMonkeyHeaders } from "../common/monkey";
-import { TampermonkeyGrants, TampermonkeyHeaders } from "./types";
+import { TampermonkeyGrantOptions, TampermonkeyGrants, TampermonkeyHeaders } from "./types";
 
 export const generateTampermonkeyHeaders: HeaderGenerator = (
     {
@@ -30,7 +29,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator = (
         (uri) => ["match", uri]
     );
 
-    const grantMap: Record<GrantOptions, TampermonkeyGrants> = {
+    const grantMap: Record<TampermonkeyGrantOptions, TampermonkeyGrants> = {
         set: "GM_setValue",
         get: "GM_getValue",
         delete: "GM_deleteValue",
@@ -41,7 +40,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator = (
         focus: "window.focus",
     };
 
-    const grantHeaders = generateGrantHeaders<TampermonkeyHeaders>(
+    const grantHeaders = generateGrantHeaders<TampermonkeyHeaders, TampermonkeyGrantOptions>(
         grantMap,
         grants
     );

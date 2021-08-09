@@ -1,9 +1,27 @@
 import {
+    CommonGrantOptions,
+    CommonGrants,
     CommonHeaders,
     CommonRunAt,
     CustomHeaders,
-    GreasemonkeyGrants,
 } from "..";
+
+export type GreasemonkeyGrantOptions =
+    | CommonGrantOptions
+    | "notify"
+    | "clip"
+    | "fetch";
+
+/** {@link https://wiki.greasespot.net/@grant} */
+export type GreasemonkeyGrants =
+    | CommonGrants
+    | "GM.setValue"
+    | "GM.getValue"
+    | "GM.listValues"
+    | "GM.deleteValue"
+    | "GM.notification"
+    | "GM.setClipboard"
+    | "GM.xmlHttpRequest";
 
 export type GreasemonkeyHeaders = CustomHeaders &
     CommonHeaders<{
