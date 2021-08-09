@@ -58,7 +58,7 @@ export type CommonHeaders<T extends object = {}> = T & {
 
 export type CustomHeaders = { contributors: string };
 
-export type HeaderEntry<T> = [keyof T, T[keyof T]];
+export type HeaderEntry<T> = [keyof T & string, T[keyof T]];
 
 export type HeaderEntries<T> = HeaderEntry<T>[];
 

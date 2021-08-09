@@ -4,12 +4,8 @@ import {
     HeaderEntries,
     HeaderGenerator,
 } from "..";
-import { formatAuthor, getLongest, parseAuthor, parseName } from "../../utils";
-import {
-    makeMonkeyHeader,
-    makeMonkeyTags,
-    MonkeyHeader,
-} from "../common/monkey";
+import { formatAuthor, parseAuthor, parseName } from "../../utils";
+import { finalizeMonkeyHeaders } from "../common/monkey";
 import { TampermonkeyGrants, TampermonkeyHeaders } from "./types";
 
 export const generateTampermonkeyHeaders: HeaderGenerator = (
@@ -26,8 +22,6 @@ export const generateTampermonkeyHeaders: HeaderGenerator = (
     },
     { spaces, matches = [], grants = [] }
 ) => {
-    const [openTag, closeTag] = makeMonkeyTags();
-
     const parsedAuthor = parseAuthor(author);
     const { packageName, scope } = parseName(name);
 
@@ -74,16 +68,6 @@ export const generateTampermonkeyHeaders: HeaderGenerator = (
         headers.push(["contributors", formatted.join(", ")]);
     }
 
-    const longest = getLongest(headers.map(([key]) => key)) + spaces;
-
-    const indentedHeaders: HeaderEntries<TampermonkeyHeaders> = headers.map(
-        ([key, val]) => [key.padEnd(longest), val]
-    );
-
-    const parsedHeaders: MonkeyHeader[] = indentedHeaders
-        .map(makeMonkeyHeader)
-        .sort();
-
     //Unused headers:
     // @icon64 and @icon64URL
     // @updateURL
@@ -99,5 +83,5 @@ export const generateTampermonkeyHeaders: HeaderGenerator = (
     // @unwrap
     // @nocompat
 
-    return [openTag, ...parsedHeaders, closeTag].join("\n");
+    return finalizeMonkeyHeaders(headers, spaces);
 };
