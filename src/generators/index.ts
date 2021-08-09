@@ -1,5 +1,6 @@
 import { GeneratorOptions } from "..";
-import { PackageInfo, RequiredProps } from "../utils";
+import { RequiredProps } from "../utils";
+import { PackageInfo } from "../utils/package";
 
 declare global {
     interface String {

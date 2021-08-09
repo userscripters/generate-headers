@@ -1,4 +1,4 @@
-import { PackageInfo } from "../utils";
+import { PackageInfo } from "./package";
 
 export const formatAuthor = ({
     name,
