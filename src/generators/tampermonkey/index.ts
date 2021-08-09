@@ -4,7 +4,8 @@ import {
     HeaderEntries,
     HeaderGenerator,
 } from "..";
-import { formatAuthor, parseAuthor, parseName } from "../../utils";
+import { parseName } from "../../utils";
+import { formatAuthor, parseAuthor } from "../../utils/author";
 import { finalizeMonkeyHeaders } from "../common/monkey";
 import { TampermonkeyGrants, TampermonkeyHeaders } from "./types";
 
