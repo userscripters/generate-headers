@@ -10,7 +10,7 @@ import {
 import { generateGreasemonkeyHeaders } from "./generators/greasemonkey";
 import { generateTampermonkeyHeaders } from "./generators/tampermonkey";
 import { generateViolentMonkeyHeaders } from "./generators/violentmonkey";
-import { scase } from "./utils";
+import { scase } from "./utils/common";
 import { getPackage } from "./utils/package";
 
 const names: UserScriptManagerName[] = [

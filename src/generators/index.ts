@@ -1,5 +1,5 @@
 import { GeneratorOptions } from "..";
-import { RequiredProps } from "../utils";
+import { RequiredProps } from "../utils/common";
 import { PackageInfo } from "../utils/package";
 
 declare global {

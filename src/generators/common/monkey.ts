@@ -1,5 +1,5 @@
 import { CommonHeaders, HeaderEntries, HeaderEntry } from "..";
-import { getLongest } from "../../utils";
+import { getLongest } from "../../utils/common";
 
 export type MonkeyHeader = `// @${string} ${string}` | `// @${string}`;
 

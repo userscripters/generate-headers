@@ -5,9 +5,9 @@ import { readFile, stat, unlink } from "fs/promises";
 import { join } from "path";
 import { promisify } from "util";
 import { generate, GeneratorOptions } from "../src";
-import { GrantOptions } from "../src/generators";
+import { GrantOptions, GreasemonkeyGrants } from "../src/generators";
 import { TampermonkeyGrants } from "../src/generators/tampermonkey/types";
-import { getLongest } from "../src/utils";
+import { getLongest } from "../src/utils/common";
 
 use(cpr);
 
