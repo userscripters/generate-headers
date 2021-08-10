@@ -84,6 +84,11 @@ describe("main", () => {
         "notify",
     ];
 
+    const directCommon: GeneratorOptions<TampermonkeyGrantOptions> = {
+        ...common,
+        direct: true,
+    };
+
     describe("CLI Options", async function () {
         this.timeout(5e3);
 
@@ -173,13 +178,28 @@ describe("main", () => {
         });
     });
 
+    describe("common", () => {
+        it("should skip invalid match headers", async () => {
+            const invalid = ["oranges", "42!"];
+            const matches = ["<all_urls>", "urn:*", ...invalid];
+
+            const content = await generate("tampermonkey", {
+                ...directCommon,
+                matches,
+            });
+
+            matches
+                .map((m) => m.replace(/(\*)/, "\\$1"))
+                .forEach((m) => {
+                    const status = new RegExp(`\\s+${m}$`, "m").test(content);
+                    expect(status !== invalid.includes(m), `failure at ${m}`).to
+                        .be.true;
+                });
+        });
+    });
+
     describe("Tampermonkey", async () => {
         const artefacts: string[] = [];
-
-        const directCommon: GeneratorOptions<TampermonkeyGrantOptions> = {
-            ...common,
-            direct: true,
-        };
 
         //make sure test output will be cleared
         beforeEach(() => artefacts.push(output));
