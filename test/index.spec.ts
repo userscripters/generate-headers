@@ -196,19 +196,27 @@ describe("main", () => {
                         .be.true;
                 });
         });
+
+        it("header names should be equally indented", async () => {
+            const content = await generate("tampermonkey", directCommon);
+
+            const headerMatcher = /(?<=^\/\/\s@\w+\s+)\w/;
+
+            const valuePostions = content
+                .split("\n")
+                .map((line) => line.search(headerMatcher));
+
+            const onlyMatched = valuePostions.filter((line) => line !== -1);
+            const [firstIndex] = onlyMatched;
+
+            const allSameChar = onlyMatched.every(
+                (index) => index === firstIndex
+            );
+            expect(allSameChar).to.be.true;
+        });
     });
 
     describe("Tampermonkey", async () => {
-        const artefacts: string[] = [];
-
-        //make sure test output will be cleared
-        beforeEach(() => artefacts.push(output));
-
-        afterEach(() => {
-            Promise.all(artefacts.map(unlink));
-            artefacts.length = 0;
-        });
-
         it("headers are generated correctly", async () => {
             const content = await generate("tampermonkey", directCommon);
             expect(!!content).to.be.true;
@@ -232,24 +240,6 @@ describe("main", () => {
 
             const matched = content.match(/@grant\s+(.+)/g) || [];
             expect(matched).length(grantOptionsTM.length);
-        });
-
-        it("header names should be equally indented", async () => {
-            const content = await generate("tampermonkey", directCommon);
-
-            const headerMatcher = /(?<=^\/\/\s@\w+\s+)\w/;
-
-            const valuePostions = content
-                .split("\n")
-                .map((line) => line.search(headerMatcher));
-
-            const onlyMatched = valuePostions.filter((line) => line !== -1);
-            const [firstIndex] = onlyMatched;
-
-            const allSameChar = onlyMatched.every(
-                (index) => index === firstIndex
-            );
-            expect(allSameChar).to.be.true;
         });
     });
 
