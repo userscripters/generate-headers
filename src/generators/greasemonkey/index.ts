@@ -4,6 +4,7 @@ import {
     HeaderEntries,
     HeaderGenerator,
 } from "..";
+import { generateCommonHeaders } from "../common";
 import { finalizeMonkeyHeaders } from "../common/monkey";
 import {
     GreasemonkeyGrantOptions,
@@ -13,7 +14,7 @@ import {
 
 //TODO: finish creating the processor
 export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptions> =
-    (_packageInfo, { matches = [], grants = [] }) => {
+    (packageInfo, { matches = [], grants = [] }) => {
         const grantMap: Record<GreasemonkeyGrantOptions, GreasemonkeyGrants> = {
             set: "GM.setValue",
             get: "GM.getValue",
@@ -25,6 +26,8 @@ export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptio
             unsafe: "unsafeWindow",
         };
 
+        const commonHeaders = generateCommonHeaders(packageInfo);
+
         const matchHeaders = generateMatchHeaders(matches);
 
         const grantHeaders = generateGrantHeaders<
@@ -33,6 +36,7 @@ export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptio
         >(grantMap, grants);
 
         const headers: HeaderEntries<GreasemonkeyHeaders> = [
+            ...commonHeaders,
             ...grantHeaders,
             ...matchHeaders,
         ];
