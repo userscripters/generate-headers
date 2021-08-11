@@ -6,7 +6,7 @@
 | Name         | @userscripters/generate-headers    |
 | Description  | Userscript manager header generator           |
 | License      | [GPL-3.0-or-later](https://spdx.org/licenses/GPL-3.0-or-later)                 |
-| Version      | 1.6.4               |
+| Version      | 2.0.0               |
 
 # Support
 
