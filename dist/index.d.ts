@@ -1,10 +1,10 @@
 import { GrantOptions, UserScriptManagerName } from "./generators";
-export declare type GeneratorOptions = {
+export declare type GeneratorOptions<T extends GrantOptions> = {
     packagePath: string;
     output: string;
     spaces?: number;
     matches?: string[];
-    grants?: GrantOptions[];
+    grants?: T[];
     direct?: boolean;
 };
-export declare const generate: (type: UserScriptManagerName, { packagePath, output, spaces, direct, ...rest }: GeneratorOptions) => Promise<string>;
+export declare const generate: <T extends GrantOptions>(type: UserScriptManagerName, { packagePath, output, spaces, direct, matches, ...rest }: GeneratorOptions<T>) => Promise<string>;

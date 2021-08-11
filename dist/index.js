@@ -6,27 +6,37 @@ const chalk_1 = require("chalk");
 const promises_1 = require("fs/promises");
 const yargs = require("yargs");
 const helpers_1 = require("yargs/helpers");
-const generators_1 = require("./generators");
-const utils_1 = require("./utils");
+const greasemonkey_1 = require("./generators/greasemonkey");
+const tampermonkey_1 = require("./generators/tampermonkey");
+const violentmonkey_1 = require("./generators/violentmonkey");
+const common_1 = require("./utils/common");
+const package_1 = require("./utils/package");
+const validators_1 = require("./utils/validators");
 const names = [
     "greasemonkey",
     "tampermonkey",
     "violentmonkey",
 ];
-const generate = async (type, { packagePath, output, spaces = 4, direct = false, ...rest }) => {
+const generate = async (type, { packagePath, output, spaces = 4, direct = false, matches = [], ...rest }) => {
     const managerTypeMap = {
-        greasemonkey: generators_1.generateGreasemnonkeyHeaders,
-        tampermonkey: generators_1.generateTampermonkeyHeaders,
-        violentmonkey: generators_1.generateViolentMonkeyHeaders,
+        greasemonkey: greasemonkey_1.generateGreasemonkeyHeaders,
+        tampermonkey: tampermonkey_1.generateTampermonkeyHeaders,
+        violentmonkey: violentmonkey_1.generateViolentMonkeyHeaders,
     };
     try {
-        const parsedPackage = await utils_1.getPackage(packagePath);
+        const parsedPackage = await package_1.getPackage(packagePath);
         if (!parsedPackage) {
             console.log(chalk_1.bgRed `missing or corrupted package`);
             return "";
         }
-        const content = managerTypeMap[type](parsedPackage, {
+        const { invalid, status, valid } = validators_1.validateMatchHeaders(matches);
+        if (!status) {
+            console.log(chalk_1.bgRed `Invalid @match headers:\n` + invalid.join("\n"));
+        }
+        const handler = managerTypeMap[type];
+        const content = handler(parsedPackage, {
             ...rest,
+            matches: valid,
             spaces,
             packagePath,
             output,
@@ -82,7 +92,7 @@ const sharedOpts = {
         type: "number",
     },
 };
-names.forEach((name) => cli.command(name, `generates ${utils_1.scase(name)} headers`, sharedOpts, ({ d, g = [], m = [], o, p, s }) => exports.generate(name, {
+names.forEach((name) => cli.command(name, `generates ${common_1.scase(name)} headers`, sharedOpts, ({ d, g = [], m = [], o, p, s }) => exports.generate(name, {
     direct: !!d,
     matches: m.map(String),
     grants: g,

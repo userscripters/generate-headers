@@ -59,9 +59,9 @@ export const generateGrantHeaders = <
     T extends CommonHeaders,
     U extends GrantOptions
 >(
-    grantMap: Record<U, T["grant"]>,
-    grants: U[]
-) => {
+        grantMap: Record<U, T["grant"]>,
+        grants: U[]
+    ) => {
     const grantHeaders: HeaderEntries<T> = grants.map((grant) => [
         "grant",
         grantMap[grant],
