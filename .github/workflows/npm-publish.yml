@@ -39,6 +39,8 @@ jobs:
             - run: |
                   npm config set //npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN
                   npm install
+              env:
+                  NODE_AUTH_TOKEN: ${{github.token}}
             - run: npm publish --access public
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

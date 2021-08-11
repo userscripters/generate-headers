@@ -200,7 +200,9 @@ describe("main", () => {
             expect(matched).length(allMatches.length);
         });
 
-        it("-r option should correctly add @run-at", async () => {
+        it("-r option should correctly add @run-at", async function () {
+            this.timeout(1e4);
+
             const command = `ts-node ${entry}`;
             const opts = `-p ${pkg} -o ${output} -d`;
 
