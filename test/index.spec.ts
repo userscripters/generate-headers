@@ -200,6 +200,22 @@ describe("main", () => {
             expect(matched).length(allMatches.length);
         });
 
+        it("-r option should correctly add @run-at", async () => {
+            const command = `ts-node ${entry}`;
+            const opts = `-p ${pkg} -o ${output} -d`;
+
+            const [{ stdout: tmout }, { stdout: vmout }, { stdout: gmout }] =
+                await Promise.all([
+                    aexec(`${command} tampermonkey ${opts} --run menu`),
+                    aexec(`${command} violentmonkey ${opts} -r end`),
+                    aexec(`${command} greasemonkey ${opts} -r idle`),
+                ]);
+
+            expect(tmout).to.match(/^\/\/ @run-at\s+context-menu$/gm);
+            expect(vmout).to.match(/^\/\/ @run-at\s+document-end$/gm);
+            expect(gmout).to.match(/^\/\/ @run-at\s+document-idle$/gm);
+        });
+
         it("-s option should control number of spaces added", async () => {
             const sp = 8;
 

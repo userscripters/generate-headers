@@ -4,6 +4,7 @@ import {
     HeaderEntries,
     HeaderGenerator,
 } from "..";
+import { RunAtOption } from "../..";
 import { generateCommonHeaders } from "../common";
 import { finalizeMonkeyHeaders } from "../common/monkey";
 import {
@@ -13,7 +14,10 @@ import {
 } from "./types";
 
 export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOptions> =
-    (packageInfo, { spaces, matches = [], grants = [], inject = "page" }) => {
+    (
+        packageInfo,
+        { spaces, matches = [], grants = [], inject = "page", run = "start" }
+    ) => {
         const commonHeaders = generateCommonHeaders(packageInfo);
 
         const grantMap: Record<ViolentmonkeyGrantOptions, ViolentmonkeyGrants> =
@@ -39,6 +43,14 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
 
         const matchHeaders = generateMatchHeaders(matches);
 
+        const runAtMap: {
+            [P in RunAtOption]?: ViolentmonkeyHeaders["run-at"];
+        } = {
+            start: "document-start",
+            end: "document-end",
+            idle: "document-idle",
+        };
+
         const {
             homepage,
             bugs: { url: supportURL },
@@ -47,6 +59,9 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
             ["homepageURL", homepage],
             ["supportURL", supportURL],
         ];
+
+        const runsAt = runAtMap[run];
+        if (runsAt) specialHeaders.push(["run-at", runsAt]);
 
         if (inject) specialHeaders.push(["inject-into", inject]);
 

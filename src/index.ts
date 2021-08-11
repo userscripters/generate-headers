@@ -23,6 +23,8 @@ const names: UserScriptManagerName[] = [
     "violentmonkey",
 ];
 
+export type RunAtOption = "start" | "end" | "idle" | "body" | "menu";
+
 export type GeneratorOptions<T extends GrantOptions> = {
     packagePath: string;
     output: string;
@@ -30,6 +32,7 @@ export type GeneratorOptions<T extends GrantOptions> = {
     inject?: string;
     matches?: string[];
     grants?: T[];
+    run?: RunAtOption;
     direct?: boolean;
 };
 
@@ -153,6 +156,11 @@ const sharedOpts = {
         default: "./package.json",
         type: "string",
     },
+    r: {
+        alias: "run",
+        default: "start",
+        type: "string",
+    },
     s: {
         alias: "spaces",
         default: 4,
@@ -165,7 +173,7 @@ names.forEach((name) =>
         name,
         `generates ${scase(name)} headers`,
         sharedOpts,
-        ({ d, g = [], i = "page", m = [], o, p, s }) =>
+        ({ d, g = [], i, m = [], o, p, r = "start", s }) =>
             generate<GrantOptions>(name, {
                 direct: !!d,
                 inject: i,
@@ -173,6 +181,7 @@ names.forEach((name) =>
                 grants: g as GrantOptions[],
                 output: o,
                 packagePath: p,
+                run: r,
                 spaces: s,
             })
     )

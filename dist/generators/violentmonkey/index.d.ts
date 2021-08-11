@@ -1,2 +1,3 @@
-import { CommonGrantOptions, HeaderGenerator } from "..";
-export declare const generateViolentMonkeyHeaders: HeaderGenerator<CommonGrantOptions>;
+import { HeaderGenerator } from "..";
+import { ViolentmonkeyGrantOptions } from "./types";
+export declare const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOptions>;

@@ -21,7 +21,7 @@ const generate = async (type, { packagePath, output, spaces = 4, direct = false,
     const managerTypeMap = {
         greasemonkey: greasemonkey_1.generateGreasemonkeyHeaders,
         tampermonkey: tampermonkey_1.generateTampermonkeyHeaders,
-        violentmonkey: violentmonkey_1.generateViolentMonkeyHeaders,
+        violentmonkey: violentmonkey_1.generateViolentmonkeyHeaders,
     };
     try {
         const parsedPackage = await package_1.getPackage(packagePath);
@@ -33,6 +33,18 @@ const generate = async (type, { packagePath, output, spaces = 4, direct = false,
         if (!status) {
             console.log(chalk_1.bgRed `Invalid @match headers:\n` + invalid.join("\n"));
         }
+        const { status: reqStatus, isValidHomepage, isValidVersion, missing, } = validators_1.validateRequiredHeaders(parsedPackage);
+        if (!isValidHomepage) {
+            console.log(chalk_1.bgRed `Invalid homepage URL:\n` + parsedPackage.homepage);
+        }
+        if (!isValidVersion) {
+            console.log(chalk_1.bgRed `Invalid version:\n` + parsedPackage.version);
+        }
+        if (missing.length) {
+            console.log(chalk_1.bgRed `Missing required fields:\n` + missing.join("\n"));
+        }
+        if (!reqStatus)
+            return "";
         const handler = managerTypeMap[type];
         const content = handler(parsedPackage, {
             ...rest,
@@ -72,6 +84,10 @@ const sharedOpts = {
         alias: "grant",
         type: "array",
     },
+    i: {
+        alias: "inject",
+        type: "string",
+    },
     m: {
         alias: "match",
         type: "array",
@@ -86,18 +102,25 @@ const sharedOpts = {
         default: "./package.json",
         type: "string",
     },
+    r: {
+        alias: "run",
+        default: "start",
+        type: "string",
+    },
     s: {
         alias: "spaces",
         default: 4,
         type: "number",
     },
 };
-names.forEach((name) => cli.command(name, `generates ${common_1.scase(name)} headers`, sharedOpts, ({ d, g = [], m = [], o, p, s }) => exports.generate(name, {
+names.forEach((name) => cli.command(name, `generates ${common_1.scase(name)} headers`, sharedOpts, ({ d, g = [], i, m = [], o, p, r = "start", s }) => exports.generate(name, {
     direct: !!d,
+    inject: i,
     matches: m.map(String),
     grants: g,
     output: o,
     packagePath: p,
+    run: r,
     spaces: s,
 })));
 cli.demandCommand().help().parse();

@@ -4,6 +4,7 @@ import {
     HeaderEntries,
     HeaderGenerator,
 } from "..";
+import { RunAtOption } from "../..";
 import { generateCommonHeaders } from "../common";
 import { finalizeMonkeyHeaders } from "../common/monkey";
 import {
@@ -12,9 +13,8 @@ import {
     GreasemonkeyHeaders,
 } from "./types";
 
-//TODO: finish creating the processor
 export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptions> =
-    (packageInfo, { matches = [], grants = [] }) => {
+    (packageInfo, { matches = [], grants = [], run = "start" }) => {
         const grantMap: Record<GreasemonkeyGrantOptions, GreasemonkeyGrants> = {
             set: "GM.setValue",
             get: "GM.getValue",
@@ -35,10 +35,24 @@ export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptio
             GreasemonkeyGrantOptions
         >(grantMap, grants);
 
+        const runAtMap: {
+            [P in RunAtOption]?: GreasemonkeyHeaders["run-at"];
+        } = {
+            start: "document-start",
+            end: "document-end",
+            idle: "document-idle",
+        };
+
+        const specialHeaders: HeaderEntries<GreasemonkeyHeaders> = [];
+
+        const runsAt = runAtMap[run];
+        if (runsAt) specialHeaders.push(["run-at", runsAt]);
+
         const headers: HeaderEntries<GreasemonkeyHeaders> = [
             ...commonHeaders,
             ...grantHeaders,
             ...matchHeaders,
+            ...specialHeaders,
         ];
 
         return finalizeMonkeyHeaders(headers, 4);

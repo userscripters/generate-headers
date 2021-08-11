@@ -1,9 +1,48 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateViolentMonkeyHeaders = void 0;
+exports.generateViolentmonkeyHeaders = void 0;
+const __1 = require("..");
+const common_1 = require("../common");
 const monkey_1 = require("../common/monkey");
-const generateViolentMonkeyHeaders = ({}) => {
-    const headers = [];
-    return monkey_1.finalizeMonkeyHeaders(headers, 4);
+const generateViolentmonkeyHeaders = (packageInfo, { spaces, matches = [], grants = [], inject = "page", run = "start" }) => {
+    const commonHeaders = common_1.generateCommonHeaders(packageInfo);
+    const grantMap = {
+        set: "GM_setValue",
+        get: "GM_getValue",
+        list: "GM_listValues",
+        delete: "GM_deleteValue",
+        download: "GM_download",
+        clip: "GM_setClipboard",
+        fetch: "GM_xmlhttpRequest",
+        notify: "GM_notification",
+        style: "GM_addStyle",
+        unsafe: "unsafeWindow",
+        close: "window.close",
+        focus: "window.focus",
+    };
+    const grantHeaders = __1.generateGrantHeaders(grantMap, grants);
+    const matchHeaders = __1.generateMatchHeaders(matches);
+    const runAtMap = {
+        start: "document-start",
+        end: "document-end",
+        idle: "document-idle",
+    };
+    const { homepage, bugs: { url: supportURL }, } = packageInfo;
+    const specialHeaders = [
+        ["homepageURL", homepage],
+        ["supportURL", supportURL],
+    ];
+    const runsAt = runAtMap[run];
+    if (runsAt)
+        specialHeaders.push(["run-at", runsAt]);
+    if (inject)
+        specialHeaders.push(["inject-into", inject]);
+    const headers = [
+        ...commonHeaders,
+        ...grantHeaders,
+        ...matchHeaders,
+        ...specialHeaders,
+    ];
+    return monkey_1.finalizeMonkeyHeaders(headers, spaces);
 };
-exports.generateViolentMonkeyHeaders = generateViolentMonkeyHeaders;
+exports.generateViolentmonkeyHeaders = generateViolentmonkeyHeaders;

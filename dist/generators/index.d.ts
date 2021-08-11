@@ -3,13 +3,14 @@ import { RequiredProps } from "../utils/common";
 import { PackageInfo, PackagePerson } from "../utils/package";
 import { GreasemonkeyGrantOptions } from "./greasemonkey/types";
 import { TampermonkeyGrantOptions } from "./tampermonkey/types";
+import { ViolentmonkeyGrantOptions } from "./violentmonkey/types";
 declare global {
     interface String {
         padEnd<T extends string>(maxLength: number, fillString?: string): T;
     }
 }
 export declare type CommonGrantOptions = "get" | "set" | "list" | "delete" | "unsafe";
-export declare type GrantOptions = GreasemonkeyGrantOptions | TampermonkeyGrantOptions | CommonGrantOptions;
+export declare type GrantOptions = GreasemonkeyGrantOptions | TampermonkeyGrantOptions | ViolentmonkeyGrantOptions;
 export declare type UserScriptManagerName = "tampermonkey" | "violentmonkey" | "greasemonkey";
 export declare type CommonGrants = "none" | "unsafeWindow";
 export declare type CommonRunAt = "document-start" | "document-end" | "document-idle";

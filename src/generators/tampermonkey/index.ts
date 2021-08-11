@@ -4,6 +4,7 @@ import {
     HeaderEntries,
     HeaderGenerator,
 } from "..";
+import { RunAtOption } from "../..";
 import { generateCommonHeaders } from "../common";
 import { finalizeMonkeyHeaders } from "../common/monkey";
 import {
@@ -13,7 +14,7 @@ import {
 } from "./types";
 
 export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptions> =
-    (packageInfo, { spaces, matches = [], grants = [] }) => {
+    (packageInfo, { spaces, matches = [], grants = [], run = "start" }) => {
         const matchHeaders = generateMatchHeaders(matches);
 
         const grantMap: Record<TampermonkeyGrantOptions, TampermonkeyGrants> = {
@@ -32,8 +33,17 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
             TampermonkeyGrantOptions
         >(grantMap, grants);
 
-        const commonHeaders =
-            generateCommonHeaders(packageInfo);
+        const commonHeaders = generateCommonHeaders(packageInfo);
+
+        const runAtMap: {
+            [P in RunAtOption]?: TampermonkeyHeaders["run-at"];
+        } = {
+            start: "document-start",
+            end: "document-end",
+            idle: "document-idle",
+            menu: "context-menu",
+            body: "document-body",
+        };
 
         const {
             homepage,
@@ -45,6 +55,9 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
             ["supportURL", supportURL],
             ["source", source],
         ];
+
+        const runsAt = runAtMap[run];
+        if (runsAt) specialHeaders.push(["run-at", runsAt]);
 
         const headers = [
             ...commonHeaders,
