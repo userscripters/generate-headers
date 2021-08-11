@@ -39,14 +39,14 @@ jobs:
                   scope: "@${{github.repository_owner}}"
             - run: |
                   npm config set //npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN
-                  npm config list
                   npm install
               env:
                   NODE_AUTH_TOKEN: ${{github.token}}
             - run: |
-                  npm config set registry https://registry.npmjs.org/
-                  npm config set scope "${{github.repository_owner}}"
-                  npm config list
+                  npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
+                  declare temp_npmrc="/home/runner/work/generate-headers/generate-headers/.npmrc"
+                  truncate $temp_npmrc -s 0
+                  echo "@${{github.repository_owner}}:registry=https://registry.npmjs.org" >> $temp_npmrc
                   npm publish --access public
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
