@@ -12,7 +12,10 @@ import { generateTampermonkeyHeaders } from "./generators/tampermonkey";
 import { generateViolentmonkeyHeaders } from "./generators/violentmonkey";
 import { scase } from "./utils/common";
 import { getPackage } from "./utils/package";
-import { validateMatchHeaders } from "./utils/validators";
+import {
+    validateMatchHeaders,
+    validateRequiredHeaders,
+} from "./utils/validators";
 
 const names: UserScriptManagerName[] = [
     "greasemonkey",
@@ -58,6 +61,29 @@ export const generate = async <T extends GrantOptions>(
         if (!status) {
             console.log(bgRed`Invalid @match headers:\n` + invalid.join("\n"));
         }
+
+        const {
+            status: reqStatus,
+            isValidHomepage,
+            isValidVersion,
+            missing,
+        } = validateRequiredHeaders(parsedPackage);
+
+        if (!isValidHomepage) {
+            console.log(
+                bgRed`Invalid homepage URL:\n` + parsedPackage.homepage
+            );
+        }
+
+        if (!isValidVersion) {
+            console.log(bgRed`Invalid version:\n` + parsedPackage.version);
+        }
+
+        if (missing.length) {
+            console.log(bgRed`Missing required fields:\n` + missing.join("\n"));
+        }
+
+        if (!reqStatus) return "";
 
         const handler = managerTypeMap[type] as HeaderGenerator<T>;
 
