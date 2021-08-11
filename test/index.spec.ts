@@ -14,6 +14,10 @@ import {
     TampermonkeyGrantOptions,
     TampermonkeyGrants,
 } from "../src/generators/tampermonkey/types";
+import {
+    ViolentmonkeyGrantOptions,
+    ViolentmonkeyGrants,
+} from "../src/generators/violentmonkey/types";
 import { getLongest } from "../src/utils/common";
 
 use(cpr);
@@ -60,6 +64,24 @@ describe("main", () => {
         "GM.getValue",
         "GM.listValues",
         "GM.setValue",
+        "unsafeWindow",
+        "GM.setClipboard",
+        "GM.xmlHttpRequest",
+        "GM.notification",
+    ];
+
+    const grantsVM: ViolentmonkeyGrants[] = [
+        "GM_getValue",
+        "GM_setValue",
+        "GM_deleteValue",
+        "GM_listValues",
+        "GM_download",
+        "GM_notification",
+        "GM_setClipboard",
+        "GM_xmlhttpRequest",
+        "unsafeWindow",
+        "window.close",
+        "window.focus",
     ];
 
     const grantOptionsCommon: CommonGrantOptions[] = [
@@ -82,6 +104,17 @@ describe("main", () => {
         "clip",
         "fetch",
         "notify",
+    ];
+
+    const grantOptionsVM: ViolentmonkeyGrantOptions[] = [
+        ...grantOptionsCommon,
+        "clip",
+        "fetch",
+        "focus",
+        "notify",
+        "download",
+        "style",
+        "close",
     ];
 
     const directCommon: GeneratorOptions<TampermonkeyGrantOptions> = {
@@ -216,7 +249,7 @@ describe("main", () => {
         });
 
         it("common headers should be generated", async () => {
-            const content = await generate("tampermonkey", directCommon);
+            const content = await generate("greasemonkey", directCommon);
 
             const commonHeaders: (keyof CommonHeaders)[] = [
                 "author",
@@ -232,22 +265,22 @@ describe("main", () => {
                 expect(matcher.test(content), `failed at ${header}`).to.be.true;
             });
         });
-    });
-
-    describe("Tampermonkey", async () => {
-        it("headers are generated correctly", async () => {
-            const content = await generate("tampermonkey", directCommon);
-            expect(!!content).to.be.true;
-        });
 
         it("@match headers should be generated", async () => {
-            const content = await generate("tampermonkey", {
+            const content = await generate("violentmonkey", {
                 ...directCommon,
                 matches: allMatches,
             });
 
             const matched = content.match(/@match\s+(.+)/g) || [];
             expect(matched).length(allMatches.length);
+        });
+    });
+
+    describe("Tampermonkey", async () => {
+        it("headers are generated correctly", async () => {
+            const content = await generate("tampermonkey", directCommon);
+            expect(!!content).to.be.true;
         });
 
         it("@grant headers should be generated", async () => {
@@ -282,16 +315,6 @@ describe("main", () => {
             expect(!!content).to.be.true;
         });
 
-        it("@match headers should be generated", async () => {
-            const content = await generate("greasemonkey", {
-                ...directCommon,
-                matches: allMatches,
-            });
-
-            const matched = content.match(/@match\s+(.+)/g) || [];
-            expect(matched).length(allMatches.length);
-        });
-
         it("@grant headers should be generated", async () => {
             const content = await generate("greasemonkey", {
                 ...directCommon,
@@ -308,7 +331,40 @@ describe("main", () => {
         });
     });
 
-    describe.skip("ViolentMonkey", async () => {
-        //TODO: add once other commands ready
+    describe("ViolentMonkey", async () => {
+        const artefacts: string[] = [];
+
+        const directCommon: GeneratorOptions<ViolentmonkeyGrantOptions> = {
+            ...common,
+            direct: true,
+        };
+
+        //make sure test output will be cleared
+        beforeEach(() => artefacts.push(output));
+
+        afterEach(() => {
+            Promise.all(artefacts.map(unlink));
+            artefacts.length = 0;
+        });
+
+        it("headers are generated correctly", async () => {
+            const content = await generate("violentmonkey", directCommon);
+            expect(!!content).to.be.true;
+        });
+
+        it("@grant headers should be generated", async () => {
+            const content = await generate("violentmonkey", {
+                ...directCommon,
+                grants: grantOptionsVM,
+            });
+
+            const matched = content.match(/@grant\s+(.+)/g) || [];
+            expect(matched).length(grantOptionsVM.length);
+
+            grantsVM.forEach((grant) => {
+                expect(new RegExp(`\\b${grant}\\b`, "m").test(grant)).to.be
+                    .true;
+            });
+        });
     });
 });
