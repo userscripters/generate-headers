@@ -48,15 +48,17 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
 
         const {
             homepage,
-            bugs: { url: supportURL },
-            repository: { url: source },
+            bugs: { url: supportURL } = {},
+            repository: { url: sourceURL } = {},
         } = packageInfo;
+
         const specialHeaders: HeaderEntries<TampermonkeyHeaders> = [
-            ["homepage", homepage],
-            ["supportURL", supportURL],
-            ["source", source],
             ...generateRunAtHeaders(runAtMap, run),
         ];
+
+        if (supportURL) specialHeaders.push(["supportURL", supportURL]);
+        if (sourceURL) specialHeaders.push(["source", sourceURL]);
+        if (homepage) specialHeaders.push(["homepage", homepage]);
 
         const headers = [
             ...commonHeaders,

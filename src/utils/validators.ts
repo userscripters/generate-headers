@@ -18,7 +18,6 @@ export const validateRequiredHeaders = (packageInfo: PackageInfo) => {
     const required: (keyof RequiredOnly<PackageInfo>)[] = [
         "author",
         "name",
-        "homepage",
         "version",
         "description",
     ];
@@ -27,7 +26,7 @@ export const validateRequiredHeaders = (packageInfo: PackageInfo) => {
     const { homepage, version } = packageInfo;
 
     const isValidVersion = !!valid(version);
-    const isValidHomepage = validator.isURL(homepage);
+    const isValidHomepage = homepage === void 0 || validator.isURL(homepage);
 
     const status = [isValidVersion, isValidHomepage, !missing.length].reduce(
         (a, c) => a && c

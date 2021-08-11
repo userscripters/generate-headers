@@ -27,12 +27,14 @@ const generateViolentmonkeyHeaders = (packageInfo, { spaces, matches = [], grant
         end: "document-end",
         idle: "document-idle",
     };
-    const { homepage, bugs: { url: supportURL }, } = packageInfo;
+    const { homepage, bugs: { url: supportURL } = {} } = packageInfo;
     const specialHeaders = [
-        ["homepageURL", homepage],
-        ["supportURL", supportURL],
         ...__1.generateRunAtHeaders(runAtMap, run),
     ];
+    if (supportURL)
+        specialHeaders.push(["supportURL", supportURL]);
+    if (homepage)
+        specialHeaders.push(["homepageURL", homepage]);
     if (inject)
         specialHeaders.push(["inject-into", inject]);
     const headers = [

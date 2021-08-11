@@ -9,8 +9,9 @@ export declare type PackageInfo = {
     icon?: string;
     license: string;
     homepage: string;
+    keywords?: string[];
     name: string;
-    version: `${number}.${number}.${number}`;
+    version: `${number}.${number}.${number}` | `${number}.${number}`;
     description: string;
     bugs: {
         url: string;

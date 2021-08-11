@@ -17,14 +17,13 @@ const validateRequiredHeaders = (packageInfo) => {
     const required = [
         "author",
         "name",
-        "homepage",
         "version",
         "description",
     ];
     const missing = required.filter((p) => !(p in packageInfo));
     const { homepage, version } = packageInfo;
     const isValidVersion = !!semver_1.valid(version);
-    const isValidHomepage = validator_1.default.isURL(homepage);
+    const isValidHomepage = homepage === void 0 || validator_1.default.isURL(homepage);
     const status = [isValidVersion, isValidHomepage, !missing.length].reduce((a, c) => a && c);
     return {
         status,

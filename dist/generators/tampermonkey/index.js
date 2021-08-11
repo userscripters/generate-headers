@@ -25,13 +25,16 @@ const generateTampermonkeyHeaders = (packageInfo, { spaces, matches = [], grants
         menu: "context-menu",
         body: "document-body",
     };
-    const { homepage, bugs: { url: supportURL }, repository: { url: source }, } = packageInfo;
+    const { homepage, bugs: { url: supportURL } = {}, repository: { url: sourceURL } = {}, } = packageInfo;
     const specialHeaders = [
-        ["homepage", homepage],
-        ["supportURL", supportURL],
-        ["source", source],
         ...__1.generateRunAtHeaders(runAtMap, run),
     ];
+    if (supportURL)
+        specialHeaders.push(["supportURL", supportURL]);
+    if (sourceURL)
+        specialHeaders.push(["source", sourceURL]);
+    if (homepage)
+        specialHeaders.push(["homepage", homepage]);
     const headers = [
         ...commonHeaders,
         ...matchHeaders,
