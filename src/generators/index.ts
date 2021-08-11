@@ -1,6 +1,6 @@
 import { GeneratorOptions } from "..";
 import { RequiredProps } from "../utils/common";
-import { PackageInfo } from "../utils/package";
+import { PackageInfo, PackagePerson } from "../utils/package";
 import { GreasemonkeyGrantOptions } from "./greasemonkey/types";
 import { TampermonkeyGrantOptions } from "./tampermonkey/types";
 
@@ -32,6 +32,8 @@ export type HeaderGenerator<T extends GrantOptions> = (
 ) => string;
 
 export type CommonHeaders<T extends object = {}> = T & {
+    author: PackagePerson;
+    contributors?: PackagePerson[];
     description: string;
     exclude: string[];
     icon: string;
@@ -59,9 +61,9 @@ export const generateGrantHeaders = <
     T extends CommonHeaders,
     U extends GrantOptions
 >(
-        grantMap: Record<U, T["grant"]>,
-        grants: U[]
-    ) => {
+    grantMap: Record<U, T["grant"]>,
+    grants: U[]
+) => {
     const grantHeaders: HeaderEntries<T> = grants.map((grant) => [
         "grant",
         grantMap[grant],

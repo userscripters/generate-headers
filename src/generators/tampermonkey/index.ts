@@ -1,6 +1,10 @@
-import { generateGrantHeaders, generateMatchHeaders, HeaderEntries, HeaderGenerator } from "..";
-import { formatAuthor, parseAuthor } from "../../utils/author";
-import { parseName } from "../../utils/common";
+import {
+    generateGrantHeaders,
+    generateMatchHeaders,
+    HeaderEntries,
+    HeaderGenerator,
+} from "..";
+import { generateCommonHeaders } from "../common";
 import { finalizeMonkeyHeaders } from "../common/monkey";
 import {
     TampermonkeyGrantOptions,
@@ -9,23 +13,7 @@ import {
 } from "./types";
 
 export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptions> =
-    (
-        {
-            author,
-            contributors = [],
-            icon,
-            name,
-            description,
-            homepage,
-            bugs: { url: supportURL },
-            repository: { url: source },
-            version,
-        },
-        { spaces, matches = [], grants = [] }
-    ) => {
-        const parsedAuthor = parseAuthor(author);
-        const { packageName, scope } = parseName(name);
-
+    (packageInfo, { spaces, matches = [], grants = [] }) => {
         const matchHeaders = generateMatchHeaders(matches);
 
         const grantMap: Record<TampermonkeyGrantOptions, TampermonkeyGrants> = {
@@ -44,28 +32,26 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
             TampermonkeyGrantOptions
         >(grantMap, grants);
 
-        const headers: HeaderEntries<TampermonkeyHeaders> = [
-            ["author", formatAuthor(parsedAuthor)],
-            ["description", description],
+        const commonHeaders =
+            generateCommonHeaders<TampermonkeyHeaders>(packageInfo);
+
+        const {
+            homepage,
+            bugs: { url: supportURL },
+            repository: { url: source },
+        } = packageInfo;
+        const specialHeaders: HeaderEntries<TampermonkeyHeaders> = [
             ["homepage", homepage],
-            ...matchHeaders,
-            ...grantHeaders,
-            ["name", packageName],
-            ["source", source],
             ["supportURL", supportURL],
-            ["version", version],
+            ["source", source],
         ];
 
-        if (scope) headers.push(["namespace", scope]);
-
-        if (icon) headers.push(["icon", icon]);
-
-        if (contributors.length) {
-            const formatted = contributors.map((contributor) =>
-                formatAuthor(parseAuthor(contributor))
-            );
-            headers.push(["contributors", formatted.join(", ")]);
-        }
+        const headers = [
+            ...commonHeaders,
+            ...matchHeaders,
+            ...grantHeaders,
+            ...specialHeaders,
+        ];
 
         //Unused headers:
         // @icon64 and @icon64URL
