@@ -8,5 +8,5 @@ export declare const validateRequiredHeaders: (packageInfo: PackageInfo) => {
     status: boolean;
     isValidVersion: boolean;
     isValidHomepage: boolean;
-    missing: ("description" | "name" | "version" | "author" | "homepage" | "bugs" | "repository" | "license")[];
+    missing: ("description" | "author" | "name" | "version" | "homepage" | "bugs" | "repository" | "license")[];
 };

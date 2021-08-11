@@ -1,6 +1,6 @@
 import { GeneratorOptions } from "..";
 import { RequiredProps } from "../utils/common";
-import { PackageInfo } from "../utils/package";
+import { PackageInfo, PackagePerson } from "../utils/package";
 import { GreasemonkeyGrantOptions } from "./greasemonkey/types";
 import { TampermonkeyGrantOptions } from "./tampermonkey/types";
 declare global {
@@ -15,6 +15,8 @@ export declare type CommonGrants = "none" | "unsafeWindow";
 export declare type CommonRunAt = "document-start" | "document-end" | "document-idle";
 export declare type HeaderGenerator<T extends GrantOptions> = (info: PackageInfo, options: RequiredProps<GeneratorOptions<T>, "spaces">) => string;
 export declare type CommonHeaders<T extends object = {}> = T & {
+    author: PackagePerson;
+    contributors?: PackagePerson[];
     description: string;
     exclude: string[];
     icon: string;
@@ -34,6 +36,8 @@ export declare type CustomHeaders = {
 export declare type HeaderEntry<T> = [keyof T & string, string];
 export declare type HeaderEntries<T> = HeaderEntry<T>[];
 export declare const generateGrantHeaders: <T extends {
+    author: PackagePerson;
+    contributors?: PackagePerson[] | undefined;
     description: string;
     exclude: string[];
     icon: string;
@@ -48,6 +52,8 @@ export declare const generateGrantHeaders: <T extends {
     grant: string;
 }, U extends GrantOptions>(grantMap: Record<U, T["grant"]>, grants: U[]) => HeaderEntries<T>;
 export declare const generateMatchHeaders: <T extends {
+    author: PackagePerson;
+    contributors?: PackagePerson[] | undefined;
     description: string;
     exclude: string[];
     icon: string;
