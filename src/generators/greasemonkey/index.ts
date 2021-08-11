@@ -1,6 +1,7 @@
 import {
     generateGrantHeaders,
     generateMatchHeaders,
+    generateRunAtHeaders,
     HeaderEntries,
     HeaderGenerator,
 } from "..";
@@ -43,7 +44,9 @@ export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptio
             idle: "document-idle",
         };
 
-        const specialHeaders: HeaderEntries<GreasemonkeyHeaders> = [];
+        const specialHeaders: HeaderEntries<GreasemonkeyHeaders> = [
+            ...generateRunAtHeaders(runAtMap, run),
+        ];
 
         const runsAt = runAtMap[run];
         if (runsAt) specialHeaders.push(["run-at", runsAt]);

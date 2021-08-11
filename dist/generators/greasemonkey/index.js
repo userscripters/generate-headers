@@ -23,7 +23,9 @@ const generateGreasemonkeyHeaders = (packageInfo, { matches = [], grants = [], r
         end: "document-end",
         idle: "document-idle",
     };
-    const specialHeaders = [];
+    const specialHeaders = [
+        ...__1.generateRunAtHeaders(runAtMap, run),
+    ];
     const runsAt = runAtMap[run];
     if (runsAt)
         specialHeaders.push(["run-at", runsAt]);

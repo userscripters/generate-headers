@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateMatchHeaders = exports.generateGrantHeaders = void 0;
+exports.generateRunAtHeaders = exports.generateMatchHeaders = exports.generateGrantHeaders = void 0;
 const generateGrantHeaders = (grantMap, grants) => {
     const grantHeaders = grants.map((grant) => [
         "grant",
@@ -15,3 +15,8 @@ const generateMatchHeaders = (matches) => {
     return matches.map((uri) => ["match", uri]);
 };
 exports.generateMatchHeaders = generateMatchHeaders;
+const generateRunAtHeaders = (runAtMap, runAt) => {
+    const runsAt = runAtMap[runAt];
+    return runsAt ? [["run-at", runsAt]] : [];
+};
+exports.generateRunAtHeaders = generateRunAtHeaders;

@@ -1,6 +1,7 @@
 import {
     generateGrantHeaders,
     generateMatchHeaders,
+    generateRunAtHeaders,
     HeaderEntries,
     HeaderGenerator,
 } from "..";
@@ -54,10 +55,8 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
             ["homepage", homepage],
             ["supportURL", supportURL],
             ["source", source],
+            ...generateRunAtHeaders(runAtMap, run),
         ];
-
-        const runsAt = runAtMap[run];
-        if (runsAt) specialHeaders.push(["run-at", runsAt]);
 
         const headers = [
             ...commonHeaders,
@@ -75,7 +74,6 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
         // @require
         // @resource
         // @connect
-        // @run-at
         // @antifeature
         // @noframes
         // @unwrap

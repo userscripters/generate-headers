@@ -1,4 +1,4 @@
-import { GeneratorOptions } from "..";
+import { GeneratorOptions, RunAtOption } from "..";
 import { RequiredProps } from "../utils/common";
 import { PackageInfo, PackagePerson } from "../utils/package";
 import { GreasemonkeyGrantOptions } from "./greasemonkey/types";
@@ -82,4 +82,15 @@ export const generateMatchHeaders = <T extends CommonHeaders>(
     matches: string[]
 ): HeaderEntries<T> => {
     return matches.map((uri) => ["match", uri]);
+};
+
+/**
+ * @summary abstract '@run-at' header generator
+ */
+export const generateRunAtHeaders = <T extends { "run-at": string }>(
+    runAtMap: { [P in RunAtOption]?: T["run-at"] } & { [x: string]: unknown },
+    runAt: T["run-at"]
+) => {
+    const runsAt = runAtMap[runAt];
+    return runsAt ? [["run-at", runsAt]] as HeaderEntries<Pick<T, "run-at">> : [];
 };

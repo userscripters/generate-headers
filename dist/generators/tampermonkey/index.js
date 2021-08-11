@@ -30,10 +30,8 @@ const generateTampermonkeyHeaders = (packageInfo, { spaces, matches = [], grants
         ["homepage", homepage],
         ["supportURL", supportURL],
         ["source", source],
+        ...__1.generateRunAtHeaders(runAtMap, run),
     ];
-    const runsAt = runAtMap[run];
-    if (runsAt)
-        specialHeaders.push(["run-at", runsAt]);
     const headers = [
         ...commonHeaders,
         ...matchHeaders,

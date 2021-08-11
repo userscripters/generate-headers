@@ -1,6 +1,7 @@
 import {
     generateGrantHeaders,
     generateMatchHeaders,
+    generateRunAtHeaders,
     HeaderEntries,
     HeaderGenerator,
 } from "..";
@@ -58,10 +59,8 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
         const specialHeaders: HeaderEntries<ViolentmonkeyHeaders> = [
             ["homepageURL", homepage],
             ["supportURL", supportURL],
+            ...generateRunAtHeaders(runAtMap, run),
         ];
-
-        const runsAt = runAtMap[run];
-        if (runsAt) specialHeaders.push(["run-at", runsAt]);
 
         if (inject) specialHeaders.push(["inject-into", inject]);
 

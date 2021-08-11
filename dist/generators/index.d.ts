@@ -1,4 +1,4 @@
-import { GeneratorOptions } from "..";
+import { GeneratorOptions, RunAtOption } from "..";
 import { RequiredProps } from "../utils/common";
 import { PackageInfo, PackagePerson } from "../utils/package";
 import { GreasemonkeyGrantOptions } from "./greasemonkey/types";
@@ -68,3 +68,14 @@ export declare const generateMatchHeaders: <T extends {
     version: `${number}.${number}.${number}`;
     grant: string;
 }>(matches: string[]) => HeaderEntries<T>;
+export declare const generateRunAtHeaders: <T extends {
+    "run-at": string;
+}>(runAtMap: {
+    start?: T["run-at"] | undefined;
+    end?: T["run-at"] | undefined;
+    idle?: T["run-at"] | undefined;
+    body?: T["run-at"] | undefined;
+    menu?: T["run-at"] | undefined;
+} & {
+    [x: string]: unknown;
+}, runAt: T["run-at"]) => HeaderEntries<Pick<T, "run-at">>;

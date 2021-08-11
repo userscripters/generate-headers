@@ -31,10 +31,8 @@ const generateViolentmonkeyHeaders = (packageInfo, { spaces, matches = [], grant
     const specialHeaders = [
         ["homepageURL", homepage],
         ["supportURL", supportURL],
+        ...__1.generateRunAtHeaders(runAtMap, run),
     ];
-    const runsAt = runAtMap[run];
-    if (runsAt)
-        specialHeaders.push(["run-at", runsAt]);
     if (inject)
         specialHeaders.push(["inject-into", inject]);
     const headers = [
