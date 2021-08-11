@@ -1,21 +1,22 @@
 {
-  "compilerOptions": {
-    "strict": true,
-    "declaration": true,
-    "removeComments": true,
-    "allowJs": true,
-    "checkJs": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "target": "es2019",
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "noUnusedParameters": true,
-    "noUnusedLocals": true,
-    "noErrorTruncation": true,
-    "skipLibCheck": true,
-    "downlevelIteration": true,
-    "outDir": "dist"
-  },
-  "exclude": ["dist"],
-  "include": ["src"]
+    "compilerOptions": {
+        "strict": true,
+        "declaration": true,
+        "removeComments": true,
+        "allowJs": true,
+        "checkJs": true,
+        "lib": ["DOM", "DOM.Iterable", "ESNext"],
+        "target": "es2019",
+        "module": "CommonJS",
+        "moduleResolution": "node",
+        "noUnusedParameters": true,
+        "noUnusedLocals": true,
+        "noErrorTruncation": true,
+        "strictNullChecks": true,
+        "skipLibCheck": true,
+        "downlevelIteration": true,
+        "outDir": "dist"
+    },
+    "exclude": ["dist"],
+    "include": ["src"]
 }
