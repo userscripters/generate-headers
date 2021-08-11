@@ -1,7 +1,15 @@
 import { expect } from "chai";
-import { validateMatchHeaders } from "../src/utils/validators";
+import { join } from "path";
+import { getPackage } from "../src/utils/package";
+import {
+    validateMatchHeaders,
+    validateRequiredHeaders,
+} from "../src/utils/validators";
 
 describe("validators", () => {
+    const base = process.cwd();
+    const pkg = join(base, "/package.json");
+
     describe("@match headers validator", () => {
         const sampleMatches: string[] = [
             "http://*/foo*",
@@ -29,6 +37,41 @@ describe("validators", () => {
             ]);
             expect(status).to.be.false;
             expect(invalid).to.contain(typo);
+        });
+    });
+
+    describe("required package headers validator", () => {
+        it("should correctly validate package with required fields present", async () => {
+            const validPackage = await getPackage(pkg);
+
+            const { status, missing } = validateRequiredHeaders(validPackage!);
+
+            expect(status).to.be.true;
+            expect(missing).to.be.empty;
+        });
+
+        it("should correctly validate package with required fields absent", async () => {
+            const validPackage = await getPackage(pkg);
+
+            const testInvalid = { ...validPackage };
+            delete testInvalid.author;
+            delete testInvalid.name;
+            delete testInvalid.description;
+
+            //@ts-expect-error
+            testInvalid.version = "gobblygook5.0";
+            testInvalid.homepage = "alice in wonderland";
+
+            const { status, missing, isValidVersion, isValidHomepage } =
+                //@ts-expect-error
+                validateRequiredHeaders(testInvalid);
+
+            expect(status).to.be.false;
+            expect(isValidVersion).to.be.false;
+            expect(isValidHomepage).to.be.false;
+            expect(missing).to.contain("author");
+            expect(missing).to.contain("name");
+            expect(missing).to.contain("description");
         });
     });
 });
