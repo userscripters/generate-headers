@@ -3,6 +3,7 @@ import { RequiredProps } from "../utils/common";
 import { PackageInfo, PackagePerson } from "../utils/package";
 import { GreasemonkeyGrantOptions } from "./greasemonkey/types";
 import { TampermonkeyGrantOptions } from "./tampermonkey/types";
+import { ViolentmonkeyGrantOptions } from "./violentmonkey/types";
 
 declare global {
     interface String {
@@ -15,7 +16,7 @@ export type CommonGrantOptions = "get" | "set" | "list" | "delete" | "unsafe";
 export type GrantOptions =
     | GreasemonkeyGrantOptions
     | TampermonkeyGrantOptions
-    | CommonGrantOptions;
+    | ViolentmonkeyGrantOptions;
 
 export type UserScriptManagerName =
     | "tampermonkey"
