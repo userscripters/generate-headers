@@ -7,7 +7,7 @@
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
     "lint": "eslint src --fix --ext .js,.ts",
     "clean": "rm -rf dist",
-    "prebuild": "npm run test && npm run lint && npm run clean",
+    "prebuild": "npm run lint && npm run clean",
     "build": "tsc --outDir dist && npm run executable",
     "executable": "sed -i \"1s/^/#!\\/usr\\/bin\\/env node\\n/\" dist/index.js",
     "postversion": "bash ./scripts/postversion.sh"
