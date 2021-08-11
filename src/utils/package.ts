@@ -14,6 +14,7 @@ export type PackageInfo = {
     icon?: string;
     license: string;
     homepage: string;
+    keywords?: string[];
     name: string;
     version: `${number}.${number}.${number}`;
     description: string;
