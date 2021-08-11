@@ -27,6 +27,7 @@ export type GeneratorOptions<T extends GrantOptions> = {
     packagePath: string;
     output: string;
     spaces?: number;
+    inject?: string;
     matches?: string[];
     grants?: T[];
     direct?: boolean;
@@ -134,6 +135,10 @@ const sharedOpts = {
         alias: "grant",
         type: "array",
     },
+    i: {
+        alias: "inject",
+        type: "string",
+    },
     m: {
         alias: "match",
         type: "array",
@@ -160,9 +165,10 @@ names.forEach((name) =>
         name,
         `generates ${scase(name)} headers`,
         sharedOpts,
-        ({ d, g = [], m = [], o, p, s }) =>
+        ({ d, g = [], i = "page", m = [], o, p, s }) =>
             generate<GrantOptions>(name, {
                 direct: !!d,
+                inject: i,
                 matches: m.map(String),
                 grants: g as GrantOptions[],
                 output: o,

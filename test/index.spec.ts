@@ -17,6 +17,7 @@ import {
 import {
     ViolentmonkeyGrantOptions,
     ViolentmonkeyGrants,
+    ViolentmonkeyHeaders,
 } from "../src/generators/violentmonkey/types";
 import { getLongest } from "../src/utils/common";
 
@@ -144,6 +145,20 @@ describe("main", () => {
                 `ts-node ${entry} tampermonkey -p ${pkg} -o ${output} -d`
             );
             expect(stat(output)).to.eventually.be.rejected;
+        });
+
+        it("-i option should add inject-into header for Violentmonkey", async () => {
+            const { stdout } = await aexec(
+                `ts-node ${entry} violentmonkey -i "content" -p ${pkg} -o ${output} -d`
+            );
+            expect(stdout).to.match(/^\/\/ @inject-into\s+content$/gm);
+        });
+
+        it("-i option should result in no-op for non-Violentmonkey managers", async () => {
+            const { stdout } = await aexec(
+                `ts-node ${entry} tampermonkey -i "page" -p ${pkg} -o ${output} -d`
+            );
+            expect(stdout).to.not.match(/^\/\/ @inject-into\s+page$/gm);
         });
 
         it("-g options should correctly add @grant", async () => {
@@ -364,6 +379,23 @@ describe("main", () => {
             grantsVM.forEach((grant) => {
                 expect(new RegExp(`\\b${grant}\\b`, "m").test(grant)).to.be
                     .true;
+            });
+        });
+
+        it("special headers should be generated", async () => {
+            const vmSpecificHeaders: Exclude<
+                keyof ViolentmonkeyHeaders,
+                keyof CommonHeaders
+            >[] = ["homepageURL", "inject-into", "run-at", "supportURL"];
+
+            const content = await generate("violentmonkey", directCommon);
+
+            vmSpecificHeaders.forEach((header) => {
+                const status = new RegExp(`\/\/ @${header}\\s+.+?`, "gm").test(
+                    content
+                );
+
+                expect(status, `missing VM header: ${header}`).to.be.true;
             });
         });
     });

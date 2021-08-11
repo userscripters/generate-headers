@@ -13,7 +13,7 @@ import {
 } from "./types";
 
 export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOptions> =
-    (packageInfo, { spaces, matches = [], grants = [] }) => {
+    (packageInfo, { spaces, matches = [], grants = [], inject = "page" }) => {
         const commonHeaders = generateCommonHeaders(packageInfo);
 
         const grantMap: Record<ViolentmonkeyGrantOptions, ViolentmonkeyGrants> =
@@ -47,6 +47,8 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
             ["homepageURL", homepage],
             ["supportURL", supportURL],
         ];
+
+        if (inject) specialHeaders.push(["inject-into", inject]);
 
         const headers: HeaderEntries<ViolentmonkeyHeaders> = [
             ...commonHeaders,
