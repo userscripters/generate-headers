@@ -5,7 +5,7 @@ import { readFile, stat, unlink } from "fs/promises";
 import { join } from "path";
 import { promisify } from "util";
 import { generate, GeneratorOptions } from "../src";
-import { CommonGrantOptions } from "../src/generators";
+import { CommonGrantOptions, CommonHeaders } from "../src/generators";
 import {
     GreasemonkeyGrantOptions,
     GreasemonkeyGrants,
@@ -213,6 +213,24 @@ describe("main", () => {
                 (index) => index === firstIndex
             );
             expect(allSameChar).to.be.true;
+        });
+
+        it("common headers should be generated", async () => {
+            const content = await generate("tampermonkey", directCommon);
+
+            const commonHeaders: (keyof CommonHeaders)[] = [
+                "author",
+                "contributors",
+                "description",
+                "name",
+                "namespace",
+                "version",
+            ];
+
+            commonHeaders.forEach((header) => {
+                const matcher = new RegExp(`@${header}\\s+\\w+`, "g");
+                expect(matcher.test(content), `failed at ${header}`).to.be.true;
+            });
         });
     });
 
