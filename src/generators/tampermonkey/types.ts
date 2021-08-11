@@ -24,7 +24,6 @@ export type TampermonkeyGrants =
 
 export type TampermonkeyHeaders = CustomHeaders &
     CommonHeaders<{
-        "author": string;
         "homepage": string;
         "homepageURL": string;
         "website": string;
