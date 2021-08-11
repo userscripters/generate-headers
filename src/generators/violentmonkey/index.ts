@@ -1,10 +1,58 @@
-import { CommonGrantOptions, HeaderEntries, HeaderGenerator } from "..";
+import {
+    generateGrantHeaders,
+    generateMatchHeaders,
+    HeaderEntries,
+    HeaderGenerator,
+} from "..";
+import { generateCommonHeaders } from "../common";
 import { finalizeMonkeyHeaders } from "../common/monkey";
-import { ViolentMonkeyHeaders } from "./types";
+import {
+    ViolentmonkeyGrantOptions,
+    ViolentmonkeyGrants,
+    ViolentmonkeyHeaders,
+} from "./types";
 
-//TODO: finish creating the processor
-export const generateViolentMonkeyHeaders: HeaderGenerator<CommonGrantOptions> =
-    ({}) => {
-        const headers: HeaderEntries<ViolentMonkeyHeaders> = [];
-        return finalizeMonkeyHeaders(headers, 4);
+export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOptions> =
+    (packageInfo, { spaces, matches = [], grants = [] }) => {
+        const commonHeaders = generateCommonHeaders(packageInfo);
+
+        const grantMap: Record<ViolentmonkeyGrantOptions, ViolentmonkeyGrants> =
+            {
+                set: "GM_setValue",
+                get: "GM_getValue",
+                list: "GM_listValues",
+                delete: "GM_deleteValue",
+                download: "GM_download",
+                clip: "GM_setClipboard",
+                fetch: "GM_xmlhttpRequest",
+                notify: "GM_notification",
+                style: "GM_addStyle",
+                unsafe: "unsafeWindow",
+                close: "window.close",
+                focus: "window.focus",
+            };
+
+        const grantHeaders = generateGrantHeaders<
+            ViolentmonkeyHeaders,
+            ViolentmonkeyGrantOptions
+        >(grantMap, grants);
+
+        const matchHeaders = generateMatchHeaders(matches);
+
+        const {
+            homepage,
+            bugs: { url: supportURL },
+        } = packageInfo;
+        const specialHeaders: HeaderEntries<ViolentmonkeyHeaders> = [
+            ["homepageURL", homepage],
+            ["supportURL", supportURL],
+        ];
+
+        const headers: HeaderEntries<ViolentmonkeyHeaders> = [
+            ...commonHeaders,
+            ...grantHeaders,
+            ...matchHeaders,
+            ...specialHeaders,
+        ];
+        return finalizeMonkeyHeaders(headers, spaces);
     };

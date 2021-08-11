@@ -9,7 +9,7 @@ import {
 } from "./generators";
 import { generateGreasemonkeyHeaders } from "./generators/greasemonkey";
 import { generateTampermonkeyHeaders } from "./generators/tampermonkey";
-import { generateViolentMonkeyHeaders } from "./generators/violentmonkey";
+import { generateViolentmonkeyHeaders } from "./generators/violentmonkey";
 import { scase } from "./utils/common";
 import { getPackage } from "./utils/package";
 import { validateMatchHeaders } from "./utils/validators";
@@ -43,7 +43,7 @@ export const generate = async <T extends GrantOptions>(
     const managerTypeMap = {
         greasemonkey: generateGreasemonkeyHeaders,
         tampermonkey: generateTampermonkeyHeaders,
-        violentmonkey: generateViolentMonkeyHeaders,
+        violentmonkey: generateViolentmonkeyHeaders,
     };
 
     try {
