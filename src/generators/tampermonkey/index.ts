@@ -33,7 +33,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
         >(grantMap, grants);
 
         const commonHeaders =
-            generateCommonHeaders<TampermonkeyHeaders>(packageInfo);
+            generateCommonHeaders(packageInfo);
 
         const {
             homepage,

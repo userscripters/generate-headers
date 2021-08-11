@@ -3,7 +3,7 @@ import { formatAuthor, parseAuthor } from "../../utils/author";
 import { parseName } from "../../utils/common";
 import { PackageInfo } from "../../utils/package";
 
-export const generateCommonHeaders = <T extends CommonHeaders>({
+export const generateCommonHeaders = ({
     author,
     description,
     name,
@@ -14,7 +14,7 @@ export const generateCommonHeaders = <T extends CommonHeaders>({
     const parsedAuthor = parseAuthor(author);
     const { packageName, scope } = parseName(name);
 
-    const headers: HeaderEntries<T> = [
+    const headers: HeaderEntries<CommonHeaders> = [
         ["author", formatAuthor(parsedAuthor)],
         ["description", description],
         ["name", packageName],
