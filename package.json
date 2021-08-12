@@ -1,6 +1,6 @@
 {
   "name": "@userscripters/generate-headers",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "Userscript manager header generator",
   "icon": "",
   "scripts": {
