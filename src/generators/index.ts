@@ -16,7 +16,8 @@ export type CommonGrantOptions = "get" | "set" | "list" | "delete" | "unsafe";
 export type GrantOptions =
     | GreasemonkeyGrantOptions
     | TampermonkeyGrantOptions
-    | ViolentmonkeyGrantOptions;
+    | ViolentmonkeyGrantOptions
+    | "all";
 
 export type UserScriptManagerName =
     | "tampermonkey"
@@ -65,13 +66,17 @@ export const generateGrantHeaders = <
         grantMap: Record<U, T["grant"]>,
         grants: U[]
     ) => {
-    const grantHeaders: HeaderEntries<T> = grants.map((grant) => [
-        "grant",
-        grantMap[grant],
-    ]);
+    if (grants.find((g) => g === "all")) {
+        return Object.entries(grantMap).map(([, v]) => [
+            "grant",
+            v,
+        ]) as HeaderEntries<T>;
+    }
 
-    return grantHeaders.length
-        ? grantHeaders
+    const headers: HeaderEntries<T> = grants.map((g) => ["grant", grantMap[g]]);
+
+    return headers.length
+        ? headers
         : ([["grant", "none"]] as HeaderEntries<Pick<T, "grant">>);
 };
 
@@ -92,5 +97,7 @@ export const generateRunAtHeaders = <T extends { "run-at": string }>(
     runAt: T["run-at"]
 ) => {
     const runsAt = runAtMap[runAt];
-    return runsAt ? [["run-at", runsAt]] as HeaderEntries<Pick<T, "run-at">> : [];
+    return runsAt
+        ? ([["run-at", runsAt]] as HeaderEntries<Pick<T, "run-at">>)
+        : [];
 };

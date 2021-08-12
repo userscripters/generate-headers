@@ -189,6 +189,19 @@ describe("main", () => {
             expect(isNone).to.be.true;
         });
 
+        it("-g option set to 'all' should include all possible grants", async () => {
+            const { stdout } = await aexec(
+                `ts-node ${entry} violentmonkey -p ${pkg} -o ${output} -d -g all`
+            );
+
+            grantsVM.forEach((grant) => {
+                const status = new RegExp(`^// @grant\\s+${grant}$`, "gm").test(
+                    stdout
+                );
+                expect(status, `missing ${grant} grant`).to.be.true;
+            });
+        });
+
         it("-m options should correctly add @matches", async () => {
             const mOpts = allMatches.map((m) => `-m "${m}"`).join(" ");
 

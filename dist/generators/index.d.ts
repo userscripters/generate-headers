@@ -10,7 +10,7 @@ declare global {
     }
 }
 export declare type CommonGrantOptions = "get" | "set" | "list" | "delete" | "unsafe";
-export declare type GrantOptions = GreasemonkeyGrantOptions | TampermonkeyGrantOptions | ViolentmonkeyGrantOptions;
+export declare type GrantOptions = GreasemonkeyGrantOptions | TampermonkeyGrantOptions | ViolentmonkeyGrantOptions | "all";
 export declare type UserScriptManagerName = "tampermonkey" | "violentmonkey" | "greasemonkey";
 export declare type CommonGrants = "none" | "unsafeWindow";
 export declare type CommonRunAt = "document-start" | "document-end" | "document-idle";
