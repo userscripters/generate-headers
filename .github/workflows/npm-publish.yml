@@ -27,7 +27,26 @@ jobs:
             - name: Run tests
               run: npm run test
 
-    publish:
+    publish-gh:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: 14
+                  registry-url: https://npm.pkg.github.com
+                  scope: "@${{github.repository_owner}}"
+            - run: |
+                  npm config set //npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN
+                  npm install
+              env:
+                  NODE_AUTH_TOKEN: ${{github.token}}
+            - run: npm publish
+              env:
+                  NODE_AUTH_TOKEN: ${{secrets.PAT}}
+
+    publish-npm:
         needs: build
         runs-on: ubuntu-latest
         steps:
@@ -44,28 +63,10 @@ jobs:
                   NODE_AUTH_TOKEN: ${{github.token}}
             - run: |
                   npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
-                  declare temp_npmrc="/home/runner/work/generate-headers/generate-headers/.npmrc"
+                  declare repo_name=$(echo "${{github.repository}}" | cut -d '/' -f 2)
+                  declare temp_npmrc="/home/runner/work/$repo_name/$repo_name/.npmrc"
                   truncate $temp_npmrc -s 0
                   echo "@${{github.repository_owner}}:registry=https://registry.npmjs.org" >> $temp_npmrc
                   npm publish --access public
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-    publish-gh:
-        needs: build
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v2
-              with:
-                  node-version: 12
-                  registry-url: https://npm.pkg.github.com
-                  scope: "@${{github.repository_owner}}"
-            - run: |
-                  npm config set //npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN
-                  npm install
-              env:
-                  NODE_AUTH_TOKEN: ${{github.token}}
-            - run: npm publish
-              env:
-                  NODE_AUTH_TOKEN: ${{secrets.PAT}}
