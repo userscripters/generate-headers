@@ -34,6 +34,7 @@ export type GeneratorOptions<T extends GrantOptions> = {
     grants?: T[];
     run?: RunAtOption;
     direct?: boolean;
+    pretty?: boolean;
 };
 
 export const generate = async <T extends GrantOptions>(
@@ -166,6 +167,10 @@ const sharedOpts = {
         default: 4,
         type: "number",
     },
+    pretty: {
+        type: "boolean",
+        default: false,
+    },
 } as const;
 
 names.forEach((name) =>
@@ -173,7 +178,7 @@ names.forEach((name) =>
         name,
         `generates ${scase(name)} headers`,
         sharedOpts,
-        ({ d, g = [], i, m = [], o, p, r = "start", s }) =>
+        ({ d, g = [], i, m = [], o, p, r = "start", s, pretty }) =>
             generate<GrantOptions>(name, {
                 direct: !!d,
                 inject: i,
@@ -183,6 +188,7 @@ names.forEach((name) =>
                 packagePath: p,
                 run: r,
                 spaces: s,
+                pretty,
             })
     )
 );

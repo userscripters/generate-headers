@@ -10,8 +10,3 @@ export const scase = (text: string) =>
     `${text[0].toUpperCase()}${text.slice(1).toLowerCase()}`;
 
 export const mdLink = (lbl: string, href: string) => `[${lbl}](${href})`;
-
-export const parseName = (name: string) => {
-    const [, scope, packageName] = name.match(/(?:@([\w-]+)\/)?([\w-]+)/) || [];
-    return { scope, packageName };
-};

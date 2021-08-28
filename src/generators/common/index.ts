@@ -1,23 +1,26 @@
 import { CommonHeaders, HeaderEntries } from "..";
 import { formatAuthor, parseAuthor } from "../../utils/author";
-import { parseName } from "../../utils/common";
+import { parseName, prettifyName } from "../../utils/name";
 import { PackageInfo } from "../../utils/package";
 
-export const generateCommonHeaders = ({
-    author,
-    description,
-    name,
-    version,
-    icon,
-    contributors = [],
-}: PackageInfo) => {
+export const generateCommonHeaders = (
+    {
+        author,
+        description,
+        name,
+        version,
+        icon,
+        contributors = [],
+    }: PackageInfo,
+    pretty: boolean
+) => {
     const parsedAuthor = parseAuthor(author);
     const { packageName, scope } = parseName(name);
 
     const headers: HeaderEntries<CommonHeaders> = [
         ["author", formatAuthor(parsedAuthor)],
         ["description", description],
-        ["name", packageName],
+        ["name", pretty ? prettifyName(packageName) : packageName],
         ["version", version],
     ];
 

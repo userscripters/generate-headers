@@ -15,7 +15,7 @@ import {
 } from "./types";
 
 export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptions> =
-    (packageInfo, { spaces, matches = [], grants = [], run = "start" }) => {
+    (packageInfo, { spaces, matches = [], grants = [], run = "start", pretty = false }) => {
         const matchHeaders = generateMatchHeaders(matches);
 
         const grantMap: Record<TampermonkeyGrantOptions, TampermonkeyGrants> = {
@@ -34,7 +34,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
             TampermonkeyGrantOptions
         >(grantMap, grants);
 
-        const commonHeaders = generateCommonHeaders(packageInfo);
+        const commonHeaders = generateCommonHeaders(packageInfo, pretty);
 
         const runAtMap: {
             [P in RunAtOption]?: TampermonkeyHeaders["run-at"];

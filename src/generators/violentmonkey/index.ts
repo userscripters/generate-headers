@@ -17,9 +17,16 @@ import {
 export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOptions> =
     (
         packageInfo,
-        { spaces, matches = [], grants = [], inject = "page", run = "start" }
+        {
+            spaces,
+            matches = [],
+            grants = [],
+            inject = "page",
+            run = "start",
+            pretty = false,
+        }
     ) => {
-        const commonHeaders = generateCommonHeaders(packageInfo);
+        const commonHeaders = generateCommonHeaders(packageInfo, pretty);
 
         const grantMap: Record<ViolentmonkeyGrantOptions, ViolentmonkeyGrants> =
             {
