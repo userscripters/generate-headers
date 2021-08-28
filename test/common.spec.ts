@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { generate } from "../src";
 import { CommonHeaders } from "../src/generators";
+import { prettifyName } from "../src/utils/name";
 import { allMatches, directCommon } from "./index.spec";
 
 describe("common", () => {
@@ -64,5 +65,17 @@ describe("common", () => {
 
         const matched = content.match(/@match\s+(.+)/g) || [];
         expect(matched).length(allMatches.length);
+    });
+
+    it('"pretty" option should prettify output', async () => {
+        const content = await generate("tampermonkey", {
+            ...directCommon,
+            pretty: true,
+        });
+
+        const [, packageName] = process.env["npm_package_name"]!.split("/");
+        const [, formattedName] = content.match(/@name\s+(.+)/) || [];
+
+        expect(prettifyName(packageName)).to.equal(formattedName);
     });
 });
