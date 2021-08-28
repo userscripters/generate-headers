@@ -2,14 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateCommonHeaders = void 0;
 const author_1 = require("../../utils/author");
-const common_1 = require("../../utils/common");
-const generateCommonHeaders = ({ author, description, name, version, icon, contributors = [], }) => {
+const name_1 = require("../../utils/name");
+const generateCommonHeaders = ({ author, description, name, version, icon, contributors = [], }, pretty) => {
     const parsedAuthor = author_1.parseAuthor(author);
-    const { packageName, scope } = common_1.parseName(name);
+    const { packageName, scope } = name_1.parseName(name);
     const headers = [
         ["author", author_1.formatAuthor(parsedAuthor)],
         ["description", description],
-        ["name", packageName],
+        ["name", pretty ? name_1.prettifyName(packageName) : packageName],
         ["version", version],
     ];
     if (scope)

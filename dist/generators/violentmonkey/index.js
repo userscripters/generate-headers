@@ -4,8 +4,8 @@ exports.generateViolentmonkeyHeaders = void 0;
 const __1 = require("..");
 const common_1 = require("../common");
 const monkey_1 = require("../common/monkey");
-const generateViolentmonkeyHeaders = (packageInfo, { spaces, matches = [], grants = [], inject = "page", run = "start" }) => {
-    const commonHeaders = common_1.generateCommonHeaders(packageInfo);
+const generateViolentmonkeyHeaders = (packageInfo, { spaces, matches = [], grants = [], inject = "page", run = "start", pretty = false, }) => {
+    const commonHeaders = common_1.generateCommonHeaders(packageInfo, pretty);
     const grantMap = {
         set: "GM_setValue",
         get: "GM_getValue",

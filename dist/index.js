@@ -112,8 +112,12 @@ const sharedOpts = {
         default: 4,
         type: "number",
     },
+    pretty: {
+        type: "boolean",
+        default: false,
+    },
 };
-names.forEach((name) => cli.command(name, `generates ${common_1.scase(name)} headers`, sharedOpts, ({ d, g = [], i, m = [], o, p, r = "start", s }) => exports.generate(name, {
+names.forEach((name) => cli.command(name, `generates ${common_1.scase(name)} headers`, sharedOpts, ({ d, g = [], i, m = [], o, p, r = "start", s, pretty }) => exports.generate(name, {
     direct: !!d,
     inject: i,
     matches: m.map(String),
@@ -122,5 +126,6 @@ names.forEach((name) => cli.command(name, `generates ${common_1.scase(name)} hea
     packagePath: p,
     run: r,
     spaces: s,
+    pretty,
 })));
 cli.demandCommand().help().parse();

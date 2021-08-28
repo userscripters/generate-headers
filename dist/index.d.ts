@@ -9,5 +9,6 @@ export declare type GeneratorOptions<T extends GrantOptions> = {
     grants?: T[];
     run?: RunAtOption;
     direct?: boolean;
+    pretty?: boolean;
 };
 export declare const generate: <T extends GrantOptions>(type: UserScriptManagerName, { packagePath, output, spaces, direct, matches, ...rest }: GeneratorOptions<T>) => Promise<string>;
