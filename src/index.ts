@@ -109,7 +109,8 @@ export const generate = async <T extends GrantOptions>(
 
         return content;
     } catch (error) {
-        const { code, name } = error;
+        const exceptionObject = error as NodeJS.ErrnoException;
+        const { code, name } = exceptionObject;
         const errMap: {
             [code: string]: (err: NodeJS.ErrnoException) => [string, string];
         } = {
@@ -117,9 +118,9 @@ export const generate = async <T extends GrantOptions>(
             default: ({ message }) => ["Something went wrong:", message],
         };
 
-        const handler = errMap[code] || errMap.default;
+        const handler = errMap[code || "default"];
 
-        const [postfix, message] = handler(error);
+        const [postfix, message] = handler(exceptionObject);
 
         console.log(bgRed`[${name}] ${postfix}` + `\n\n${message}`);
 
