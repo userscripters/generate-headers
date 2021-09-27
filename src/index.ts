@@ -180,7 +180,7 @@ names.forEach((name) =>
         `generates ${scase(name)} headers`,
         sharedOpts,
         ({ d, g = [], i, m = [], o, p, r = "start", s, pretty }) =>
-            generate<GrantOptions>(name, {
+           void generate<GrantOptions>(name, {
                 direct: !!d,
                 inject: i,
                 matches: m.map(String),
