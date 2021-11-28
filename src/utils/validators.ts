@@ -5,7 +5,7 @@ import { RequiredOnly } from "./types";
 
 export const validateMatchHeaders = (matches: string[]) => {
     const validationRegex =
-        /^((?:https?|file|ftp|\*)(?=:\/\/)|(?:urn(?=:))):(?:\/\/)?(?:((?:\*||.+?)(?=\/|$)))?(\/\*|(?:.+?\*?)+)?|<all_urls>/;
+        /^((?:https?|file|ftp|\*)(?=:\/\/)|(?:urn(?=:))):(?:\/\/)?(?:((?:\*||.+?)(?=\/|$)))?(\/\*|(?:.+?\*?)+)?|<all_urls>|all$/;
     const invalid = matches.filter((match) => !validationRegex.test(match));
     return {
         invalid,

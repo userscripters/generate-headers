@@ -4,7 +4,7 @@ exports.validateRequiredHeaders = exports.validateMatchHeaders = void 0;
 const semver_1 = require("semver");
 const validator_1 = require("validator");
 const validateMatchHeaders = (matches) => {
-    const validationRegex = /^((?:https?|file|ftp|\*)(?=:\/\/)|(?:urn(?=:))):(?:\/\/)?(?:((?:\*||.+?)(?=\/|$)))?(\/\*|(?:.+?\*?)+)?|<all_urls>/;
+    const validationRegex = /^((?:https?|file|ftp|\*)(?=:\/\/)|(?:urn(?=:))):(?:\/\/)?(?:((?:\*||.+?)(?=\/|$)))?(\/\*|(?:.+?\*?)+)?|<all_urls>|all$/;
     const invalid = matches.filter((match) => !validationRegex.test(match));
     return {
         invalid,
