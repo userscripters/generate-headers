@@ -14,7 +14,7 @@ export declare type GrantOptions = GreasemonkeyGrantOptions | TampermonkeyGrantO
 export declare type UserScriptManagerName = "tampermonkey" | "violentmonkey" | "greasemonkey";
 export declare type CommonGrants = "none" | "unsafeWindow";
 export declare type CommonRunAt = "document-start" | "document-end" | "document-idle";
-export declare type HeaderGenerator<T extends GrantOptions> = (info: PackageInfo, options: RequiredProps<GeneratorOptions<T>, "spaces">) => string;
+export declare type HeaderGenerator<T extends GrantOptions> = (info: PackageInfo, options: RequiredProps<GeneratorOptions<T>, "spaces">) => Promise<string>;
 export declare type CommonHeaders<T extends object = {}> = T & {
     author: PackagePerson;
     contributors?: PackagePerson[];
@@ -67,15 +67,15 @@ export declare const generateMatchHeaders: <T extends {
     require: string[];
     version: `${number}.${number}.${number}`;
     grant: string;
-}>(matches: string[]) => HeaderEntries<T>;
+}>(matches: string[], collapse?: boolean) => Promise<HeaderEntries<T>>;
 export declare const generateRunAtHeaders: <T extends {
     "run-at": string;
 }>(runAtMap: {
+    body?: T["run-at"] | undefined;
+    menu?: T["run-at"] | undefined;
     start?: T["run-at"] | undefined;
     end?: T["run-at"] | undefined;
     idle?: T["run-at"] | undefined;
-    body?: T["run-at"] | undefined;
-    menu?: T["run-at"] | undefined;
 } & {
     [x: string]: unknown;
 }, runAt: T["run-at"]) => HeaderEntries<Pick<T, "run-at">>;

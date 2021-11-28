@@ -4,8 +4,8 @@ exports.generateViolentmonkeyHeaders = void 0;
 const __1 = require("..");
 const common_1 = require("../common");
 const monkey_1 = require("../common/monkey");
-const generateViolentmonkeyHeaders = (packageInfo, { spaces, matches = [], grants = [], inject = "page", run = "start", pretty = false, }) => {
-    const commonHeaders = common_1.generateCommonHeaders(packageInfo, pretty);
+const generateViolentmonkeyHeaders = async (packageInfo, { spaces, matches = [], grants = [], inject = "page", run = "start", pretty = false, }) => {
+    const commonHeaders = (0, common_1.generateCommonHeaders)(packageInfo, pretty);
     const grantMap = {
         set: "GM_setValue",
         get: "GM_getValue",
@@ -20,8 +20,8 @@ const generateViolentmonkeyHeaders = (packageInfo, { spaces, matches = [], grant
         close: "window.close",
         focus: "window.focus",
     };
-    const grantHeaders = __1.generateGrantHeaders(grantMap, grants);
-    const matchHeaders = __1.generateMatchHeaders(matches);
+    const grantHeaders = (0, __1.generateGrantHeaders)(grantMap, grants);
+    const matchHeaders = await (0, __1.generateMatchHeaders)(matches);
     const runAtMap = {
         start: "document-start",
         end: "document-end",
@@ -29,7 +29,7 @@ const generateViolentmonkeyHeaders = (packageInfo, { spaces, matches = [], grant
     };
     const { homepage, bugs: { url: supportURL } = {} } = packageInfo;
     const specialHeaders = [
-        ...__1.generateRunAtHeaders(runAtMap, run),
+        ...(0, __1.generateRunAtHeaders)(runAtMap, run),
     ];
     if (supportURL)
         specialHeaders.push(["supportURL", supportURL]);
@@ -43,6 +43,6 @@ const generateViolentmonkeyHeaders = (packageInfo, { spaces, matches = [], grant
         ...matchHeaders,
         ...specialHeaders,
     ];
-    return monkey_1.finalizeMonkeyHeaders(headers, spaces);
+    return (0, monkey_1.finalizeMonkeyHeaders)(headers, spaces);
 };
 exports.generateViolentmonkeyHeaders = generateViolentmonkeyHeaders;

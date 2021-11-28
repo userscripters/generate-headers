@@ -64,9 +64,9 @@ export const generateGrantHeaders = <
     T extends CommonHeaders,
     U extends GrantOptions
 >(
-    grantMap: Record<U, T["grant"]>,
-    grants: U[]
-) => {
+        grantMap: Record<U, T["grant"]>,
+        grants: U[]
+    ) => {
     if (grants.find((g) => g === "all")) {
         return Object.entries(grantMap).map(([, v]) => [
             "grant",

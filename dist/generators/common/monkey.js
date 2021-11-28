@@ -10,8 +10,8 @@ exports.makeMonkeyTags = makeMonkeyTags;
 const makeMonkeyHeader = ([name, value,]) => (value ? `// @${name} ${value}` : `// @${name}`);
 exports.makeMonkeyHeader = makeMonkeyHeader;
 const finalizeMonkeyHeaders = (headers, spaces) => {
-    const [openTag, closeTag] = exports.makeMonkeyTags();
-    const longest = common_1.getLongest(headers.map(([key]) => key)) + spaces;
+    const [openTag, closeTag] = (0, exports.makeMonkeyTags)();
+    const longest = (0, common_1.getLongest)(headers.map(([key]) => key)) + spaces;
     const indentedHeaders = headers.map(([key, val]) => [
         key.padEnd(longest),
         val,

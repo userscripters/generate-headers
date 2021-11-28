@@ -22,7 +22,7 @@ const validateRequiredHeaders = (packageInfo) => {
     ];
     const missing = required.filter((p) => !(p in packageInfo));
     const { homepage, version } = packageInfo;
-    const isValidVersion = !!semver_1.valid(version);
+    const isValidVersion = !!(0, semver_1.valid)(version);
     const isValidHomepage = homepage === void 0 || validator_1.default.isURL(homepage);
     const status = [isValidVersion, isValidHomepage, !missing.length].reduce((a, c) => a && c);
     return {
