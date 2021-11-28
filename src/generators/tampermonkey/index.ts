@@ -17,9 +17,16 @@ import {
 export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptions> =
     async (
         packageInfo,
-        { spaces, matches = [], grants = [], run = "start", pretty = false }
+        {
+            spaces,
+            matches = [],
+            grants = [],
+            run = "start",
+            pretty = false,
+            collapse = false,
+        }
     ) => {
-        const matchHeaders = await generateMatchHeaders(matches);
+        const matchHeaders = await generateMatchHeaders(matches, collapse);
 
         const grantMap: Record<TampermonkeyGrantOptions, TampermonkeyGrants> = {
             set: "GM_setValue",

@@ -24,6 +24,7 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
             inject = "page",
             run = "start",
             pretty = false,
+            collapse = false,
         }
     ) => {
         const commonHeaders = generateCommonHeaders(packageInfo, pretty);
@@ -49,7 +50,7 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
             ViolentmonkeyGrantOptions
         >(grantMap, grants);
 
-        const matchHeaders = await generateMatchHeaders(matches);
+        const matchHeaders = await generateMatchHeaders(matches, collapse);
 
         const runAtMap: {
             [P in RunAtOption]?: ViolentmonkeyHeaders["run-at"];

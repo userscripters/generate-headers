@@ -4,8 +4,8 @@ exports.generateTampermonkeyHeaders = void 0;
 const __1 = require("..");
 const common_1 = require("../common");
 const monkey_1 = require("../common/monkey");
-const generateTampermonkeyHeaders = async (packageInfo, { spaces, matches = [], grants = [], run = "start", pretty = false }) => {
-    const matchHeaders = await (0, __1.generateMatchHeaders)(matches);
+const generateTampermonkeyHeaders = async (packageInfo, { spaces, matches = [], grants = [], run = "start", pretty = false, collapse = false, }) => {
+    const matchHeaders = await (0, __1.generateMatchHeaders)(matches, collapse);
     const grantMap = {
         set: "GM_setValue",
         get: "GM_getValue",

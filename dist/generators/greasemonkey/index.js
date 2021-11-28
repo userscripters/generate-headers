@@ -4,7 +4,7 @@ exports.generateGreasemonkeyHeaders = void 0;
 const __1 = require("..");
 const common_1 = require("../common");
 const monkey_1 = require("../common/monkey");
-const generateGreasemonkeyHeaders = async (packageInfo, { matches = [], grants = [], run = "start", pretty = false }) => {
+const generateGreasemonkeyHeaders = async (packageInfo, { matches = [], grants = [], run = "start", pretty = false, collapse = false, }) => {
     const grantMap = {
         set: "GM.setValue",
         get: "GM.getValue",
@@ -16,7 +16,7 @@ const generateGreasemonkeyHeaders = async (packageInfo, { matches = [], grants =
         unsafe: "unsafeWindow",
     };
     const commonHeaders = (0, common_1.generateCommonHeaders)(packageInfo, pretty);
-    const matchHeaders = await (0, __1.generateMatchHeaders)(matches);
+    const matchHeaders = await (0, __1.generateMatchHeaders)(matches, collapse);
     const grantHeaders = (0, __1.generateGrantHeaders)(grantMap, grants);
     const runAtMap = {
         start: "document-start",
