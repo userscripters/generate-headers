@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { generate } from "../src";
-import { CommonHeaders } from "../src/generators";
+import { CommonHeaders, generateMatchHeaders } from "../src/generators";
 import { prettifyName } from "../src/utils/name";
 import { allMatches, directCommon } from "./index.spec";
 
@@ -65,6 +65,16 @@ describe("common", () => {
 
         const matched = content.match(/@match\s+(.+)/g) || [];
         expect(matched).length(allMatches.length);
+    });
+
+    it('"match" with "all" should expand to all sites', async () => {
+        const [headers] = await generateMatchHeaders(
+            ["all", "https://domain"],
+            true
+        );
+
+        expect(headers).to.include("https://*.stackexchange.com");
+        expect(headers).length.to.be.greaterThan(1);
     });
 
     it('"pretty" option should prettify output', async () => {
