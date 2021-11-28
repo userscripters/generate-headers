@@ -68,13 +68,14 @@ describe("common", () => {
     });
 
     it('"match" with "all" should expand to all sites', async () => {
-        const [headers] = await generateMatchHeaders(
+        const headers = await generateMatchHeaders(
             ["all", "https://domain"],
             true
         );
 
-        expect(headers).to.include("https://*.stackexchange.com");
-        expect(headers).length.to.be.greaterThan(1);
+        const matches = headers.map(([, m]) => m);
+        expect(matches).to.include("https://*.stackexchange.com");
+        expect(matches).length.to.be.greaterThan(1);
     });
 
     it('"pretty" option should prettify output', async () => {

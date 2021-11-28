@@ -25,6 +25,7 @@ export const output = join(base, "/test/headers.js");
 export const common: GeneratorOptions<CommonGrantOptions> = {
     output,
     packagePath: pkg,
+    collapse: true,
 };
 
 //@see https://developer.chrome.com/docs/extensions/mv2/match_patterns/

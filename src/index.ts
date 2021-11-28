@@ -31,6 +31,7 @@ export type GeneratorOptions<T extends GrantOptions> = {
     spaces?: number;
     inject?: string;
     matches?: string[];
+    collapse: boolean;
     grants?: T[];
     run?: RunAtOption;
     direct?: boolean;
@@ -43,6 +44,7 @@ export const generate = async <T extends GrantOptions>(
         packagePath,
         output,
         spaces = 4,
+        collapse = false,
         direct = false,
         matches = [],
         ...rest
@@ -94,6 +96,7 @@ export const generate = async <T extends GrantOptions>(
 
         const content = await handler(parsedPackage, {
             ...rest,
+            collapse,
             matches: valid,
             spaces,
             packagePath,
@@ -131,6 +134,11 @@ export const generate = async <T extends GrantOptions>(
 const cli = yargs(hideBin(process.argv));
 
 const sharedOpts = {
+    c: {
+        alias: "collapse",
+        default: true,
+        type: "boolean",
+    },
     d: {
         alias: "direct",
         default: false,
@@ -179,8 +187,9 @@ names.forEach((name) =>
         name,
         `generates ${scase(name)} headers`,
         sharedOpts,
-        ({ d, g = [], i, m = [], o, p, r = "start", s, pretty }) =>
+        ({ c, d, g = [], i, m = [], o, p, r = "start", s, pretty }) =>
             void generate<GrantOptions>(name, {
+                collapse: c,
                 direct: !!d,
                 inject: i,
                 matches: m.map(String),
