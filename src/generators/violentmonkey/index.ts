@@ -15,7 +15,7 @@ import {
 } from "./types";
 
 export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOptions> =
-    (
+    async (
         packageInfo,
         {
             spaces,
@@ -49,7 +49,7 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
             ViolentmonkeyGrantOptions
         >(grantMap, grants);
 
-        const matchHeaders = generateMatchHeaders(matches);
+        const matchHeaders = await generateMatchHeaders(matches);
 
         const runAtMap: {
             [P in RunAtOption]?: ViolentmonkeyHeaders["run-at"];

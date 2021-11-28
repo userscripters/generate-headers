@@ -15,7 +15,7 @@ import {
 } from "./types";
 
 export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptions> =
-    (packageInfo, { matches = [], grants = [], run = "start", pretty = false }) => {
+    async (packageInfo, { matches = [], grants = [], run = "start", pretty = false }) => {
         const grantMap: Record<GreasemonkeyGrantOptions, GreasemonkeyGrants> = {
             set: "GM.setValue",
             get: "GM.getValue",
@@ -29,7 +29,7 @@ export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptio
 
         const commonHeaders = generateCommonHeaders(packageInfo, pretty);
 
-        const matchHeaders = generateMatchHeaders(matches);
+        const matchHeaders = await generateMatchHeaders(matches);
 
         const grantHeaders = generateGrantHeaders<
             GreasemonkeyHeaders,
