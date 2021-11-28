@@ -1,6 +1,7 @@
 import { GeneratorOptions, RunAtOption } from "..";
-import { RequiredProps } from "../utils/common";
+import { RequiredProps, uniqify } from "../utils/common";
 import { PackageInfo, PackagePerson } from "../utils/package";
+import { scrapeNetworkSites } from "../utils/scraper";
 import { GreasemonkeyGrantOptions } from "./greasemonkey/types";
 import { TampermonkeyGrantOptions } from "./tampermonkey/types";
 import { ViolentmonkeyGrantOptions } from "./violentmonkey/types";
@@ -31,7 +32,7 @@ export type CommonRunAt = "document-start" | "document-end" | "document-idle";
 export type HeaderGenerator<T extends GrantOptions> = (
     info: PackageInfo,
     options: RequiredProps<GeneratorOptions<T>, "spaces">
-) => string;
+) => Promise<string>;
 
 export type CommonHeaders<T extends object = {}> = T & {
     author: PackagePerson;
@@ -63,9 +64,9 @@ export const generateGrantHeaders = <
     T extends CommonHeaders,
     U extends GrantOptions
 >(
-        grantMap: Record<U, T["grant"]>,
-        grants: U[]
-    ) => {
+    grantMap: Record<U, T["grant"]>,
+    grants: U[]
+) => {
     if (grants.find((g) => g === "all")) {
         return Object.entries(grantMap).map(([, v]) => [
             "grant",
@@ -83,9 +84,27 @@ export const generateGrantHeaders = <
 /**
  * @summary abstract '@match' header generator
  */
-export const generateMatchHeaders = <T extends CommonHeaders>(
-    matches: string[]
-): HeaderEntries<T> => {
+export const generateMatchHeaders = async <T extends CommonHeaders>(
+    matches: string[],
+    collapse = true
+): Promise<HeaderEntries<T>> => {
+    if (matches.includes("all")) {
+        const match =
+            matches.find((m) => /domain/.test(m)) || "https://domain/*";
+
+        const sites = await scrapeNetworkSites();
+
+        const all = sites.map(({ site }) => {
+            const domain =
+                collapse && /stackexchange/.test(site)
+                    ? "*.stackexchange.com"
+                    : site;
+            return match.replace("domain", domain);
+        });
+
+        return generateMatchHeaders(uniqify(all));
+    }
+
     return matches.map((uri) => ["match", uri]);
 };
 
