@@ -3,11 +3,11 @@
 
 | Author       | Oleg Valter<br>[oleg.a.valter@gmail.com](mailto:oleg.a.valter@gmail.com) |
 | :----------- | :----------------------- |
-| Contributors | double beep<br>[https://github.com/double-beep](https://github.com/double-beep)              |
-| Name         | @userscripters/generate-headers    |
-| Description  | Userscript manager header generator           |
-| License      | [GPL-3.0-or-later](https://spdx.org/licenses/GPL-3.0-or-later)                 |
-| Version      | 2.6.0               |
+| Contributors | double beep<br>[https://github.com/double-beep](https://github.com/double-beep) |
+| Name | @userscripters/generate-headers |
+| Description | Userscript manager header generator |
+| License | [GPL-3.0-or-later](https://spdx.org/licenses/GPL-3.0-or-later) |
+| Version | 2.7.0 |
 
 # Support
 
