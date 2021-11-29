@@ -1,4 +1,4 @@
-import { GeneratorOptions, RunAtOption } from "..";
+import { GeneratorOptions, RunAtOption } from "../generate";
 import { RequiredProps, uniqify } from "../utils/common";
 import { PackageInfo, PackagePerson } from "../utils/package";
 import { scrapeNetworkSites } from "../utils/scraper";
@@ -64,9 +64,9 @@ export const generateGrantHeaders = <
     T extends CommonHeaders,
     U extends GrantOptions
 >(
-        grantMap: Record<U, T["grant"]>,
-        grants: U[]
-    ) => {
+    grantMap: Record<U, T["grant"]>,
+    grants: U[]
+) => {
     if (grants.find((g) => g === "all")) {
         return Object.entries(grantMap).map(([, v]) => [
             "grant",

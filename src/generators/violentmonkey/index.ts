@@ -5,7 +5,7 @@ import {
     HeaderEntries,
     HeaderGenerator,
 } from "..";
-import { RunAtOption } from "../..";
+import { RunAtOption } from "../../generate";
 import { generateCommonHeaders } from "../common";
 import { finalizeMonkeyHeaders } from "../common/monkey";
 import {
