@@ -1,3 +1,3 @@
-import { HeaderGenerator } from "..";
-import { TampermonkeyGrantOptions } from "./types";
+import { type HeaderGenerator } from "..";
+import type { TampermonkeyGrantOptions } from "./types";
 export declare const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptions>;

@@ -1,4 +1,4 @@
-import { HeaderEntries, HeaderEntry } from "..";
+import type { HeaderEntries, HeaderEntry } from "..";
 export declare type MonkeyHeader = `// @${string} ${string}` | `// @${string}`;
 export declare const makeMonkeyTags: (name?: string) => readonly [openTag: string, closeTag: string];
 export declare const makeMonkeyHeader: <T extends {

@@ -1,9 +1,9 @@
-import { GeneratorOptions, RunAtOption } from "../generate";
-import { RequiredProps } from "../utils/common";
-import { PackageInfo, PackagePerson } from "../utils/package";
-import { GreasemonkeyGrantOptions } from "./greasemonkey/types";
-import { TampermonkeyGrantOptions } from "./tampermonkey/types";
-import { ViolentmonkeyGrantOptions } from "./violentmonkey/types";
+import type { GeneratorOptions, RunAtOption } from "../generate";
+import { type RequiredProps } from "../utils/common";
+import type { PackageInfo, PackagePerson } from "../utils/package";
+import type { GreasemonkeyGrantOptions } from "./greasemonkey/types";
+import type { TampermonkeyGrantOptions } from "./tampermonkey/types";
+import type { ViolentmonkeyGrantOptions } from "./violentmonkey/types";
 declare global {
     interface String {
         padEnd<T extends string>(maxLength: number, fillString?: string): T;

@@ -1,8 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateRequiredHeaders = exports.validateMatchHeaders = void 0;
 const semver_1 = require("semver");
-const validator_1 = require("validator");
+const validator_1 = __importDefault(require("validator"));
 const validateMatchHeaders = (matches) => {
     const validationRegex = /^((?:https?|file|ftp|\*)(?=:\/\/)|(?:urn(?=:))):(?:\/\/)?(?:((?:\*||.+?)(?=\/|$)))?(\/\*|(?:.+?\*?)+)?|<all_urls>|all$/;
     const invalid = matches.filter((match) => !validationRegex.test(match));

@@ -1,4 +1,4 @@
-import { GrantOptions, UserScriptManagerName } from "./generators/index";
+import type { GrantOptions, UserScriptManagerName } from "./generators/index";
 export declare type RunAtOption = "start" | "end" | "idle" | "body" | "menu";
 export declare type GeneratorOptions<T extends GrantOptions> = {
     packagePath: string;
