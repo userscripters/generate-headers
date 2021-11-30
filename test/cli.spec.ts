@@ -37,7 +37,7 @@ describe("CLI Options", async function () {
         aexec(`${cliPfx} tampermonkey -i "page" -p ${pkg} -o ${output} -d`),
         aexec(`${cliPfx} tampermonkey -p ${pkg} -o ${output} -d`),
         aexec(`${cliPfx} violentmonkey -p ${pkg} -o ${output} -d -g all`),
-        aexec(`${cliPfx} tampermonkey -m all -c`),
+        aexec(`${cliPfx} tampermonkey -m all -c -d`),
         aexec(`${cliPfx} tampermonkey -p ${pkg} -d --pretty`),
     ]);
 
