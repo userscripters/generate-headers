@@ -1,7 +1,7 @@
-import { CommonHeaders, HeaderEntries } from "..";
+import type { CommonHeaders, HeaderEntries } from "..";
 import { formatAuthor, parseAuthor } from "../../utils/author";
 import { parseName, prettifyName } from "../../utils/name";
-import { PackageInfo } from "../../utils/package";
+import type { PackageInfo } from "../../utils/package";
 
 export const generateCommonHeaders = (
     {

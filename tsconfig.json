@@ -15,6 +15,7 @@
         "strictNullChecks": true,
         "skipLibCheck": true,
         "downlevelIteration": true,
+        "esModuleInterop": true,
         "outDir": "dist"
     },
     "exclude": ["dist"],

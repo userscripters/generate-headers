@@ -1,7 +1,7 @@
-import * as yargs from "yargs";
+import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { generate } from "./generate";
-import { GrantOptions, UserScriptManagerName } from "./generators";
+import type { GrantOptions, UserScriptManagerName } from "./generators";
 import { scase } from "./utils/common";
 
 const names: UserScriptManagerName[] = [

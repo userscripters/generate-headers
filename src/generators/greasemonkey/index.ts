@@ -2,16 +2,16 @@ import {
     generateGrantHeaders,
     generateMatchHeaders,
     generateRunAtHeaders,
-    HeaderEntries,
-    HeaderGenerator,
+    type HeaderEntries,
+    type HeaderGenerator
 } from "..";
-import { RunAtOption } from "../../generate";
+import type { RunAtOption } from "../../generate";
 import { generateCommonHeaders } from "../common";
 import { finalizeMonkeyHeaders } from "../common/monkey";
-import {
+import type {
     GreasemonkeyGrantOptions,
     GreasemonkeyGrants,
-    GreasemonkeyHeaders,
+    GreasemonkeyHeaders
 } from "./types";
 
 export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptions> =

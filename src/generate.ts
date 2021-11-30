@@ -1,7 +1,7 @@
 import { bgRed } from "chalk";
 import { appendFile } from "fs/promises";
 import { generateGreasemonkeyHeaders } from "./generators/greasemonkey/index";
-import {
+import type {
     GrantOptions,
     HeaderGenerator,
     UserScriptManagerName,

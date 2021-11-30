@@ -1,10 +1,10 @@
-import { GeneratorOptions, RunAtOption } from "../generate";
-import { RequiredProps, uniqify } from "../utils/common";
-import { PackageInfo, PackagePerson } from "../utils/package";
+import type { GeneratorOptions, RunAtOption } from "../generate";
+import { uniqify, type RequiredProps } from "../utils/common";
+import type { PackageInfo, PackagePerson } from "../utils/package";
 import { scrapeNetworkSites } from "../utils/scraper";
-import { GreasemonkeyGrantOptions } from "./greasemonkey/types";
-import { TampermonkeyGrantOptions } from "./tampermonkey/types";
-import { ViolentmonkeyGrantOptions } from "./violentmonkey/types";
+import type { GreasemonkeyGrantOptions } from "./greasemonkey/types";
+import type { TampermonkeyGrantOptions } from "./tampermonkey/types";
+import type { ViolentmonkeyGrantOptions } from "./violentmonkey/types";
 
 declare global {
     interface String {

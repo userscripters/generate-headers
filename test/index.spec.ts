@@ -1,5 +1,5 @@
 import { use } from "chai";
-import * as cpr from "chai-as-promised";
+import cpr from "chai-as-promised";
 import { join } from "path";
 import type { GeneratorOptions } from "../src/generate";
 import type { CommonGrantOptions } from "../src/generators";
