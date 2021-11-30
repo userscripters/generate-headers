@@ -67,7 +67,9 @@ describe("common", () => {
         expect(matched).length(allMatches.length);
     });
 
-    it('"match" with "all" should expand to all sites', async () => {
+    it('"match" with "all" should expand to all sites', async function () {
+        this.timeout(5e3);
+
         const headers = await generateMatchHeaders(
             ["all", "https://domain"],
             true
