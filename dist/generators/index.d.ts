@@ -1,4 +1,4 @@
-import { GeneratorOptions, RunAtOption } from "..";
+import { GeneratorOptions, RunAtOption } from "../generate";
 import { RequiredProps } from "../utils/common";
 import { PackageInfo, PackagePerson } from "../utils/package";
 import { GreasemonkeyGrantOptions } from "./greasemonkey/types";
