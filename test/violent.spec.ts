@@ -1,10 +1,10 @@
 import { expect } from "chai";
 import { unlink } from "fs/promises";
-import { generate, GeneratorOptions } from "../src";
-import { CommonHeaders } from "../src/generators";
-import {
+import { generate, type GeneratorOptions } from "../src/generate";
+import type { CommonHeaders } from "../src/generators";
+import type {
     ViolentmonkeyGrantOptions,
-    ViolentmonkeyHeaders,
+    ViolentmonkeyHeaders
 } from "../src/generators/violentmonkey/types";
 import { common, grantOptionsVM, grantsVM, output } from "./index.spec";
 

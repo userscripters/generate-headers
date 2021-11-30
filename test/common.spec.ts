@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { generate } from "../src";
+import { generate } from "../src/generate";
 import { CommonHeaders, generateMatchHeaders } from "../src/generators";
 import { prettifyName } from "../src/utils/name";
 import { allMatches, directCommon } from "./index.spec";

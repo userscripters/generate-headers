@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { generate } from "../src";
+import { generate } from "../src/generate";
 import { directCommon, grantOptionsTM } from "./index.spec";
 
 describe("Tampermonkey", async () => {

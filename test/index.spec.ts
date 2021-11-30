@@ -1,17 +1,17 @@
 import { use } from "chai";
 import * as cpr from "chai-as-promised";
 import { join } from "path";
-import { GeneratorOptions } from "../src";
-import { CommonGrantOptions } from "../src/generators";
-import {
+import type { GeneratorOptions } from "../src/generate";
+import type { CommonGrantOptions } from "../src/generators";
+import type {
     GreasemonkeyGrantOptions,
     GreasemonkeyGrants,
 } from "../src/generators/greasemonkey/types";
-import {
+import type {
     TampermonkeyGrantOptions,
     TampermonkeyGrants,
 } from "../src/generators/tampermonkey/types";
-import {
+import type {
     ViolentmonkeyGrantOptions,
     ViolentmonkeyGrants,
 } from "../src/generators/violentmonkey/types";

@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { unlink } from "fs/promises";
-import { generate, GeneratorOptions } from "../src";
+import { generate, type GeneratorOptions } from "../src/generate";
 import { GreasemonkeyGrantOptions } from "../src/generators/greasemonkey/types";
 import { common, grantOptionsGM, grantsGM, output } from "./index.spec";
 
