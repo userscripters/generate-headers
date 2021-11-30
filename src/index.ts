@@ -15,7 +15,7 @@ const cli = yargs(hideBin(process.argv));
 const sharedOpts = {
     c: {
         alias: "collapse",
-        default: false,
+        default: true,
         type: "boolean",
     },
     d: {

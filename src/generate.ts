@@ -35,7 +35,7 @@ export const generate = async <T extends GrantOptions>(
         packagePath,
         output,
         spaces = 4,
-        collapse = false,
+        collapse = true,
         direct = false,
         matches = [],
         ...rest
