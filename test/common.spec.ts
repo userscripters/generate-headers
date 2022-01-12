@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import { load } from "proxyquire";
+import sinon from "sinon";
 import { generate } from "../src/generate";
 import { CommonHeaders } from "../src/generators";
 import { prettifyName } from "../src/utils/name";
@@ -7,6 +8,11 @@ import type { scrapeNetworkSites } from "../src/utils/scraper";
 import { allMatches, directCommon } from "./index.spec";
 
 describe("common", () => {
+
+    before(() => sinon.stub(console, "log"));
+
+    after(() => sinon.restore());
+
     it("should skip invalid match headers", async () => {
         const invalid = ["oranges", "42!"];
         const matches = ["<all_urls>", "urn:*", ...invalid];

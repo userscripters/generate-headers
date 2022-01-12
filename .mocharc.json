@@ -1,0 +1,5 @@
+{
+    "bail": true,
+    "check-leaks": true,
+    "recursive": true
+}
