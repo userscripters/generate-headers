@@ -4,14 +4,14 @@ import { generateGreasemonkeyHeaders } from "./generators/greasemonkey/index";
 import type {
     GrantOptions,
     HeaderGenerator,
-    UserScriptManagerName,
+    UserScriptManagerName
 } from "./generators/index";
 import { generateTampermonkeyHeaders } from "./generators/tampermonkey/index";
 import { generateViolentmonkeyHeaders } from "./generators/violentmonkey/index";
 import { getPackage } from "./utils/package";
 import {
     validateMatchHeaders,
-    validateRequiredHeaders,
+    validateRequiredHeaders
 } from "./utils/validators";
 
 export type RunAtOption = "start" | "end" | "idle" | "body" | "menu";
@@ -94,12 +94,13 @@ export const generate = async <T extends GrantOptions>(
             output,
         });
 
+        if (!direct) {
+            await appendFile(output!, content, { encoding: "utf-8", flag: "w+" });
+            return content;
+        }
+
         //running from CLI with file emit disabled
-        if (direct && require.main === module) process.stdout.write(content);
-
-        if (direct) return content;
-
-        await appendFile(output!, content, { encoding: "utf-8", flag: "w+" });
+        if (require.main === module) process.stdout.write(content);
 
         return content;
     } catch (error) {
