@@ -101,7 +101,7 @@ export const generate = async <T extends GrantOptions>(
 
         if (!direct) {
             if (!existsSync(output)) {
-                await appendFile(output!, content, { encoding: "utf-8", flag: "w+" });
+                await appendFile(output, content, { encoding: "utf-8", flag: "w+" });
                 return content;
             }
 
@@ -111,6 +111,9 @@ export const generate = async <T extends GrantOptions>(
                 await replaceFileContent(output, openOffset, closeOffset, content);
                 return content;
             }
+
+            await replaceFileContent(output, 0, 0, `${content}${eol}`);
+            return content;
         }
 
         //running from CLI with file emit disabled

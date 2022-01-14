@@ -57,6 +57,8 @@ const generate = async (type, { packagePath, output, spaces = 4, eol, collapse =
                 await (0, filesystem_1.replaceFileContent)(output, openOffset, closeOffset, content);
                 return content;
             }
+            await (0, filesystem_1.replaceFileContent)(output, 0, 0, `${content}${eol}`);
+            return content;
         }
         if (require.main === module)
             process.stdout.write(content);
