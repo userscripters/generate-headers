@@ -101,3 +101,25 @@ describe("validators", () => {
 
     });
 });
+
+describe("filesystem", () => {
+
+    describe("file content replacer", () => {
+
+        it("should correctly replace content", async () => {
+            const tmpfile = join("./", "test.txt");
+
+            await appendFile(tmpfile, "0123456789", { encoding: "utf-8" });
+
+            await replaceFileContent(tmpfile, 0, 4, "----");
+
+            const content = await readFile(tmpfile, { encoding: "utf-8" });
+
+            await rm(tmpfile);
+
+            expect(content.startsWith("----")).to.be.true;
+        });
+
+    });
+
+});
