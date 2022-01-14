@@ -1,4 +1,5 @@
 import { bgRed } from "chalk";
+import { existsSync } from "fs";
 import { appendFile } from "fs/promises";
 import { generateGreasemonkeyHeaders } from "./generators/greasemonkey/index";
 import type {
@@ -8,8 +9,10 @@ import type {
 } from "./generators/index";
 import { generateTampermonkeyHeaders } from "./generators/tampermonkey/index";
 import { generateViolentmonkeyHeaders } from "./generators/violentmonkey/index";
+import { replaceFileContent } from "./utils/filesystem";
 import { getPackage } from "./utils/package";
 import {
+    getExistingHeadersOffset,
     validateMatchHeaders,
     validateRequiredHeaders
 } from "./utils/validators";
@@ -23,6 +26,7 @@ export type GeneratorOptions<T extends GrantOptions> = {
     inject?: string;
     matches?: string[];
     collapse: boolean;
+    eol?: string;
     grants?: T[];
     run?: RunAtOption;
     direct?: boolean;
@@ -35,6 +39,7 @@ export const generate = async <T extends GrantOptions>(
         packagePath,
         output,
         spaces = 4,
+        eol,
         collapse = true,
         direct = false,
         matches = [],
@@ -95,8 +100,17 @@ export const generate = async <T extends GrantOptions>(
         });
 
         if (!direct) {
-            await appendFile(output!, content, { encoding: "utf-8", flag: "w+" });
-            return content;
+            if (!existsSync(output)) {
+                await appendFile(output!, content, { encoding: "utf-8", flag: "w+" });
+                return content;
+            }
+
+            const [openOffset, closeOffset] = await getExistingHeadersOffset(output, eol);
+
+            if (openOffset > -1 && closeOffset > -1) {
+                await replaceFileContent(output, openOffset, closeOffset, content);
+                return content;
+            }
         }
 
         //running from CLI with file emit disabled
