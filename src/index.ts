@@ -23,6 +23,11 @@ const sharedOpts = {
         default: false,
         type: "boolean",
     },
+    e: {
+        alias: "eol",
+        default: "\n",
+        type: "string",
+    },
     g: {
         alias: "grant",
         type: "array",
@@ -66,10 +71,11 @@ names.forEach((name) =>
         name,
         `generates ${scase(name)} headers`,
         sharedOpts,
-        ({ c, d, g = [], i, m = [], o, p, r = "start", s, pretty }) =>
+        ({ c, d, e, g = [], i, m = [], o, p, r = "start", s, pretty }) =>
             void generate<GrantOptions>(name, {
                 collapse: c,
                 direct: !!d,
+                eol: e,
                 inject: i,
                 matches: m.map(String),
                 grants: g as GrantOptions[],
