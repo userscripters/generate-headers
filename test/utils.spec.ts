@@ -1,9 +1,11 @@
 import { expect } from "chai";
+import { appendFile, readFile, rm } from "fs/promises";
 import { join } from "path";
 import { makeMonkeyTags } from "../src/generators/common/monkey";
+import { replaceFileContent } from "../src/utils/filesystem";
 import { getPackage } from "../src/utils/package";
 import {
-    getExistingHeadersPosition,
+    getExistingHeadersOffset,
     validateMatchHeaders,
     validateRequiredHeaders
 } from "../src/utils/validators";
@@ -81,22 +83,20 @@ describe("validators", () => {
         const [openTag, closeTag] = makeMonkeyTags();
 
         it("should return the correct position of existing headers", async () => {
-            const { appendFile, rm } = await import("fs/promises");
+            const { EOL } = await import("os");
 
             const tmpfile = join("./", "headers.js");
 
-            await appendFile(
-                tmpfile,
-                `${openTag}\njust a header\n${closeTag}\n`,
-                { encoding: 'utf-8' }
-            );
+            const content = `${openTag}${EOL}just a header${EOL}${closeTag}${EOL}`;
 
-            const [start, end] = await getExistingHeadersPosition(tmpfile);
+            await appendFile(tmpfile, content, { encoding: 'utf-8' });
+
+            const [start, end] = await getExistingHeadersOffset(tmpfile);
 
             await rm(tmpfile);
 
-            expect(start).to.equal(1);
-            expect(end).to.equal(3);
+            expect(start).to.equal(0);
+            expect(end).to.equal(Buffer.from(content).length - EOL.length);
         });
 
     });

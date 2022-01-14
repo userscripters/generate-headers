@@ -1,36 +1,40 @@
+import { EOL } from "os";
 import { valid } from "semver";
 import validator from "validator";
 import { makeMonkeyTags } from "../generators/common/monkey";
 import { type PackageInfo } from "./package";
 import type { RequiredOnly } from "./types";
 
-export const getExistingHeadersPosition = async (path: string | URL) => {
+export const getExistingHeadersOffset = async (path: string | URL, eol = EOL) => {
     const { createInterface } = await import("readline");
     const { createReadStream } = await import("fs");
 
     const filestream = createReadStream(path, { encoding: "utf-8" });
     const readline = createInterface(filestream);
 
-    let currentLine = 0;
-    let openTagLine = -1;
-    let closeTagLine = -1;
+    let currentOffset = 0;
+    let openTagOffset = -1;
+    let closeTagOffset = -1;
+    const { length: eolNumChars } = eol;
 
     const [openTag, closeTag] = makeMonkeyTags();
 
     return new Promise<[number, number]>((resolve, reject) => {
         readline.on("line", (line) => {
-            currentLine += 1;
+            const { length: bytesInLine } = Buffer.from(line);
 
-            if (line === openTag) openTagLine = currentLine;
-            if (line === closeTag) closeTagLine = currentLine;
+            if (line === openTag) openTagOffset = currentOffset;
+            if (line === closeTag) closeTagOffset = currentOffset + bytesInLine;
 
-            if (openTagLine > -1 && closeTagLine > -1) {
+            if (openTagOffset > -1 && closeTagOffset > -1) {
                 readline.close();
             }
+
+            currentOffset += bytesInLine + eolNumChars;
         });
 
         readline.on("error", reject);
-        readline.on("close", () => resolve([openTagLine, closeTagLine]));
+        readline.on("close", () => resolve([openTagOffset, closeTagOffset]));
     });
 };
 
