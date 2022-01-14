@@ -1,11 +1,59 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateRequiredHeaders = exports.validateMatchHeaders = void 0;
+exports.validateRequiredHeaders = exports.validateMatchHeaders = exports.getExistingHeadersOffset = void 0;
+const os_1 = require("os");
 const semver_1 = require("semver");
 const validator_1 = __importDefault(require("validator"));
+const monkey_1 = require("../generators/common/monkey");
+const getExistingHeadersOffset = async (path, eol = os_1.EOL) => {
+    const { createInterface } = await Promise.resolve().then(() => __importStar(require("readline")));
+    const { createReadStream } = await Promise.resolve().then(() => __importStar(require("fs")));
+    const filestream = createReadStream(path, { encoding: "utf-8" });
+    const readline = createInterface(filestream);
+    let currentOffset = 0;
+    let openTagOffset = -1;
+    let closeTagOffset = -1;
+    const { length: eolNumChars } = eol;
+    const [openTag, closeTag] = (0, monkey_1.makeMonkeyTags)();
+    return new Promise((resolve, reject) => {
+        readline.on("line", (line) => {
+            const { length: bytesInLine } = Buffer.from(line);
+            if (line === openTag)
+                openTagOffset = currentOffset;
+            if (line === closeTag)
+                closeTagOffset = currentOffset + bytesInLine;
+            if (openTagOffset > -1 && closeTagOffset > -1) {
+                readline.close();
+            }
+            currentOffset += bytesInLine + eolNumChars;
+        });
+        readline.on("error", reject);
+        readline.on("close", () => resolve([openTagOffset, closeTagOffset]));
+    });
+};
+exports.getExistingHeadersOffset = getExistingHeadersOffset;
 const validateMatchHeaders = (matches) => {
     const validationRegex = /^((?:https?|file|ftp|\*)(?=:\/\/)|(?:urn(?=:))):(?:\/\/)?(?:((?:\*||.+?)(?=\/|$)))?(\/\*|(?:.+?\*?)+)?|<all_urls>|all$/;
     const invalid = matches.filter((match) => !validationRegex.test(match));

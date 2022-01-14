@@ -1,4 +1,5 @@
-import { PackageInfo } from "./package";
+import { type PackageInfo } from "./package";
+export declare const getExistingHeadersOffset: (path: string | URL, eol?: string) => Promise<[number, number]>;
 export declare const validateMatchHeaders: (matches: string[]) => {
     invalid: string[];
     status: boolean;

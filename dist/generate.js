@@ -2,13 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generate = void 0;
 const chalk_1 = require("chalk");
+const fs_1 = require("fs");
 const promises_1 = require("fs/promises");
 const index_1 = require("./generators/greasemonkey/index");
 const index_2 = require("./generators/tampermonkey/index");
 const index_3 = require("./generators/violentmonkey/index");
+const filesystem_1 = require("./utils/filesystem");
 const package_1 = require("./utils/package");
 const validators_1 = require("./utils/validators");
-const generate = async (type, { packagePath, output, spaces = 4, collapse = true, direct = false, matches = [], ...rest }) => {
+const generate = async (type, { packagePath, output, spaces = 4, eol, collapse = true, direct = false, matches = [], ...rest }) => {
     const managerTypeMap = {
         greasemonkey: index_1.generateGreasemonkeyHeaders,
         tampermonkey: index_2.generateTampermonkeyHeaders,
@@ -45,11 +47,19 @@ const generate = async (type, { packagePath, output, spaces = 4, collapse = true
             packagePath,
             output,
         });
-        if (direct && require.main === module)
+        if (!direct) {
+            if (!(0, fs_1.existsSync)(output)) {
+                await (0, promises_1.appendFile)(output, content, { encoding: "utf-8", flag: "w+" });
+                return content;
+            }
+            const [openOffset, closeOffset] = await (0, validators_1.getExistingHeadersOffset)(output, eol);
+            if (openOffset > -1 && closeOffset > -1) {
+                await (0, filesystem_1.replaceFileContent)(output, openOffset, closeOffset, content);
+                return content;
+            }
+        }
+        if (require.main === module)
             process.stdout.write(content);
-        if (direct)
-            return content;
-        await (0, promises_1.appendFile)(output, content, { encoding: "utf-8", flag: "w+" });
         return content;
     }
     catch (error) {
