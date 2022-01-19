@@ -55,7 +55,7 @@ const getExistingHeadersOffset = async (path, eol = os_1.EOL) => {
 };
 exports.getExistingHeadersOffset = getExistingHeadersOffset;
 const validateMatchHeaders = (matches) => {
-    const validationRegex = /^((?:https?|file|ftp|\*)(?=:\/\/)|(?:urn(?=:))):(?:\/\/)?(?:((?:\*||.+?)(?=\/|$)))?(\/\*|(?:.+?\*?)+)?|<all_urls>|all$/;
+    const validationRegex = /^((?:https?|file|ftp|\*)(?=:\/\/)|(?:urn(?=:))):(?:\/\/)?(?:((?:\*||.+?)(?=\/|$)))?(\/\*|(?:.+?\*?)+)?|<all_urls>|all|meta$/;
     const invalid = matches.filter((match) => !validationRegex.test(match));
     return {
         invalid,

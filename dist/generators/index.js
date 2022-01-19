@@ -20,6 +20,14 @@ const generateMatchHeaders = async (matches, collapse = true) => {
     if (matches.includes("all")) {
         const match = matches.find((m) => /domain/.test(m)) || "https://domain/*";
         const sites = await (0, scraper_1.scrapeNetworkSites)();
+        if (matches.includes("meta")) {
+            const metaSites = sites.flatMap(({ site, ...rest }) => {
+                return collapse && /stackexchange/.test(site) || /stackapps/.test(site) ? [] : [{
+                        ...rest, site: site.replace(/^(.+?\.(?=.+\.)|)/, "$1meta.")
+                    }];
+            });
+            sites.push(...metaSites);
+        }
         const all = sites.map(({ site }) => {
             const domain = collapse && /stackexchange/.test(site)
                 ? "*.stackexchange.com"

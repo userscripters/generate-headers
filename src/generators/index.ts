@@ -94,6 +94,16 @@ export const generateMatchHeaders = async <T extends CommonHeaders>(
 
         const sites = await scrapeNetworkSites();
 
+        if (matches.includes("meta")) {
+            const metaSites = sites.flatMap(({ site, ...rest }) => {
+                return collapse && /stackexchange/.test(site) || /stackapps/.test(site) ? [] : [{
+                    ...rest, site: site.replace(/^(.+?\.(?=.+\.)|)/, "$1meta.")
+                }];
+            });
+
+            sites.push(...metaSites);
+        }
+
         const all = sites.map(({ site }) => {
             const domain =
                 collapse && /stackexchange/.test(site)
