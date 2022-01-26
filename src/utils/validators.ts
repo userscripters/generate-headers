@@ -49,6 +49,22 @@ export const validateMatchHeaders = (matches: string[]) => {
     };
 };
 
+export const validateConnectHeaders = (whitelist: string[]) => {
+    const specialWordRegex = /^localhost|self|\*$/;
+    const ipv4Regex = /^((?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\.|$)){4}/;
+    // https://stackoverflow.com/a/57129482/11407695
+    const domainRegex = /^(?!.*?_.*?)(?!(?:[\w]+?\.)?\-[\w\.\-]*?)(?![\w]+?\-\.(?:[\w\.\-]+?))(?=[\w])(?=[\w\.\-]*?\.+[\w\.\-]*?)(?![\w\.\-]{254})(?!(?:\.?[\w\-\.]*?[\w\-]{64,}\.)+?)[\w\.\-]+?(?<![\w\-\.]*?\.[\d]+?)(?<=[\w\-]{2,})(?<![\w\-]{25})$/;
+
+    const checks: RegExp[] = [specialWordRegex, ipv4Regex, domainRegex];
+
+    const invalid = whitelist.filter((remote) => !checks.some((r) => r.test(remote)));
+    return {
+        invalid,
+        status: !invalid.length,
+        valid: whitelist.filter((r) => !invalid.includes(r))
+    };
+};
+
 export const validateRequiredHeaders = (packageInfo: PackageInfo) => {
     const required: (keyof RequiredOnly<PackageInfo>)[] = [
         "author",

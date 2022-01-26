@@ -6,6 +6,7 @@ import { replaceFileContent } from "../src/utils/filesystem";
 import { getPackage } from "../src/utils/package";
 import {
     getExistingHeadersOffset,
+    validateConnectHeaders,
     validateMatchHeaders,
     validateRequiredHeaders
 } from "../src/utils/validators";
@@ -41,6 +42,37 @@ describe("validators", () => {
             ]);
             expect(status).to.be.false;
             expect(invalid).to.contain(typo);
+        });
+    });
+
+    describe("@connect headers validator", () => {
+        const sampleRemotes: string[] = [
+            "tampermonkey.net",
+            "support.google.com",
+            "localhost",
+            "self",
+            "*"
+        ];
+
+        it("should correctly validate valid headers", () => {
+            const { status, invalid } = validateConnectHeaders(sampleRemotes);
+            expect(status).to.be.true;
+            expect(invalid).to.be.empty;
+        });
+
+        it("should correctly validate invalid headers", () => {
+            const invalidIpV4 = "999.88.20.400";
+            const invalidDomain = "https://test.com/path";
+
+            const { status, invalid } = validateConnectHeaders([
+                ...sampleRemotes,
+                invalidIpV4,
+                invalidDomain
+            ]);
+
+            expect(status).to.be.false;
+            expect(invalid).to.contain(invalidIpV4);
+            expect(invalid).to.contain(invalidDomain);
         });
     });
 
