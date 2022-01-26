@@ -13,6 +13,7 @@ import { replaceFileContent } from "./utils/filesystem";
 import { getPackage } from "./utils/package";
 import {
     getExistingHeadersOffset,
+    validateConnectHeaders,
     validateMatchHeaders,
     validateRequiredHeaders
 } from "./utils/validators";
@@ -28,6 +29,7 @@ export type GeneratorOptions<T extends GrantOptions> = {
     collapse: boolean;
     eol?: string;
     grants?: T[];
+    whitelist?: Array<"self" | "localhost" | "*"> | string[];
     run?: RunAtOption;
     direct?: boolean;
     pretty?: boolean;
@@ -43,6 +45,7 @@ export const generate = async <T extends GrantOptions>(
         collapse = true,
         direct = false,
         matches = [],
+        whitelist = [],
         ...rest
     }: GeneratorOptions<T>
 ) => {
@@ -60,9 +63,22 @@ export const generate = async <T extends GrantOptions>(
             return "";
         }
 
-        const { invalid, status, valid } = validateMatchHeaders(matches);
-        if (!status) {
-            console.log(bgRed`Invalid @match headers:\n` + invalid.join("\n"));
+        const {
+            invalid: matchInvalid,
+            status: matchStatus,
+            valid: validMatches
+        } = validateMatchHeaders(matches);
+        if (!matchStatus) {
+            console.log(bgRed`Invalid @match headers:\n` + matchInvalid.join("\n"));
+        }
+
+        const {
+            invalid: connectInvalid,
+            status: connectStatus,
+            valid: validConnects
+        } = validateConnectHeaders(whitelist);
+        if (!connectStatus) {
+            console.log(bgRed`Invalid @connect headers:\n` + connectInvalid.join("\n"));
         }
 
         const {
@@ -93,7 +109,8 @@ export const generate = async <T extends GrantOptions>(
         const content = await handler(parsedPackage, {
             ...rest,
             collapse,
-            matches: valid,
+            matches: validMatches,
+            whitelist: validConnects,
             spaces,
             packagePath,
             output,

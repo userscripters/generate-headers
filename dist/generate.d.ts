@@ -9,8 +9,9 @@ export declare type GeneratorOptions<T extends GrantOptions> = {
     collapse: boolean;
     eol?: string;
     grants?: T[];
+    whitelist?: Array<"self" | "localhost" | "*"> | string[];
     run?: RunAtOption;
     direct?: boolean;
     pretty?: boolean;
 };
-export declare const generate: <T extends GrantOptions>(type: UserScriptManagerName, { packagePath, output, spaces, eol, collapse, direct, matches, ...rest }: GeneratorOptions<T>) => Promise<string>;
+export declare const generate: <T extends GrantOptions>(type: UserScriptManagerName, { packagePath, output, spaces, eol, collapse, direct, matches, whitelist, ...rest }: GeneratorOptions<T>) => Promise<string>;

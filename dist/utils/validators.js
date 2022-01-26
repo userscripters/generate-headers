@@ -22,7 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateRequiredHeaders = exports.validateMatchHeaders = exports.getExistingHeadersOffset = void 0;
+exports.validateRequiredHeaders = exports.validateConnectHeaders = exports.validateMatchHeaders = exports.getExistingHeadersOffset = void 0;
 const os_1 = require("os");
 const semver_1 = require("semver");
 const validator_1 = __importDefault(require("validator"));
@@ -64,6 +64,19 @@ const validateMatchHeaders = (matches) => {
     };
 };
 exports.validateMatchHeaders = validateMatchHeaders;
+const validateConnectHeaders = (whitelist) => {
+    const specialWordRegex = /^localhost|self|\*$/;
+    const ipv4Regex = /^((?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\.|$)){4}/;
+    const domainRegex = /^(?!.*?_.*?)(?!(?:[\w]+?\.)?\-[\w\.\-]*?)(?![\w]+?\-\.(?:[\w\.\-]+?))(?=[\w])(?=[\w\.\-]*?\.+[\w\.\-]*?)(?![\w\.\-]{254})(?!(?:\.?[\w\-\.]*?[\w\-]{64,}\.)+?)[\w\.\-]+?(?<![\w\-\.]*?\.[\d]+?)(?<=[\w\-]{2,})(?<![\w\-]{25})$/;
+    const checks = [specialWordRegex, ipv4Regex, domainRegex];
+    const invalid = whitelist.filter((remote) => !checks.some((r) => r.test(remote)));
+    return {
+        invalid,
+        status: !invalid.length,
+        valid: whitelist.filter((r) => !invalid.includes(r))
+    };
+};
+exports.validateConnectHeaders = validateConnectHeaders;
 const validateRequiredHeaders = (packageInfo) => {
     const required = [
         "author",

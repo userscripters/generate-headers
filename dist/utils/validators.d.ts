@@ -5,6 +5,11 @@ export declare const validateMatchHeaders: (matches: string[]) => {
     status: boolean;
     valid: string[];
 };
+export declare const validateConnectHeaders: (whitelist: string[]) => {
+    invalid: string[];
+    status: boolean;
+    valid: string[];
+};
 export declare const validateRequiredHeaders: (packageInfo: PackageInfo) => {
     status: boolean;
     isValidVersion: boolean;

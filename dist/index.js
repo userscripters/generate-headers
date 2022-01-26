@@ -62,12 +62,16 @@ const sharedOpts = {
         default: 4,
         type: "number",
     },
+    w: {
+        alias: "whitelist",
+        type: "array",
+    },
     pretty: {
         type: "boolean",
         default: false,
     },
 };
-names.forEach((name) => cli.command(name, `generates ${(0, common_1.scase)(name)} headers`, sharedOpts, ({ c, d, e, g = [], i, m = [], o, p, r = "start", s, pretty }) => void (0, generate_1.generate)(name, {
+names.forEach((name) => cli.command(name, `generates ${(0, common_1.scase)(name)} headers`, sharedOpts, ({ c, d, e, g = [], i, m = [], o, p, r = "start", s, pretty, w = [] }) => void (0, generate_1.generate)(name, {
     collapse: c,
     direct: !!d,
     eol: e,
@@ -79,5 +83,6 @@ names.forEach((name) => cli.command(name, `generates ${(0, common_1.scase)(name)
     run: r,
     spaces: s,
     pretty,
+    whitelist: w.map(String)
 })));
 cli.demandCommand().help().parse();

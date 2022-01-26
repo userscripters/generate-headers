@@ -1,6 +1,6 @@
 import type { CommonGrantOptions, CommonGrants, CommonHeaders, CommonRunAt, CustomHeaders } from "..";
-export declare type TampermonkeyGrantOptions = CommonGrantOptions | "close" | "focus" | "change";
-export declare type TampermonkeyGrants = CommonGrants | "GM_setValue" | "GM_getValue" | "GM_listValues" | "GM_deleteValue" | "window.close" | "window.focus" | "window.onurlchange";
+export declare type TampermonkeyGrantOptions = CommonGrantOptions | "close" | "fetch" | "focus" | "change";
+export declare type TampermonkeyGrants = CommonGrants | "GM_setValue" | "GM_getValue" | "GM_listValues" | "GM_deleteValue" | "GM_xmlhttpRequest" | "window.close" | "window.focus" | "window.onurlchange";
 export declare type TampermonkeyHeaders = CustomHeaders & CommonHeaders<{
     "homepage": string;
     "homepageURL": string;

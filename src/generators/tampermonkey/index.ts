@@ -19,6 +19,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
         packageInfo,
         {
             spaces,
+            whitelist = [],
             matches = [],
             grants = [],
             run = "start",
@@ -71,6 +72,13 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
         if (sourceURL) specialHeaders.push(["source", sourceURL]);
         if (homepage) specialHeaders.push(["homepage", homepage]);
 
+        if (grants.includes("fetch")) {
+            whitelist.forEach((remote) => {
+                const schemaStripped = remote.replace(/^.+?:\/\//, "");
+                specialHeaders.push(["connect", schemaStripped]);
+            });
+        }
+
         const headers = [
             ...commonHeaders,
             ...matchHeaders,
@@ -86,7 +94,6 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
         // @exclude
         // @require
         // @resource
-        // @connect
         // @antifeature
         // @noframes
         // @unwrap

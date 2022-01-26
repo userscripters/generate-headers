@@ -4,13 +4,14 @@ exports.generateTampermonkeyHeaders = void 0;
 const __1 = require("..");
 const common_1 = require("../common");
 const monkey_1 = require("../common/monkey");
-const generateTampermonkeyHeaders = async (packageInfo, { spaces, matches = [], grants = [], run = "start", pretty = false, collapse = false, }) => {
+const generateTampermonkeyHeaders = async (packageInfo, { spaces, whitelist = [], matches = [], grants = [], run = "start", pretty = false, collapse = false, }) => {
     const matchHeaders = await (0, __1.generateMatchHeaders)(matches, collapse);
     const grantMap = {
         set: "GM_setValue",
         get: "GM_getValue",
         delete: "GM_deleteValue",
         list: "GM_listValues",
+        fetch: "GM_xmlhttpRequest",
         unsafe: "unsafeWindow",
         change: "window.onurlchange",
         close: "window.close",
@@ -35,6 +36,12 @@ const generateTampermonkeyHeaders = async (packageInfo, { spaces, matches = [], 
         specialHeaders.push(["source", sourceURL]);
     if (homepage)
         specialHeaders.push(["homepage", homepage]);
+    if (grants.includes("fetch")) {
+        whitelist.forEach((remote) => {
+            const schemaStripped = remote.replace(/^.+?:\/\//, "");
+            specialHeaders.push(["connect", schemaStripped]);
+        });
+    }
     const headers = [
         ...commonHeaders,
         ...matchHeaders,

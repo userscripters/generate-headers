@@ -10,7 +10,7 @@ const index_3 = require("./generators/violentmonkey/index");
 const filesystem_1 = require("./utils/filesystem");
 const package_1 = require("./utils/package");
 const validators_1 = require("./utils/validators");
-const generate = async (type, { packagePath, output, spaces = 4, eol, collapse = true, direct = false, matches = [], ...rest }) => {
+const generate = async (type, { packagePath, output, spaces = 4, eol, collapse = true, direct = false, matches = [], whitelist = [], ...rest }) => {
     const managerTypeMap = {
         greasemonkey: index_1.generateGreasemonkeyHeaders,
         tampermonkey: index_2.generateTampermonkeyHeaders,
@@ -22,9 +22,13 @@ const generate = async (type, { packagePath, output, spaces = 4, eol, collapse =
             console.log((0, chalk_1.bgRed) `missing or corrupted package`);
             return "";
         }
-        const { invalid, status, valid } = (0, validators_1.validateMatchHeaders)(matches);
-        if (!status) {
-            console.log((0, chalk_1.bgRed) `Invalid @match headers:\n` + invalid.join("\n"));
+        const { invalid: matchInvalid, status: matchStatus, valid: validMatches } = (0, validators_1.validateMatchHeaders)(matches);
+        if (!matchStatus) {
+            console.log((0, chalk_1.bgRed) `Invalid @match headers:\n` + matchInvalid.join("\n"));
+        }
+        const { invalid: connectInvalid, status: connectStatus, valid: validConnects } = (0, validators_1.validateConnectHeaders)(whitelist);
+        if (!connectStatus) {
+            console.log((0, chalk_1.bgRed) `Invalid @connect headers:\n` + connectInvalid.join("\n"));
         }
         const { status: reqStatus, isValidHomepage, isValidVersion, missing, } = (0, validators_1.validateRequiredHeaders)(parsedPackage);
         if (!isValidHomepage) {
@@ -42,7 +46,8 @@ const generate = async (type, { packagePath, output, spaces = 4, eol, collapse =
         const content = await handler(parsedPackage, {
             ...rest,
             collapse,
-            matches: valid,
+            matches: validMatches,
+            whitelist: validConnects,
             spaces,
             packagePath,
             output,
