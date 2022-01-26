@@ -3,12 +3,13 @@ import type {
     CommonGrants,
     CommonHeaders,
     CommonRunAt,
-    CustomHeaders,
+    CustomHeaders
 } from "..";
 
 export type TampermonkeyGrantOptions =
     | CommonGrantOptions
     | "close"
+    | "fetch"
     | "focus"
     | "change";
 
@@ -18,6 +19,7 @@ export type TampermonkeyGrants =
     | "GM_getValue"
     | "GM_listValues"
     | "GM_deleteValue"
+    | "GM_xmlhttpRequest"
     | "window.close"
     | "window.focus"
     | "window.onurlchange";

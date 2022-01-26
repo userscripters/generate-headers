@@ -33,6 +33,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
             get: "GM_getValue",
             delete: "GM_deleteValue",
             list: "GM_listValues",
+            fetch: "GM_xmlhttpRequest",
             unsafe: "unsafeWindow",
             change: "window.onurlchange",
             close: "window.close",
