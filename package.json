@@ -50,9 +50,9 @@
         "@types/sinon": "^10.0.11",
         "@types/tampermonkey": "^4.0.5",
         "@types/validator": "^13.7.1",
-        "@types/yargs": "^17.0.9",
-        "@typescript-eslint/eslint-plugin": "^5.14.0",
-        "@typescript-eslint/parser": "^5.14.0",
+        "@types/yargs": "^17.0.10",
+        "@typescript-eslint/eslint-plugin": "^5.15.0",
+        "@typescript-eslint/parser": "^5.15.0",
         "@userscripters/generate-readme": "^2.1.1",
         "chai": "^4.3.6",
         "chai-as-promised": "^7.1.1",
@@ -70,7 +70,7 @@
         "jsdom": "^19.0.0",
         "semver": "^7.3.5",
         "validator": "^13.7.0",
-        "yargs": "^17.3.1"
+        "yargs": "^17.4.0"
     },
     "main": "dist/index.js",
     "bin": {
