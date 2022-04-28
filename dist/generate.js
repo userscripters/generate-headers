@@ -74,9 +74,10 @@ const generate = async (type, { packagePath, output, spaces = 4, eol, collapse =
         const { code, name } = exceptionObject;
         const errMap = {
             ENOENT: ({ path }) => ["Missing path:", path],
+            ENOTFOUND: ({ message }) => ["Network failure:", message],
             default: ({ message }) => ["Something went wrong:", message],
         };
-        const handler = errMap[code || "default"];
+        const handler = errMap[code || "default"] || errMap.default;
         const [postfix, message] = handler(exceptionObject);
         console.log((0, chalk_1.bgRed) `[${name}] ${postfix}` + `\n\n${message}`);
         return "";
