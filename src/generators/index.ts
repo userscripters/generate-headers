@@ -2,6 +2,7 @@ import type { GeneratorOptions, RunAtOption } from "../generate";
 import { uniqify, type RequiredProps } from "../utils/common";
 import type { PackageInfo, PackagePerson } from "../utils/package";
 import { scrapeNetworkSites } from "../utils/scraper";
+import { explodePaths } from "../utils/urls";
 import type { GreasemonkeyGrantOptions } from "./greasemonkey/types";
 import type { TampermonkeyGrantOptions } from "./tampermonkey/types";
 import type { ViolentmonkeyGrantOptions } from "./violentmonkey/types";
@@ -115,7 +116,7 @@ export const generateMatchHeaders = async <T extends CommonHeaders>(
         return generateMatchHeaders(uniqify(all));
     }
 
-    return matches.map((uri) => ["match", uri]);
+    return matches.flatMap(explodePaths).map((uri) => ["match", uri]);
 };
 
 /**

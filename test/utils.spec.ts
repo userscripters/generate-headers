@@ -4,6 +4,7 @@ import { join } from "path";
 import { makeMonkeyTags } from "../src/generators/common/monkey";
 import { replaceFileContent } from "../src/utils/filesystem";
 import { getPackage } from "../src/utils/package";
+import { explodePaths } from "../src/utils/urls";
 import {
     getExistingHeadersOffset,
     validateConnectHeaders,
@@ -154,4 +155,25 @@ describe("filesystem", () => {
 
     });
 
+});
+
+describe('urls', () => {
+    describe(explodePaths.name, () => {
+        it('should return one URL string for non-explodable paths', () => {
+            const url = "https://google.com/search*";
+            const paths = explodePaths(url);
+            expect(paths.length).to.equal(1);
+            expect(paths[0]).to.equal(url);
+        });
+
+        it('should return a URL string for each alternation of explodable paths', () => {
+            const url = "http://stackoverflow.com/questions|review/*";
+            const paths = explodePaths(url);
+            expect(paths.length).to.equal(2);
+
+            const [questions, reviews] = paths;
+            expect(questions).to.contain("/questions/*");
+            expect(reviews).to.contain("/review/*");
+        });
+    });
 });

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateRunAtHeaders = exports.generateMatchHeaders = exports.generateGrantHeaders = void 0;
 const common_1 = require("../utils/common");
 const scraper_1 = require("../utils/scraper");
+const urls_1 = require("../utils/urls");
 const generateGrantHeaders = (grantMap, grants) => {
     if (grants.find((g) => g === "all")) {
         return Object.entries(grantMap).map(([, v]) => [
@@ -36,7 +37,7 @@ const generateMatchHeaders = async (matches, collapse = true) => {
         });
         return (0, exports.generateMatchHeaders)((0, common_1.uniqify)(all));
     }
-    return matches.map((uri) => ["match", uri]);
+    return matches.flatMap(urls_1.explodePaths).map((uri) => ["match", uri]);
 };
 exports.generateMatchHeaders = generateMatchHeaders;
 const generateRunAtHeaders = (runAtMap, runAt) => {
