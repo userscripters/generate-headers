@@ -144,10 +144,11 @@ export const generate = async <T extends GrantOptions>(
             [code: string]: (err: NodeJS.ErrnoException) => [string, string];
         } = {
             ENOENT: ({ path }) => ["Missing path:", path!],
+            ENOTFOUND: ({ message }) => ["Network failure:", message],
             default: ({ message }) => ["Something went wrong:", message],
         };
 
-        const handler = errMap[code || "default"];
+        const handler = errMap[code || "default"] || errMap.default;
 
         const [postfix, message] = handler(exceptionObject);
 
