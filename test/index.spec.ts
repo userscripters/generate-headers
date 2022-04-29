@@ -5,15 +5,15 @@ import type { GeneratorOptions } from "../src/generate";
 import type { CommonGrantOptions } from "../src/generators";
 import type {
     GreasemonkeyGrantOptions,
-    GreasemonkeyGrants,
+    GreasemonkeyGrants
 } from "../src/generators/greasemonkey/types";
 import type {
     TampermonkeyGrantOptions,
-    TampermonkeyGrants,
+    TampermonkeyGrants
 } from "../src/generators/tampermonkey/types";
 import type {
     ViolentmonkeyGrantOptions,
-    ViolentmonkeyGrants,
+    ViolentmonkeyGrants
 } from "../src/generators/violentmonkey/types";
 
 use(cpr);
@@ -39,6 +39,12 @@ export const allMatches: string[] = [
     "*://mail.google.com/*",
     "urn:*",
     "<all_urls>",
+];
+
+export const requires: string[] = [
+    "file:///test.js",
+    "http://github.com/generator/raw/master/dist/script.js",
+    "https://github.com/generator/raw/master/dist/script.user.js"
 ];
 
 export const grantsTM: TampermonkeyGrants[] = [

@@ -1,6 +1,7 @@
 import {
     generateGrantHeaders,
     generateMatchHeaders,
+    generateRequireHeaders,
     generateRunAtHeaders,
     type HeaderEntries,
     type HeaderGenerator
@@ -20,6 +21,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
         {
             spaces,
             whitelist = [],
+            requires = [],
             matches = [],
             grants = [],
             run = "start",
@@ -28,6 +30,8 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
         }
     ) => {
         const matchHeaders = await generateMatchHeaders(matches, collapse);
+
+        const requireHeaders = generateRequireHeaders(requires);
 
         const grantMap: Record<TampermonkeyGrantOptions, TampermonkeyGrants> = {
             set: "GM_setValue",
@@ -82,6 +86,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
         const headers = [
             ...commonHeaders,
             ...matchHeaders,
+            ...requireHeaders,
             ...grantHeaders,
             ...specialHeaders,
         ];
@@ -92,7 +97,6 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
         // @downloadURL
         // @include
         // @exclude
-        // @require
         // @resource
         // @antifeature
         // @noframes

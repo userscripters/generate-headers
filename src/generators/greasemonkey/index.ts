@@ -1,6 +1,7 @@
 import {
     generateGrantHeaders,
     generateMatchHeaders,
+    generateRequireHeaders,
     generateRunAtHeaders,
     type HeaderEntries,
     type HeaderGenerator
@@ -19,6 +20,7 @@ export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptio
         packageInfo,
         {
             matches = [],
+            requires = [],
             grants = [],
             run = "start",
             pretty = false,
@@ -39,6 +41,8 @@ export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptio
         const commonHeaders = generateCommonHeaders(packageInfo, pretty);
 
         const matchHeaders = await generateMatchHeaders(matches, collapse);
+
+        const requireHeaders = generateRequireHeaders(requires);
 
         const grantHeaders = generateGrantHeaders<
             GreasemonkeyHeaders,
@@ -64,6 +68,7 @@ export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptio
             ...commonHeaders,
             ...grantHeaders,
             ...matchHeaders,
+            ...requireHeaders,
             ...specialHeaders,
         ];
 

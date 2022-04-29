@@ -5,7 +5,7 @@ import { generate } from "../src/generate";
 import { CommonHeaders } from "../src/generators";
 import { prettifyName } from "../src/utils/name";
 import type { scrapeNetworkSites } from "../src/utils/scraper";
-import { allMatches, directCommon } from "./index.spec";
+import { allMatches, directCommon, requires } from "./index.spec";
 
 describe("common", () => {
 
@@ -93,6 +93,18 @@ describe("common", () => {
         const matches = headers.map(([, m]) => m);
         expect(matches).to.include("https://*.stackexchange.com");
         expect(matches).length.to.be.greaterThan(1);
+    });
+
+    it('@require headers should be generated', async () => {
+        const content = await generate("tampermonkey", {
+            ...directCommon,
+            requires
+        });
+
+        const required = content.match(/@require\s+(.+)/g) || [];
+
+        // 'file:' protocol URLs are filtered out
+        expect(required.length).to.equal(2);
     });
 
     it('"pretty" option should prettify output', async () => {

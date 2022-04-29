@@ -1,3 +1,4 @@
+import validator from "validator";
 import type { GeneratorOptions, RunAtOption } from "../generate";
 import { uniqify, type RequiredProps } from "../utils/common";
 import type { PackageInfo, PackagePerson } from "../utils/package";
@@ -130,4 +131,18 @@ export const generateRunAtHeaders = <T extends { "run-at": string }>(
     return runsAt
         ? ([["run-at", runsAt]] as HeaderEntries<Pick<T, "run-at">>)
         : [];
+};
+
+/**
+ * @summary abstract '@require' header generator
+ */
+export const generateRequireHeaders = (
+    requires: string[]
+): HeaderEntries<{ require: string; }> => {
+    return requires
+        .filter((url) => validator.isURL(url, {
+            allow_protocol_relative_urls: true
+        }))
+        .flatMap(explodePaths)
+        .map((url) => ["require", url]);
 };
