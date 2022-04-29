@@ -6,6 +6,7 @@ export declare type GeneratorOptions<T extends GrantOptions> = {
     spaces?: number;
     inject?: string;
     matches?: string[];
+    requires?: string[];
     collapse: boolean;
     eol?: string;
     grants?: T[];

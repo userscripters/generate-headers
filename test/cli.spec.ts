@@ -11,6 +11,7 @@ import {
     grantsVM,
     output,
     pkg,
+    requires
 } from "./index.spec";
 
 const aexec = promisify(exec);
@@ -107,6 +108,17 @@ describe("CLI Options", async function () {
 
         const matched = stdout.match(/@match\s+(.+)/g) || [];
         expect(matched).length(allMatches.length);
+    });
+
+    it('-q options should correctly add @require', async () => {
+        const rOpts = requires.map((m) => `-q "${m}"`).join(" ");
+
+        const { stdout } = await aexec(
+            `ts-node ${entry} tampermonkey ${rOpts} -p ${pkg} -o ${output} -d`
+        );
+
+        const required = stdout.match(/@require\s+(.+)/g) || [];
+        expect(required).length(2);
     });
 
     it("-c option should correctly collapse -m all [template] output", async () => {

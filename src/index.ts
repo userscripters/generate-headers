@@ -50,6 +50,10 @@ const sharedOpts = {
         default: "./package.json",
         type: "string",
     },
+    q: {
+        alias: "require",
+        type: "array"
+    },
     r: {
         alias: "run",
         default: "start",
@@ -75,13 +79,14 @@ names.forEach((name) =>
         name,
         `generates ${scase(name)} headers`,
         sharedOpts,
-        ({ c, d, e, g = [], i, m = [], o, p, r = "start", s, pretty, w = [] }) =>
+        ({ c, d, e, g = [], i, m = [], q = [], o, p, r = "start", s, pretty, w = [] }) =>
             void generate<GrantOptions>(name, {
                 collapse: c,
                 direct: !!d,
                 eol: e,
                 inject: i,
                 matches: m.map(String),
+                requires: q.map(String),
                 grants: g as GrantOptions[],
                 output: o,
                 packagePath: p,

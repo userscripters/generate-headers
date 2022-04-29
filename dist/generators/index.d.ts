@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import type { GeneratorOptions, RunAtOption } from "../generate";
 import { type RequiredProps } from "../utils/common";
 import type { PackageInfo, PackagePerson } from "../utils/package";
@@ -79,3 +80,6 @@ export declare const generateRunAtHeaders: <T extends {
 } & {
     [x: string]: unknown;
 }, runAt: T["run-at"]) => HeaderEntries<Pick<T, "run-at">>;
+export declare const generateRequireHeaders: (requires: string[]) => HeaderEntries<{
+    require: string;
+}>;

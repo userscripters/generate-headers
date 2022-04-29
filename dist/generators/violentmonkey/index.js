@@ -4,7 +4,7 @@ exports.generateViolentmonkeyHeaders = void 0;
 const __1 = require("..");
 const common_1 = require("../common");
 const monkey_1 = require("../common/monkey");
-const generateViolentmonkeyHeaders = async (packageInfo, { spaces, matches = [], grants = [], inject = "page", run = "start", pretty = false, collapse = false, }) => {
+const generateViolentmonkeyHeaders = async (packageInfo, { spaces, matches = [], requires = [], grants = [], inject = "page", run = "start", pretty = false, collapse = false, }) => {
     const commonHeaders = (0, common_1.generateCommonHeaders)(packageInfo, pretty);
     const grantMap = {
         set: "GM_setValue",
@@ -22,6 +22,7 @@ const generateViolentmonkeyHeaders = async (packageInfo, { spaces, matches = [],
     };
     const grantHeaders = (0, __1.generateGrantHeaders)(grantMap, grants);
     const matchHeaders = await (0, __1.generateMatchHeaders)(matches, collapse);
+    const requireHeaders = (0, __1.generateRequireHeaders)(requires);
     const runAtMap = {
         start: "document-start",
         end: "document-end",
@@ -41,6 +42,7 @@ const generateViolentmonkeyHeaders = async (packageInfo, { spaces, matches = [],
         ...commonHeaders,
         ...grantHeaders,
         ...matchHeaders,
+        ...requireHeaders,
         ...specialHeaders,
     ];
     return (0, monkey_1.finalizeMonkeyHeaders)(headers, spaces);

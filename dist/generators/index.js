@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateRunAtHeaders = exports.generateMatchHeaders = exports.generateGrantHeaders = void 0;
+exports.generateRequireHeaders = exports.generateRunAtHeaders = exports.generateMatchHeaders = exports.generateGrantHeaders = void 0;
+const validator_1 = __importDefault(require("validator"));
 const common_1 = require("../utils/common");
 const scraper_1 = require("../utils/scraper");
 const urls_1 = require("../utils/urls");
@@ -47,3 +51,12 @@ const generateRunAtHeaders = (runAtMap, runAt) => {
         : [];
 };
 exports.generateRunAtHeaders = generateRunAtHeaders;
+const generateRequireHeaders = (requires) => {
+    return requires
+        .filter((url) => validator_1.default.isURL(url, {
+        allow_protocol_relative_urls: true
+    }))
+        .flatMap(urls_1.explodePaths)
+        .map((url) => ["require", url]);
+};
+exports.generateRequireHeaders = generateRequireHeaders;

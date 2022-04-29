@@ -4,8 +4,9 @@ exports.generateTampermonkeyHeaders = void 0;
 const __1 = require("..");
 const common_1 = require("../common");
 const monkey_1 = require("../common/monkey");
-const generateTampermonkeyHeaders = async (packageInfo, { spaces, whitelist = [], matches = [], grants = [], run = "start", pretty = false, collapse = false, }) => {
+const generateTampermonkeyHeaders = async (packageInfo, { spaces, whitelist = [], requires = [], matches = [], grants = [], run = "start", pretty = false, collapse = false, }) => {
     const matchHeaders = await (0, __1.generateMatchHeaders)(matches, collapse);
+    const requireHeaders = (0, __1.generateRequireHeaders)(requires);
     const grantMap = {
         set: "GM_setValue",
         get: "GM_getValue",
@@ -45,6 +46,7 @@ const generateTampermonkeyHeaders = async (packageInfo, { spaces, whitelist = []
     const headers = [
         ...commonHeaders,
         ...matchHeaders,
+        ...requireHeaders,
         ...grantHeaders,
         ...specialHeaders,
     ];

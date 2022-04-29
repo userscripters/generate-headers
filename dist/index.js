@@ -52,6 +52,10 @@ const sharedOpts = {
         default: "./package.json",
         type: "string",
     },
+    q: {
+        alias: "require",
+        type: "array"
+    },
     r: {
         alias: "run",
         default: "start",
@@ -71,12 +75,13 @@ const sharedOpts = {
         default: false,
     },
 };
-names.forEach((name) => cli.command(name, `generates ${(0, common_1.scase)(name)} headers`, sharedOpts, ({ c, d, e, g = [], i, m = [], o, p, r = "start", s, pretty, w = [] }) => void (0, generate_1.generate)(name, {
+names.forEach((name) => cli.command(name, `generates ${(0, common_1.scase)(name)} headers`, sharedOpts, ({ c, d, e, g = [], i, m = [], q = [], o, p, r = "start", s, pretty, w = [] }) => void (0, generate_1.generate)(name, {
     collapse: c,
     direct: !!d,
     eol: e,
     inject: i,
     matches: m.map(String),
+    requires: q.map(String),
     grants: g,
     output: o,
     packagePath: p,
