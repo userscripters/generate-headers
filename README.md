@@ -9,6 +9,8 @@
 | License | [GPL-3.0-or-later](https://spdx.org/licenses/GPL-3.0-or-later) |
 | Version | 2.12.0 |
 
+Installation instructions and usage examples can be found on the [Stack Apps post](https://stackapps.com/q/9088/78873).
+
 # Support
 
 Bug reports for the project should be [submitted here](https://github.com/userscripters/generate-headers/issues).
