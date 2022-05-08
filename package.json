@@ -75,6 +75,6 @@
     },
     "main": "dist/index.js",
     "bin": {
-        "generate": "dist/index.js"
+        "generate-headers": "dist/index.js"
     }
 }
