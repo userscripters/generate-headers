@@ -41,6 +41,12 @@ export type GeneratorOptions<T extends GrantOptions> = CommonGeneratorOptions & 
     whitelist?: Array<"self" | "localhost" | "*"> | string[];
 };
 
+/**
+ * @summary main header generator function
+ * @param type userscript manager type
+ * @param options generator configuration
+ * @param cli is running as a CLI?
+ */
 export const generate = async <T extends GrantOptions>(
     type: UserScriptManagerName,
     options: GeneratorOptions<T>,
