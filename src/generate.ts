@@ -15,12 +15,14 @@ import {
     getExistingHeadersOffset,
     validateConnectHeaders,
     validateMatchHeaders,
+    validateOptionalHeaders,
     validateRequiredHeaders
 } from "./utils/validators";
 
 export type RunAtOption = "start" | "end" | "idle" | "body" | "menu";
 
 export type GeneratorOptions<T extends GrantOptions> = {
+    downloadURL?: string;
     packagePath: string;
     output: string;
     spaces?: number;
@@ -38,7 +40,9 @@ export type GeneratorOptions<T extends GrantOptions> = {
 
 export const generate = async <T extends GrantOptions>(
     type: UserScriptManagerName,
-    {
+    options: GeneratorOptions<T>
+) => {
+    const {
         packagePath,
         output,
         spaces = 4,
@@ -48,8 +52,8 @@ export const generate = async <T extends GrantOptions>(
         matches = [],
         whitelist = [],
         ...rest
-    }: GeneratorOptions<T>
-) => {
+    } = options;
+
     const managerTypeMap = {
         greasemonkey: generateGreasemonkeyHeaders,
         tampermonkey: generateTampermonkeyHeaders,
@@ -93,6 +97,12 @@ export const generate = async <T extends GrantOptions>(
             console.log(
                 bgRed`Invalid homepage URL:\n` + parsedPackage.homepage
             );
+        }
+
+        const { isValidDownloadURL } = validateOptionalHeaders(options);
+
+        if (!isValidDownloadURL) {
+            console.log(bgRed`Invalid @downloadURL:\n` + options.downloadURL);
         }
 
         if (!isValidVersion) {

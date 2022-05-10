@@ -9,8 +9,10 @@ import {
     getExistingHeadersOffset,
     validateConnectHeaders,
     validateMatchHeaders,
+    validateOptionalHeaders,
     validateRequiredHeaders
 } from "../src/utils/validators";
+import { requires } from "./index.spec";
 
 describe("validators", () => {
     const base = process.cwd();
@@ -109,6 +111,16 @@ describe("validators", () => {
             expect(missing).to.contain("author");
             expect(missing).to.contain("name");
             expect(missing).to.contain("description");
+        });
+    });
+
+    describe(validateOptionalHeaders.name, () => {
+        it('should correctly valide @downloadURL', () => {
+            // file:// URLs are not valid for download
+            requires.slice(1).forEach((url) => {
+                const { isValidDownloadURL } = validateOptionalHeaders({ downloadURL: url });
+                expect(isValidDownloadURL, `${url}`).to.be.true;
+            });
         });
     });
 

@@ -1,9 +1,17 @@
 import { EOL } from "os";
 import { valid } from "semver";
 import validator from "validator";
+import type { GeneratorOptions } from "../generate";
 import { makeMonkeyTags } from "../generators/common/monkey";
+import type { GrantOptions } from "../generators/index";
 import { type PackageInfo } from "./package";
 import type { RequiredOnly } from "./types";
+
+type OnlyOptional<T> = { [P in keyof T as undefined extends T[P] ? P : never]: T[P] };
+
+interface OptionalHeadersValidationResult {
+    isValidDownloadURL: boolean;
+}
 
 export const getExistingHeadersOffset = async (path: string | URL, eol = EOL) => {
     const { createInterface } = await import("readline");
@@ -88,5 +96,21 @@ export const validateRequiredHeaders = (packageInfo: PackageInfo) => {
         isValidVersion,
         isValidHomepage,
         missing,
+    };
+};
+
+/**
+ * @summary validates optional headers
+ * @param options generator options
+ */
+export const validateOptionalHeaders = <T extends GrantOptions>(
+    options: OnlyOptional<GeneratorOptions<T>>
+): OptionalHeadersValidationResult => {
+    const { downloadURL } = options;
+
+    const isValidDownloadURL = downloadURL === void 0 || validator.isURL(downloadURL);
+
+    return {
+        isValidDownloadURL
     };
 };
