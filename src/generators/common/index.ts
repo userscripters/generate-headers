@@ -3,6 +3,10 @@ import { parseName, prettifyName } from "../../utils/name.js";
 import type { PackageInfo } from "../../utils/package.js";
 import type { CommonHeaders, HeaderEntries } from "../index.js";
 
+export type CommonHeadersOptions = {
+    pretty: boolean;
+}
+
 export const generateCommonHeaders = (
     {
         author,
@@ -12,8 +16,10 @@ export const generateCommonHeaders = (
         icon,
         contributors = [],
     }: PackageInfo,
-    pretty: boolean
+    options: CommonHeadersOptions
 ) => {
+    const { pretty } = options;
+
     const parsedAuthor = parseAuthor(author);
     const { packageName, scope } = parseName(name);
 

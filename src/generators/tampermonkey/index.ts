@@ -53,7 +53,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
             TampermonkeyGrantOptions
         >(grantMap, grants);
 
-        const commonHeaders = generateCommonHeaders(packageInfo, pretty);
+        const commonHeaders = generateCommonHeaders(packageInfo, { pretty });
 
         const runAtMap: {
             [P in RunAtOption]?: TampermonkeyHeaders["run-at"];

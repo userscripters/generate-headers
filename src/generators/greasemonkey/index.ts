@@ -39,7 +39,7 @@ export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptio
             unsafe: "unsafeWindow",
         };
 
-        const commonHeaders = generateCommonHeaders(packageInfo, pretty);
+        const commonHeaders = generateCommonHeaders(packageInfo, { pretty });
 
         const matchHeaders = await generateMatchHeaders(matches, scrapeNetworkSites, collapse);
 
