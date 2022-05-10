@@ -16,8 +16,8 @@ import {
 
 const aexec = promisify(exec);
 
-describe("CLI Options", async function () {
-    this.timeout(5e3);
+describe("CLI Options", function () {
+    this.timeout(30e3); // CLI runs can be slow
 
     const entry = "./src/index.ts";
     const cliPfx = `node --loader ts-node/esm ${entry}`;
@@ -32,16 +32,21 @@ describe("CLI Options", async function () {
      * CLI runs are grouped before test cases to achieve some level
      * of parallelization for CLI tests (each can take up to 5s)
      */
-    const cliPfx = `ts-node ${entry}`;
-    const cliRuns = await Promise.all([
-        aexec(`${cliPfx} tampermonkey -p ${pkg} -d`),
-        aexec(`${cliPfx} violentmonkey -i "content" -p ${pkg} -o ${output} -d`),
-        aexec(`${cliPfx} tampermonkey -i "page" -p ${pkg} -o ${output} -d`),
-        aexec(`${cliPfx} tampermonkey -p ${pkg} -o ${output} -d`),
-        aexec(`${cliPfx} violentmonkey -p ${pkg} -o ${output} -d -g all`),
-        aexec(`${cliPfx} tampermonkey -m all -c -d`),
-        aexec(`${cliPfx} tampermonkey -p ${pkg} -d --pretty`),
-    ]);
+    const cliRuns: { stdout: string; stderr: string; }[] = [];
+
+    before(async () => {
+        const runs = await Promise.all([
+            aexec(`${cliPfx} tampermonkey -p ${pkg} -d --du ${requires[1]}`),
+            aexec(`${cliPfx} violentmonkey -i "content" -p ${pkg} -o ${output} -d`),
+            aexec(`${cliPfx} tampermonkey -i "page" -p ${pkg} -o ${output} -d`),
+            aexec(`${cliPfx} tampermonkey -p ${pkg} -o ${output} -d`),
+            aexec(`${cliPfx} violentmonkey -p ${pkg} -o ${output} -d -g all`),
+            aexec(`${cliPfx} tampermonkey -m all -c -d`),
+            aexec(`${cliPfx} tampermonkey -p ${pkg} -d --pretty`),
+        ]);
+
+        cliRuns.push(...runs);
+    });
 
     it("-d option should forgo file generation", async () => {
         const { stdout } = cliRuns[0];
@@ -162,9 +167,9 @@ describe("CLI Options", async function () {
 
         const longest = getLongest(headers);
 
-        const [fistHeader] = headlines;
+        const [firstHeader] = headlines;
 
-        const index = fistHeader!.search(/(?<=^\/\/\s@\w+\s+)\w/);
+        const index = firstHeader?.search(/(?<=^\/\/\s@\w+\s+)\w/);
         expect(longest + sp + 1).to.be.equal(index);
     });
 
