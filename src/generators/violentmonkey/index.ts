@@ -20,6 +20,7 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
     async (
         packageInfo,
         {
+            downloadURL,
             spaces,
             matches = [],
             requires = [],
@@ -70,6 +71,7 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
             ...generateRunAtHeaders(runAtMap, run),
         ];
 
+        if (downloadURL) specialHeaders.push(["downloadURL", downloadURL]);
         if (supportURL) specialHeaders.push(["supportURL", supportURL]);
         if (homepage) specialHeaders.push(["homepageURL", homepage]);
         if (inject) specialHeaders.push(["inject-into", inject]);

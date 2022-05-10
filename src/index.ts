@@ -26,6 +26,11 @@ const sharedOpts = {
         description: "Directs headers content to `process.stdout`",
         type: "boolean",
     },
+    du: {
+        alias: "download-url",
+        description: "URL for the @downloadURL header",
+        type: "string"
+    },
     e: {
         alias: "eol",
         default: "\n",
@@ -93,10 +98,11 @@ names.forEach((name) =>
         name,
         `generates ${scase(name)} headers`,
         sharedOpts,
-        ({ c, d, e, g = [], i, m = [], q = [], o, p, r = "start", s, pretty, w = [] }) =>
+        ({ c, d, du, e, g = [], i, m = [], q = [], o, p, r = "start", s, pretty, w = [] }) =>
             void generate<GrantOptions>(name, {
                 collapse: c,
                 direct: !!d,
+                downloadURL: du,
                 eol: e,
                 inject: i,
                 matches: m.map(String),

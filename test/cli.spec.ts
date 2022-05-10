@@ -59,6 +59,11 @@ describe("CLI Options", function () {
         expect(stat(output)).to.eventually.be.rejected;
     });
 
+    it('--du option should add @downloadURL header', async () => {
+        const { stdout } = cliRuns[0];
+        expect(stdout).to.match(new RegExp(`^\\/\\/ @downloadURL\\s+${requires[1]}$`, "m"));
+    });
+
     it("-i option should add inject-into header for Violentmonkey", () => {
         const { stdout } = cliRuns[1];
         expect(stdout).to.match(/^\/\/ @inject-into\s+content$/gm);

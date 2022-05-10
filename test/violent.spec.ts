@@ -47,9 +47,12 @@ describe("ViolentMonkey", async () => {
         const vmSpecificHeaders: Exclude<
             keyof ViolentmonkeyHeaders,
             keyof CommonHeaders
-        >[] = ["homepageURL", "inject-into", "run-at", "supportURL"];
+            >[] = ["homepageURL", "inject-into", "run-at", "supportURL", "downloadURL"];
 
-        const content = await generate("violentmonkey", directCommon);
+        const content = await generate("violentmonkey", {
+            ...directCommon,
+            downloadURL: requires[1]
+        });
 
         vmSpecificHeaders.forEach((header) => {
             const status = new RegExp(`\/\/ @${header}\\s+.+?`, "gm").test(
