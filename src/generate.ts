@@ -26,6 +26,7 @@ export type GeneratorOptions<T extends GrantOptions> = {
     packagePath: string;
     output: string;
     spaces?: number;
+    homepage?: string;
     inject?: string;
     matches?: string[];
     namespace?: string;

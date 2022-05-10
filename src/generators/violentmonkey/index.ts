@@ -21,6 +21,7 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
         packageInfo,
         {
             downloadURL,
+            homepage,
             spaces,
             matches = [],
             requires = [],
@@ -67,14 +68,16 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
             idle: "document-idle",
         };
 
-        const { homepage, bugs: { url: supportURL } = {} } = packageInfo;
+        const { bugs: { url: supportURL } = {} } = packageInfo;
         const specialHeaders: HeaderEntries<ViolentmonkeyHeaders> = [
             ...generateRunAtHeaders(runAtMap, run),
         ];
 
+        const homepageURL = homepage || packageInfo.homepage;
+
         if (downloadURL) specialHeaders.push(["downloadURL", downloadURL]);
         if (supportURL) specialHeaders.push(["supportURL", supportURL]);
-        if (homepage) specialHeaders.push(["homepageURL", homepage]);
+        if (homepageURL) specialHeaders.push(["homepageURL", homepageURL]);
         if (inject) specialHeaders.push(["inject-into", inject]);
 
         const headers: HeaderEntries<ViolentmonkeyHeaders> = [

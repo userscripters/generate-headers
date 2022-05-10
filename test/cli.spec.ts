@@ -36,7 +36,7 @@ describe("CLI Options", function () {
 
     before(async () => {
         const runs = await Promise.all([
-            aexec(`${cliPfx} tampermonkey -p ${pkg} -d --du ${requires[1]} -u ${requires[1]} -n testing`),
+            aexec(`${cliPfx} tampermonkey -p ${pkg} -d --du ${requires[1]} -u ${requires[1]} -n testing -h ${requires[1]}`),
             aexec(`${cliPfx} violentmonkey -i "content" -p ${pkg} -o ${output} -d`),
             aexec(`${cliPfx} tampermonkey -i "page" -p ${pkg} -o ${output} -d`),
             aexec(`${cliPfx} tampermonkey -p ${pkg} -o ${output} -d`),
@@ -57,6 +57,11 @@ describe("CLI Options", function () {
     it("-d option should override -o", async () => {
         await aexec(`${cliPfx} tampermonkey -p ${pkg} -o ${output} -d`);
         expect(stat(output)).to.eventually.be.rejected;
+    });
+
+    it('-h option should override @homepage header', () => {
+        const { stdout } = cliRuns[0];
+        expect(stdout).to.match(new RegExp(`^\\/\\/ @homepage\\s+${requires[1]}$`, "m"));
     });
 
     it('--du option should add @downloadURL header', async () => {

@@ -21,6 +21,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
         packageInfo,
         {
             downloadURL,
+            homepage,
             updateURL,
             spaces,
             whitelist = [],
@@ -67,7 +68,6 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
         };
 
         const {
-            homepage,
             bugs: { url: supportURL } = {},
             repository: { url: sourceURL } = {},
         } = packageInfo;
@@ -76,11 +76,13 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
             ...generateRunAtHeaders(runAtMap, run),
         ];
 
+        const homepageURL = homepage || packageInfo.homepage;
+
         if (downloadURL) specialHeaders.push(["downloadURL", downloadURL]);
         if (supportURL) specialHeaders.push(["supportURL", supportURL]);
         if (updateURL) specialHeaders.push(["updateURL", updateURL]);
         if (sourceURL) specialHeaders.push(["source", sourceURL]);
-        if (homepage) specialHeaders.push(["homepage", homepage]);
+        if (homepageURL) specialHeaders.push(["homepage", homepageURL]);
 
         if (grants.includes("fetch")) {
             whitelist.forEach((remote) => {

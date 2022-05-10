@@ -37,6 +37,11 @@ const sharedOpts = {
         description: "Sets the end-of-line character(s) (affects the check for existing headers)",
         type: "string",
     },
+    h: {
+        alias: "homepage",
+        description: "Overrides homepage for @homepage header",
+        type: "string",
+    },
     g: {
         alias: "grant",
         description: "generates @grant headers, can be repeated",
@@ -108,12 +113,13 @@ names.forEach((name) =>
         name,
         `generates ${scase(name)} headers`,
         sharedOpts,
-        ({ c, d, du, e, g = [], i, m = [], n, q = [], o, p, r = "start", s, pretty, u, w = [] }) =>
+        ({ c, d, du, e, h, g = [], i, m = [], n, q = [], o, p, r = "start", s, pretty, u, w = [] }) =>
             void generate<GrantOptions>(name, {
                 collapse: c,
                 direct: !!d,
                 downloadURL: du,
                 eol: e,
+                homepage: h,
                 inject: i,
                 matches: m.map(String),
                 requires: q.map(String),

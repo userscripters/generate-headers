@@ -51,7 +51,8 @@ describe("ViolentMonkey", async () => {
 
         const content = await generate("violentmonkey", {
             ...directCommon,
-            downloadURL: requires[1]
+            downloadURL: requires[1],
+            homepage: requires[1]
         });
 
         vmSpecificHeaders.forEach((header) => {

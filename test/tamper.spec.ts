@@ -46,11 +46,12 @@ describe("Tampermonkey", async () => {
         const vmSpecificHeaders: Exclude<
             keyof TampermonkeyHeaders,
             keyof CommonHeaders
-        >[] = ["downloadURL", "updateURL"];
+            >[] = ["downloadURL", "homepage", "updateURL"];
 
         const content = await generate("tampermonkey", {
             ...directCommon,
             downloadURL: requires[1],
+            homepage: requires[1],
             updateURL: requires[1]
         });
 
