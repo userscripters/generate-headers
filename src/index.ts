@@ -42,15 +42,15 @@ const sharedOpts = {
         description: "Overrides homepage for @homepage header",
         type: "string",
     },
-    g: {
-        alias: "grant",
-        description: "Generates @grant headers, can be repeated",
-        type: "array",
-    },
     i: {
         alias: "inject",
         description: "Adds @inject-into header for Violentmonkey, no-op otherwise",
         type: "string",
+    },
+    g: {
+        alias: "grant",
+        description: "Generates @grant headers, can be repeated",
+        type: "array",
     },
     m: {
         alias: "match",
