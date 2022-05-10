@@ -12,7 +12,8 @@
         "executable": "sed -i \"1s/^/#!\\/usr\\/bin\\/env node\\n/\" dist/index.js",
         "version": "npm run test && npm run build && git add dist && git commit --amend --no-edit",
         "postversion": "bash ./scripts/postversion.sh",
-        "readme": "bash ./scripts/readme.sh"
+        "readme": "bash ./scripts/readme.sh",
+        "usage": "bash ./scripts/usage.sh"
     },
     "repository": {
         "type": "git",
