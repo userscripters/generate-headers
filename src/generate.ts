@@ -1,6 +1,7 @@
 import chulk from "chalk";
 import { existsSync } from "fs";
 import { appendFile } from "fs/promises";
+import type { CommonGeneratorOptions } from "./generators/common/index.js";
 import { generateGreasemonkeyHeaders } from "./generators/greasemonkey/index.js";
 import type {
     GrantOptions,
@@ -21,7 +22,7 @@ import {
 
 export type RunAtOption = "start" | "end" | "idle" | "body" | "menu";
 
-export type GeneratorOptions<T extends GrantOptions> = {
+export type GeneratorOptions<T extends GrantOptions> = CommonGeneratorOptions & {
     collapse: boolean;
     direct?: boolean;
     downloadURL?: string;
@@ -30,7 +31,6 @@ export type GeneratorOptions<T extends GrantOptions> = {
     homepage?: string;
     inject?: string;
     matches?: string[];
-    namespace?: string;
     output: string;
     packagePath: string;
     pretty?: boolean;

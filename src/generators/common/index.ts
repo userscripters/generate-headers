@@ -3,7 +3,7 @@ import { parseName, prettifyName } from "../../utils/name.js";
 import type { PackageInfo } from "../../utils/package.js";
 import type { CommonHeaders, HeaderEntries } from "../index.js";
 
-export type CommonHeadersOptions = {
+export type CommonGeneratorOptions = {
     namespace?: string;
     pretty: boolean;
 }
@@ -15,7 +15,7 @@ export type CommonHeadersOptions = {
  */
 export const generateCommonHeaders = (
     pkg: PackageInfo,
-    options: CommonHeadersOptions
+    options: CommonGeneratorOptions
 ) => {
     const { namespace, pretty } = options;
 
