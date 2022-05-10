@@ -44,7 +44,7 @@ const sharedOpts = {
     },
     g: {
         alias: "grant",
-        description: "generates @grant headers, can be repeated",
+        description: "Generates @grant headers, can be repeated",
         type: "array",
     },
     i: {
@@ -54,7 +54,7 @@ const sharedOpts = {
     },
     m: {
         alias: "match",
-        description: "generates valid @match headers (repeatable)",
+        description: "Generates valid @match headers (repeatable)",
         type: "array",
     },
     n: {
@@ -76,7 +76,7 @@ const sharedOpts = {
     },
     q: {
         alias: "require",
-        description: "generates valid @require headers (repeatable)",
+        description: "Generates valid @require headers (repeatable)",
         type: "array"
     },
     r: {
@@ -88,7 +88,7 @@ const sharedOpts = {
     s: {
         alias: "spaces",
         default: 4,
-        description: "number of spaces to indent header values with (total is the longest name + this value)",
+        description: "Number of spaces to indent header values with (total is the longest name + this value)",
         type: "number",
     },
     u: {
@@ -98,13 +98,13 @@ const sharedOpts = {
     },
     w: {
         alias: "whitelist",
-        description: "generates @connect headers (repeatable)",
+        description: "Generates @connect headers (repeatable)",
         type: "array",
     },
     pretty: {
         type: "boolean",
         default: false,
-        description: "prettifies outputted headers where possible",
+        description: "Prettifies outputted headers where possible",
     },
 } as const;
 
