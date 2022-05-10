@@ -36,6 +36,7 @@ export type GeneratorOptions<T extends GrantOptions> = {
     run?: RunAtOption;
     direct?: boolean;
     pretty?: boolean;
+    updateURL?: string;
 };
 
 export const generate = async <T extends GrantOptions>(

@@ -21,6 +21,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
         packageInfo,
         {
             downloadURL,
+            updateURL,
             spaces,
             whitelist = [],
             requires = [],
@@ -76,6 +77,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
 
         if (downloadURL) specialHeaders.push(["downloadURL", downloadURL]);
         if (supportURL) specialHeaders.push(["supportURL", supportURL]);
+        if (updateURL) specialHeaders.push(["updateURL", updateURL]);
         if (sourceURL) specialHeaders.push(["source", sourceURL]);
         if (homepage) specialHeaders.push(["homepage", homepage]);
 
@@ -96,7 +98,6 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
 
         //Unused headers:
         // @icon64 and @icon64URL
-        // @updateURL
         // @include
         // @exclude
         // @resource

@@ -11,6 +11,7 @@ type OnlyOptional<T> = { [P in keyof T as undefined extends T[P] ? P : never]: T
 
 interface OptionalHeadersValidationResult {
     isValidDownloadURL: boolean;
+    isValidUpdateURL: boolean;
 }
 
 export const getExistingHeadersOffset = async (path: string | URL, eol = EOL) => {
@@ -106,11 +107,13 @@ export const validateRequiredHeaders = (packageInfo: PackageInfo) => {
 export const validateOptionalHeaders = <T extends GrantOptions>(
     options: OnlyOptional<GeneratorOptions<T>>
 ): OptionalHeadersValidationResult => {
-    const { downloadURL } = options;
+    const { downloadURL, updateURL } = options;
 
     const isValidDownloadURL = downloadURL === void 0 || validator.isURL(downloadURL);
+    const isValidUpdateURL = updateURL === void 0 || validator.isURL(updateURL);
 
     return {
-        isValidDownloadURL
+        isValidDownloadURL,
+        isValidUpdateURL
     };
 };

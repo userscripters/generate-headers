@@ -81,6 +81,11 @@ const sharedOpts = {
         description: "number of spaces to indent header values with (total is the longest name + this value)",
         type: "number",
     },
+    u: {
+        alias: "update-url",
+        description: "URL for the @updateURL header for Tampermonkey, no-op otherwise",
+        type: "string"
+    },
     w: {
         alias: "whitelist",
         description: "generates @connect headers (repeatable)",
@@ -98,7 +103,7 @@ names.forEach((name) =>
         name,
         `generates ${scase(name)} headers`,
         sharedOpts,
-        ({ c, d, du, e, g = [], i, m = [], q = [], o, p, r = "start", s, pretty, w = [] }) =>
+        ({ c, d, du, e, g = [], i, m = [], q = [], o, p, r = "start", s, pretty, u, w = [] }) =>
             void generate<GrantOptions>(name, {
                 collapse: c,
                 direct: !!d,
@@ -113,6 +118,7 @@ names.forEach((name) =>
                 run: r,
                 spaces: s,
                 pretty,
+                updateURL: u,
                 whitelist: w.map(String)
             },
                 import.meta.url === pathToFileURL(process.argv[1]).href

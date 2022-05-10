@@ -1,5 +1,7 @@
 import { expect } from "chai";
 import { generate } from "../src/generate.js";
+import type { CommonHeaders } from "../src/generators/index.js";
+import type { TampermonkeyHeaders } from "../src/generators/tampermonkey/types.js";
 import { directCommon, grantOptionsTM, requires } from "./index.spec.js";
 
 describe("Tampermonkey", async () => {
@@ -40,12 +42,24 @@ describe("Tampermonkey", async () => {
         });
     });
 
-    it('@downloadURL header should be generated', async () => {
+    it("special headers should be generated", async () => {
+        const vmSpecificHeaders: Exclude<
+            keyof TampermonkeyHeaders,
+            keyof CommonHeaders
+        >[] = ["downloadURL", "updateURL"];
+
         const content = await generate("tampermonkey", {
             ...directCommon,
-            downloadURL: requires[1]
+            downloadURL: requires[1],
+            updateURL: requires[1]
         });
 
-        expect(content).to.match(/@downloadURL\s+.+/);
+        vmSpecificHeaders.forEach((header) => {
+            const status = new RegExp(`\/\/ @${header}\\s+.+?`, "gm").test(
+                content
+            );
+
+            expect(status, `missing VM header: ${header}`).to.be.true;
+        });
     });
 });
