@@ -2,8 +2,8 @@ import { expect } from "chai";
 import { exec } from "child_process";
 import { readFile, stat, unlink } from "fs/promises";
 import { promisify } from "util";
-import { TampermonkeyGrants } from "../src/generators/tampermonkey/types";
-import { getLongest } from "../src/utils/common";
+import { TampermonkeyGrants } from "../src/generators/tampermonkey/types.js";
+import { getLongest } from "../src/utils/common.js";
 import {
     allMatches,
     grantOptionsTM,
@@ -12,7 +12,7 @@ import {
     output,
     pkg,
     requires
-} from "./index.spec";
+} from "./index.spec.js";
 
 const aexec = promisify(exec);
 
@@ -20,6 +20,7 @@ describe("CLI Options", async function () {
     this.timeout(5e3);
 
     const entry = "./src/index.ts";
+    const cliPfx = `node --loader ts-node/esm ${entry}`;
 
     afterEach(async () =>
         stat(output)
@@ -49,7 +50,7 @@ describe("CLI Options", async function () {
     });
 
     it("-d option should override -o", async () => {
-        await aexec(`ts-node ${entry} tampermonkey -p ${pkg} -o ${output} -d`);
+        await aexec(`${cliPfx} tampermonkey -p ${pkg} -o ${output} -d`);
         expect(stat(output)).to.eventually.be.rejected;
     });
 
@@ -67,7 +68,7 @@ describe("CLI Options", async function () {
         const gOpts = grantOptionsTM.map((g) => `-g "${g}"`).join(" ");
 
         const { stdout } = await aexec(
-            `ts-node ${entry} tampermonkey ${gOpts} -p ${pkg} -o ${output} -d`
+            `${cliPfx} tampermonkey ${gOpts} -p ${pkg} -o ${output} -d`
         );
 
         const matched = stdout.match(/@grant\s+(.+)/g) || [];
@@ -103,7 +104,7 @@ describe("CLI Options", async function () {
         const mOpts = allMatches.map((m) => `-m "${m}"`).join(" ");
 
         const { stdout } = await aexec(
-            `ts-node ${entry} tampermonkey ${mOpts} -p ${pkg} -o ${output} -d`
+            `${cliPfx} tampermonkey ${mOpts} -p ${pkg} -o ${output} -d`
         );
 
         const matched = stdout.match(/@match\s+(.+)/g) || [];
@@ -114,7 +115,7 @@ describe("CLI Options", async function () {
         const rOpts = requires.map((m) => `-q "${m}"`).join(" ");
 
         const { stdout } = await aexec(
-            `ts-node ${entry} tampermonkey ${rOpts} -p ${pkg} -o ${output} -d`
+            `${cliPfx} tampermonkey ${rOpts} -p ${pkg} -o ${output} -d`
         );
 
         const required = stdout.match(/@require\s+(.+)/g) || [];
@@ -129,14 +130,13 @@ describe("CLI Options", async function () {
     it("-r option should correctly add @run-at", async function () {
         this.timeout(1e4);
 
-        const command = `ts-node ${entry}`;
         const opts = `-p ${pkg} -o ${output} -d`;
 
         const [{ stdout: tmout }, { stdout: vmout }, { stdout: gmout }] =
             await Promise.all([
-                aexec(`${command} tampermonkey ${opts} --run menu`),
-                aexec(`${command} violentmonkey ${opts} -r end`),
-                aexec(`${command} greasemonkey ${opts} -r idle`),
+                aexec(`${cliPfx} tampermonkey ${opts} --run menu`),
+                aexec(`${cliPfx} violentmonkey ${opts} -r end`),
+                aexec(`${cliPfx} greasemonkey ${opts} -r idle`),
             ]);
 
         expect(tmout).to.match(/^\/\/ @run-at\s+context-menu$/gm);
@@ -147,9 +147,8 @@ describe("CLI Options", async function () {
     it("-s option should control number of spaces added", async () => {
         const sp = 8;
 
-        await aexec(
-            `ts-node ${entry} tampermonkey -s ${sp} -p ${pkg} -o ${output}`
-        );
+        await aexec(`${cliPfx} tampermonkey -s ${sp} -p ${pkg} -o ${output}`);
+
         const contents = await readFile(output, { encoding: "utf-8" });
 
         const lines = contents.split("\n");

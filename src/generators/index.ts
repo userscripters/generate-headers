@@ -1,12 +1,12 @@
 import validator from "validator";
-import type { GeneratorOptions, RunAtOption } from "../generate";
-import { uniqify, type RequiredProps } from "../utils/common";
-import type { PackageInfo, PackagePerson } from "../utils/package";
-import { scrapeNetworkSites } from "../utils/scraper";
-import { explodePaths } from "../utils/urls";
-import type { GreasemonkeyGrantOptions } from "./greasemonkey/types";
-import type { TampermonkeyGrantOptions } from "./tampermonkey/types";
-import type { ViolentmonkeyGrantOptions } from "./violentmonkey/types";
+import type { GeneratorOptions, RunAtOption } from "../generate.js";
+import { uniqify, type RequiredProps } from "../utils/common.js";
+import type { PackageInfo, PackagePerson } from "../utils/package.js";
+import { NetworkSiteInfo } from "../utils/scraper.js";
+import { explodePaths } from "../utils/urls.js";
+import type { GreasemonkeyGrantOptions } from "./greasemonkey/types.js";
+import type { TampermonkeyGrantOptions } from "./tampermonkey/types.js";
+import type { ViolentmonkeyGrantOptions } from "./violentmonkey/types.js";
 
 declare global {
     interface String {
@@ -88,13 +88,14 @@ export const generateGrantHeaders = <
  */
 export const generateMatchHeaders = async <T extends CommonHeaders>(
     matches: string[],
+    networkSiteScraper: () => Promise<NetworkSiteInfo[]>,
     collapse = true
 ): Promise<HeaderEntries<T>> => {
     if (matches.includes("all")) {
         const match =
             matches.find((m) => /domain/.test(m)) || "https://domain/*";
 
-        const sites = await scrapeNetworkSites();
+        const sites = await networkSiteScraper();
 
         if (matches.includes("meta")) {
             const metaSites = sites.flatMap(({ site, ...rest }) => {
@@ -114,7 +115,7 @@ export const generateMatchHeaders = async <T extends CommonHeaders>(
             return match.replace("domain", domain);
         });
 
-        return generateMatchHeaders(uniqify(all));
+        return generateMatchHeaders(uniqify(all), networkSiteScraper);
     }
 
     return matches.flatMap(explodePaths).map((uri) => ["match", uri]);

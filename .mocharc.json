@@ -1,4 +1,16 @@
 {
+    "$schema": "https://json.schemastore.org/mocharc.json",
+    "extensions": [
+        "js",
+        "ts",
+        "tsx"
+    ],
+    "spec": [
+        "test/**/*.spec.*"
+    ],
+    "loader": [
+        "ts-node/esm"
+    ],
     "bail": true,
     "check-leaks": true,
     "recursive": true

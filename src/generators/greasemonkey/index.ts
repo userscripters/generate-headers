@@ -1,3 +1,7 @@
+import type { RunAtOption } from "../../generate.js";
+import { scrapeNetworkSites } from "../../utils/scraper.js";
+import { generateCommonHeaders } from "../common/index.js";
+import { finalizeMonkeyHeaders } from "../common/monkey.js";
 import {
     generateGrantHeaders,
     generateMatchHeaders,
@@ -5,15 +9,12 @@ import {
     generateRunAtHeaders,
     type HeaderEntries,
     type HeaderGenerator
-} from "..";
-import type { RunAtOption } from "../../generate";
-import { generateCommonHeaders } from "../common";
-import { finalizeMonkeyHeaders } from "../common/monkey";
+} from "../index.js";
 import type {
     GreasemonkeyGrantOptions,
     GreasemonkeyGrants,
     GreasemonkeyHeaders
-} from "./types";
+} from "./types.js";
 
 export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptions> =
     async (
@@ -40,7 +41,7 @@ export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptio
 
         const commonHeaders = generateCommonHeaders(packageInfo, pretty);
 
-        const matchHeaders = await generateMatchHeaders(matches, collapse);
+        const matchHeaders = await generateMatchHeaders(matches, scrapeNetworkSites, collapse);
 
         const requireHeaders = generateRequireHeaders(requires);
 

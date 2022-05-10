@@ -1,11 +1,10 @@
 import { expect } from "chai";
-import { load } from "proxyquire";
 import sinon from "sinon";
-import { generate } from "../src/generate";
-import { CommonHeaders } from "../src/generators";
-import { prettifyName } from "../src/utils/name";
-import type { scrapeNetworkSites } from "../src/utils/scraper";
-import { allMatches, directCommon, requires } from "./index.spec";
+import { generate } from "../src/generate.js";
+import { CommonHeaders, generateMatchHeaders } from "../src/generators/index.js";
+import { prettifyName } from "../src/utils/name.js";
+import type { scrapeNetworkSites } from "../src/utils/scraper.js";
+import { allMatches, directCommon, requires } from "./index.spec.js";
 
 describe("common", () => {
 
@@ -76,19 +75,14 @@ describe("common", () => {
     });
 
     it('"match" with "all" should expand to all sites', async () => {
-        const { generateMatchHeaders } = load<
-            typeof import("../src/generators")
-        >("../src/generators", {
-            "../utils/scraper": {
-                scrapeNetworkSites: (async () => [
-                    { site: "stackoverflow.com" },
-                    { site: "cooking.stackexchange.com" },
-                    { site: "meta.stackexchange.com" },
-                ]) as typeof scrapeNetworkSites,
-            },
-        });
-
-        const headers = await generateMatchHeaders(["all", "https://domain"]);
+        const headers = await generateMatchHeaders(
+            ["all", "https://domain"],
+            (async () => [
+                { site: "stackoverflow.com" },
+                { site: "cooking.stackexchange.com" },
+                { site: "meta.stackexchange.com" },
+            ]) as typeof scrapeNetworkSites
+        );
 
         const matches = headers.map(([, m]) => m);
         expect(matches).to.include("https://*.stackexchange.com");

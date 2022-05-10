@@ -1,3 +1,7 @@
+import type { RunAtOption } from "../../generate.js";
+import { scrapeNetworkSites } from "../../utils/scraper.js";
+import { generateCommonHeaders } from "../common/index.js";
+import { finalizeMonkeyHeaders } from "../common/monkey.js";
 import {
     generateGrantHeaders,
     generateMatchHeaders,
@@ -5,15 +9,12 @@ import {
     generateRunAtHeaders,
     type HeaderEntries,
     type HeaderGenerator
-} from "..";
-import type { RunAtOption } from "../../generate";
-import { generateCommonHeaders } from "../common";
-import { finalizeMonkeyHeaders } from "../common/monkey";
+} from "../index.js";
 import type {
     ViolentmonkeyGrantOptions,
     ViolentmonkeyGrants,
     ViolentmonkeyHeaders
-} from "./types";
+} from "./types.js";
 
 export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOptions> =
     async (
@@ -52,7 +53,7 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
             ViolentmonkeyGrantOptions
         >(grantMap, grants);
 
-        const matchHeaders = await generateMatchHeaders(matches, collapse);
+        const matchHeaders = await generateMatchHeaders(matches, scrapeNetworkSites, collapse);
 
         const requireHeaders = generateRequireHeaders(requires);
 

@@ -1,23 +1,23 @@
-import { bgRed } from "chalk";
+import chulk from "chalk";
 import { existsSync } from "fs";
 import { appendFile } from "fs/promises";
-import { generateGreasemonkeyHeaders } from "./generators/greasemonkey/index";
+import { generateGreasemonkeyHeaders } from "./generators/greasemonkey/index.js";
 import type {
     GrantOptions,
     HeaderGenerator,
     UserScriptManagerName
-} from "./generators/index";
-import { generateTampermonkeyHeaders } from "./generators/tampermonkey/index";
-import { generateViolentmonkeyHeaders } from "./generators/violentmonkey/index";
-import { replaceFileContent } from "./utils/filesystem";
-import { getPackage } from "./utils/package";
+} from "./generators/index.js";
+import { generateTampermonkeyHeaders } from "./generators/tampermonkey/index.js";
+import { generateViolentmonkeyHeaders } from "./generators/violentmonkey/index.js";
+import { replaceFileContent } from "./utils/filesystem.js";
+import { getPackage } from "./utils/package.js";
 import {
     getExistingHeadersOffset,
     validateConnectHeaders,
     validateMatchHeaders,
     validateOptionalHeaders,
     validateRequiredHeaders
-} from "./utils/validators";
+} from "./utils/validators.js";
 
 export type RunAtOption = "start" | "end" | "idle" | "body" | "menu";
 
@@ -40,7 +40,8 @@ export type GeneratorOptions<T extends GrantOptions> = {
 
 export const generate = async <T extends GrantOptions>(
     type: UserScriptManagerName,
-    options: GeneratorOptions<T>
+    options: GeneratorOptions<T>,
+    cli = false
 ) => {
     const {
         packagePath,
@@ -64,7 +65,7 @@ export const generate = async <T extends GrantOptions>(
         const parsedPackage = await getPackage(packagePath);
 
         if (!parsedPackage) {
-            console.log(bgRed`missing or corrupted package`);
+            console.log(chulk.bgRed`missing or corrupted package`);
             return "";
         }
 
@@ -74,7 +75,7 @@ export const generate = async <T extends GrantOptions>(
             valid: validMatches
         } = validateMatchHeaders(matches);
         if (!matchStatus) {
-            console.log(bgRed`Invalid @match headers:\n` + matchInvalid.join("\n"));
+            console.log(chulk.bgRed`Invalid @match headers:\n` + matchInvalid.join("\n"));
         }
 
         const {
@@ -83,7 +84,7 @@ export const generate = async <T extends GrantOptions>(
             valid: validConnects
         } = validateConnectHeaders(whitelist);
         if (!connectStatus) {
-            console.log(bgRed`Invalid @connect headers:\n` + connectInvalid.join("\n"));
+            console.log(chulk.bgRed`Invalid @connect headers:\n` + connectInvalid.join("\n"));
         }
 
         const {
@@ -95,22 +96,22 @@ export const generate = async <T extends GrantOptions>(
 
         if (!isValidHomepage) {
             console.log(
-                bgRed`Invalid homepage URL:\n` + parsedPackage.homepage
+                chulk.bgRed`Invalid homepage URL:\n` + parsedPackage.homepage
             );
         }
 
         const { isValidDownloadURL } = validateOptionalHeaders(options);
 
         if (!isValidDownloadURL) {
-            console.log(bgRed`Invalid @downloadURL:\n` + options.downloadURL);
+            console.log(chulk.bgRed`Invalid @downloadURL:\n` + options.downloadURL);
         }
 
         if (!isValidVersion) {
-            console.log(bgRed`Invalid version:\n` + parsedPackage.version);
+            console.log(chulk.bgRed`Invalid version:\n` + parsedPackage.version);
         }
 
         if (missing.length) {
-            console.log(bgRed`Missing required fields:\n` + missing.join("\n"));
+            console.log(chulk.bgRed`Missing required fields:\n` + missing.join("\n"));
         }
 
         if (!reqStatus) return "";
@@ -145,7 +146,7 @@ export const generate = async <T extends GrantOptions>(
         }
 
         //running from CLI with file emit disabled
-        if (require.main === module) process.stdout.write(content);
+        if (cli) process.stdout.write(content);
 
         return content;
     } catch (error) {
@@ -163,7 +164,7 @@ export const generate = async <T extends GrantOptions>(
 
         const [postfix, message] = handler(exceptionObject);
 
-        console.log(bgRed`[${name}] ${postfix}` + `\n\n${message}`);
+        console.log(chulk.bgRed`[${name}] ${postfix}` + `\n\n${message}`);
 
         return "";
     }

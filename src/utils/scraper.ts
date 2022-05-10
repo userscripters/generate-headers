@@ -7,7 +7,7 @@ got.extend({
     },
 });
 
-interface NetworkSiteInfo {
+export interface NetworkSiteInfo {
     icon: string;
     site: string;
     name: string;

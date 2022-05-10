@@ -1,20 +1,20 @@
 import { use } from "chai";
 import cpr from "chai-as-promised";
 import { join } from "path";
-import type { GeneratorOptions } from "../src/generate";
-import type { CommonGrantOptions } from "../src/generators";
+import type { GeneratorOptions } from "../src/generate.js";
 import type {
     GreasemonkeyGrantOptions,
     GreasemonkeyGrants
-} from "../src/generators/greasemonkey/types";
+} from "../src/generators/greasemonkey/types.js";
+import type { CommonGrantOptions } from "../src/generators/index.js";
 import type {
     TampermonkeyGrantOptions,
     TampermonkeyGrants
-} from "../src/generators/tampermonkey/types";
+} from "../src/generators/tampermonkey/types.js";
 import type {
     ViolentmonkeyGrantOptions,
     ViolentmonkeyGrants
-} from "../src/generators/violentmonkey/types";
+} from "../src/generators/violentmonkey/types.js";
 
 use(cpr);
 

@@ -1,11 +1,11 @@
 import { EOL } from "os";
-import { valid } from "semver";
+import semver from "semver";
 import validator from "validator";
-import type { GeneratorOptions } from "../generate";
-import { makeMonkeyTags } from "../generators/common/monkey";
-import type { GrantOptions } from "../generators/index";
-import { type PackageInfo } from "./package";
-import type { RequiredOnly } from "./types";
+import type { GeneratorOptions } from "../generate.js";
+import { makeMonkeyTags } from "../generators/common/monkey.js";
+import type { GrantOptions } from "../generators/index.js";
+import { type PackageInfo } from "./package.js";
+import type { RequiredOnly } from "./types.js";
 
 type OnlyOptional<T> = { [P in keyof T as undefined extends T[P] ? P : never]: T[P] };
 
@@ -84,7 +84,7 @@ export const validateRequiredHeaders = (packageInfo: PackageInfo) => {
 
     const { homepage, version } = packageInfo;
 
-    const isValidVersion = !!valid(version);
+    const isValidVersion = !!semver.valid(version);
     const isValidHomepage = homepage === void 0 || validator.isURL(homepage);
 
     const status = [isValidVersion, isValidHomepage, !missing.length].reduce(

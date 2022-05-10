@@ -1,18 +1,18 @@
 import { expect } from "chai";
 import { appendFile, readFile, rm } from "fs/promises";
 import { join } from "path";
-import { makeMonkeyTags } from "../src/generators/common/monkey";
-import { replaceFileContent } from "../src/utils/filesystem";
-import { getPackage } from "../src/utils/package";
-import { explodePaths } from "../src/utils/urls";
+import { makeMonkeyTags } from "../src/generators/common/monkey.js";
+import { replaceFileContent } from "../src/utils/filesystem.js";
+import { getPackage } from "../src/utils/package.js";
+import { explodePaths } from "../src/utils/urls.js";
 import {
     getExistingHeadersOffset,
     validateConnectHeaders,
     validateMatchHeaders,
     validateOptionalHeaders,
     validateRequiredHeaders
-} from "../src/utils/validators";
-import { requires } from "./index.spec";
+} from "../src/utils/validators.js";
+import { requires } from "./index.spec.js";
 
 describe("validators", () => {
     const base = process.cwd();

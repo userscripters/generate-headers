@@ -1,8 +1,8 @@
 import { expect } from "chai";
 import { unlink } from "fs/promises";
-import { generate, type GeneratorOptions } from "../src/generate";
-import { GreasemonkeyGrantOptions } from "../src/generators/greasemonkey/types";
-import { common, grantOptionsGM, grantsGM, output } from "./index.spec";
+import { generate, type GeneratorOptions } from "../src/generate.js";
+import type { GreasemonkeyGrantOptions } from "../src/generators/greasemonkey/types.js";
+import { common, grantOptionsGM, grantsGM, output } from "./index.spec.js";
 
 describe("Greasemonkey", async () => {
     const artefacts: string[] = [];

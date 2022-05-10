@@ -1,4 +1,4 @@
-import { scase } from "./common";
+import { scase } from "./common.js";
 
 export const parseName = (name: string) => {
     const [, scope, packageName] = name.match(/(?:@([\w-]+)\/)?([\w-]+)/) || [];

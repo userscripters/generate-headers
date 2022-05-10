@@ -1,8 +1,9 @@
+import { pathToFileURL } from "url";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-import { generate } from "./generate";
-import type { GrantOptions, UserScriptManagerName } from "./generators";
-import { scase } from "./utils/common";
+import { generate } from "./generate.js";
+import type { GrantOptions, UserScriptManagerName } from "./generators/index.js";
+import { scase } from "./utils/common.js";
 
 const names: UserScriptManagerName[] = [
     "greasemonkey",
@@ -107,7 +108,9 @@ names.forEach((name) =>
                 spaces: s,
                 pretty,
                 whitelist: w.map(String)
-            })
+            },
+                import.meta.url === pathToFileURL(process.argv[1]).href
+            )
     )
 );
 

@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import { generate } from "../src/generate";
-import { directCommon, grantOptionsTM } from "./index.spec";
+import { generate } from "../src/generate.js";
+import { directCommon, grantOptionsTM, requires } from "./index.spec.js";
 
 describe("Tampermonkey", async () => {
     it("headers are generated correctly", async () => {

@@ -7,7 +7,7 @@
         "checkJs": true,
         "lib": ["DOM", "DOM.Iterable", "ESNext"],
         "target": "es2019",
-        "module": "CommonJS",
+        "module": "es2020",
         "moduleResolution": "node",
         "noUnusedParameters": true,
         "noUnusedLocals": true,

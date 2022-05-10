@@ -3,8 +3,8 @@ import type {
     CommonGrants,
     CommonHeaders,
     CommonRunAt,
-    CustomHeaders,
-} from "..";
+    CustomHeaders
+} from "../index.js";
 
 export type ViolentmonkeyGrantOptions =
     | CommonGrantOptions
