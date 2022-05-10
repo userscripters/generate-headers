@@ -26,6 +26,7 @@ export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptio
             run = "start",
             pretty = false,
             collapse = false,
+            namespace
         }
     ) => {
         const grantMap: Record<GreasemonkeyGrantOptions, GreasemonkeyGrants> = {
@@ -39,7 +40,7 @@ export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptio
             unsafe: "unsafeWindow",
         };
 
-        const commonHeaders = generateCommonHeaders(packageInfo, { pretty });
+        const commonHeaders = generateCommonHeaders(packageInfo, { namespace, pretty });
 
         const matchHeaders = await generateMatchHeaders(matches, scrapeNetworkSites, collapse);
 

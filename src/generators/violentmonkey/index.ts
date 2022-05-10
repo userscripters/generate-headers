@@ -29,9 +29,10 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
             run = "start",
             pretty = false,
             collapse = false,
+            namespace
         }
     ) => {
-        const commonHeaders = generateCommonHeaders(packageInfo, { pretty });
+        const commonHeaders = generateCommonHeaders(packageInfo, { namespace, pretty });
 
         const grantMap: Record<ViolentmonkeyGrantOptions, ViolentmonkeyGrants> =
             {

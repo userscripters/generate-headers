@@ -4,6 +4,7 @@ import type { PackageInfo } from "../../utils/package.js";
 import type { CommonHeaders, HeaderEntries } from "../index.js";
 
 export type CommonHeadersOptions = {
+    namespace?: string;
     pretty: boolean;
 }
 
@@ -16,7 +17,7 @@ export const generateCommonHeaders = (
     pkg: PackageInfo,
     options: CommonHeadersOptions
 ) => {
-    const { pretty } = options;
+    const { namespace, pretty } = options;
 
     const {
         author,
@@ -37,7 +38,8 @@ export const generateCommonHeaders = (
         ["version", version],
     ];
 
-    if (scope) headers.push(["namespace", scope]);
+    const scopeOrNs = namespace || scope;
+    if (scopeOrNs) headers.push(["namespace", scopeOrNs]);
 
     if (icon) headers.push(["icon", icon]);
 

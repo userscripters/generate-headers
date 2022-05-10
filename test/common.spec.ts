@@ -101,6 +101,15 @@ describe("common", () => {
         expect(required.length).to.equal(2);
     });
 
+    it('"namespace" option should override package.json scope', async () => {
+        const content = await generate("tampermonkey", {
+            ...directCommon,
+            namespace: "testing"
+        });
+
+        expect(content).to.match(/@namespace\s+testing$/m);
+    });
+
     it('"pretty" option should prettify output', async () => {
         const content = await generate("tampermonkey", {
             ...directCommon,

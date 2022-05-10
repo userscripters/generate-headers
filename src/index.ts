@@ -52,6 +52,11 @@ const sharedOpts = {
         description: "generates valid @match headers (repeatable)",
         type: "array",
     },
+    n: {
+        alias: "namespace",
+        description: "Overrides namespace for @namespace header",
+        type: "string",
+    },
     o: {
         alias: "output",
         default: "./dist/headers.js",
@@ -103,7 +108,7 @@ names.forEach((name) =>
         name,
         `generates ${scase(name)} headers`,
         sharedOpts,
-        ({ c, d, du, e, g = [], i, m = [], q = [], o, p, r = "start", s, pretty, u, w = [] }) =>
+        ({ c, d, du, e, g = [], i, m = [], n, q = [], o, p, r = "start", s, pretty, u, w = [] }) =>
             void generate<GrantOptions>(name, {
                 collapse: c,
                 direct: !!d,
@@ -113,6 +118,7 @@ names.forEach((name) =>
                 matches: m.map(String),
                 requires: q.map(String),
                 grants: g as GrantOptions[],
+                namespace: n,
                 output: o,
                 packagePath: p,
                 run: r,
