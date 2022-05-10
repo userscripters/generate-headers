@@ -7,18 +7,25 @@ export type CommonHeadersOptions = {
     pretty: boolean;
 }
 
+/**
+ * @summary generates headers common to all userscript managers
+ * @param pkg parsed package.json
+ * @param options configuration options
+ */
 export const generateCommonHeaders = (
-    {
+    pkg: PackageInfo,
+    options: CommonHeadersOptions
+) => {
+    const { pretty } = options;
+
+    const {
         author,
         description,
         name,
         version,
         icon,
         contributors = [],
-    }: PackageInfo,
-    options: CommonHeadersOptions
-) => {
-    const { pretty } = options;
+    } = pkg;
 
     const parsedAuthor = parseAuthor(author);
     const { packageName, scope } = parseName(name);
