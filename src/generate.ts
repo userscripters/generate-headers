@@ -22,23 +22,23 @@ import {
 export type RunAtOption = "start" | "end" | "idle" | "body" | "menu";
 
 export type GeneratorOptions<T extends GrantOptions> = {
+    collapse: boolean;
+    direct?: boolean;
     downloadURL?: string;
-    packagePath: string;
-    output: string;
-    spaces?: number;
+    eol?: string;
+    grants?: T[];
     homepage?: string;
     inject?: string;
     matches?: string[];
     namespace?: string;
-    requires?: string[];
-    collapse: boolean;
-    eol?: string;
-    grants?: T[];
-    whitelist?: Array<"self" | "localhost" | "*"> | string[];
-    run?: RunAtOption;
-    direct?: boolean;
+    output: string;
+    packagePath: string;
     pretty?: boolean;
+    requires?: string[];
+    run?: RunAtOption;
+    spaces?: number;
     updateURL?: string;
+    whitelist?: Array<"self" | "localhost" | "*"> | string[];
 };
 
 export const generate = async <T extends GrantOptions>(
