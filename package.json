@@ -9,7 +9,7 @@
         "clean": "rm -rf dist",
         "prebuild": "npm run lint && npm run clean",
         "build": "tsc --outDir dist && npm run executable",
-        "executable": "sed -i \"1s/^/#!\\/usr\\/bin\\/env node\\n/\" dist/index.js",
+        "executable": "sed -i \"1s/^/#!\\/usr\\/bin\\/env node\\n/\" dist/cli.js",
         "version": "npm run test && npm run build && git add dist && git commit --amend --no-edit",
         "postversion": "bash ./scripts/postversion.sh",
         "readme": "bash ./scripts/readme.sh",
@@ -76,6 +76,6 @@
     "main": "dist/index.js",
     "type": "module",
     "bin": {
-        "generate-headers": "dist/index.js"
+        "generate-headers": "dist/cli.js"
     }
 }

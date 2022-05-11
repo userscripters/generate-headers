@@ -19,7 +19,7 @@ const aexec = promisify(exec);
 describe("CLI Options", function () {
     this.timeout(30e3); // CLI runs can be slow
 
-    const entry = "./src/index.ts";
+    const entry = "./src/cli.ts";
     const cliPfx = `node --loader ts-node/esm ${entry}`;
 
     afterEach(async () =>
