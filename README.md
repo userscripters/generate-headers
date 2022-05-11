@@ -7,7 +7,7 @@
 | Name | @userscripters/generate-headers |
 | Description | Userscript manager header generator |
 | License | [GPL-3.0-or-later](https://spdx.org/licenses/GPL-3.0-or-later) |
-| Version | 2.12.1 |
+| Version | 3.0.0 |
 
 Installation instructions and usage examples can be found on the [Stack Apps post](https://stackapps.com/q/9088/78873).
 
