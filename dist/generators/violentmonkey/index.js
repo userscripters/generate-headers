@@ -1,11 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateViolentmonkeyHeaders = void 0;
-const __1 = require("..");
-const common_1 = require("../common");
-const monkey_1 = require("../common/monkey");
-const generateViolentmonkeyHeaders = async (packageInfo, { spaces, matches = [], requires = [], grants = [], inject = "page", run = "start", pretty = false, collapse = false, }) => {
-    const commonHeaders = (0, common_1.generateCommonHeaders)(packageInfo, pretty);
+import { scrapeNetworkSites } from "../../utils/scraper.js";
+import { generateCommonHeaders } from "../common/index.js";
+import { finalizeMonkeyHeaders } from "../common/monkey.js";
+import { generateGrantHeaders, generateMatchHeaders, generateRequireHeaders, generateRunAtHeaders } from "../index.js";
+export const generateViolentmonkeyHeaders = async (packageInfo, { downloadURL, homepage, spaces, matches = [], requires = [], grants = [], inject = "page", run = "start", pretty = false, collapse = false, namespace }) => {
+    const commonHeaders = generateCommonHeaders(packageInfo, { namespace, pretty });
     const grantMap = {
         set: "GM_setValue",
         get: "GM_getValue",
@@ -20,22 +18,25 @@ const generateViolentmonkeyHeaders = async (packageInfo, { spaces, matches = [],
         close: "window.close",
         focus: "window.focus",
     };
-    const grantHeaders = (0, __1.generateGrantHeaders)(grantMap, grants);
-    const matchHeaders = await (0, __1.generateMatchHeaders)(matches, collapse);
-    const requireHeaders = (0, __1.generateRequireHeaders)(requires);
+    const grantHeaders = generateGrantHeaders(grantMap, grants);
+    const matchHeaders = await generateMatchHeaders(matches, scrapeNetworkSites, collapse);
+    const requireHeaders = generateRequireHeaders(requires);
     const runAtMap = {
         start: "document-start",
         end: "document-end",
         idle: "document-idle",
     };
-    const { homepage, bugs: { url: supportURL } = {} } = packageInfo;
+    const { bugs: { url: supportURL } = {} } = packageInfo;
     const specialHeaders = [
-        ...(0, __1.generateRunAtHeaders)(runAtMap, run),
+        ...generateRunAtHeaders(runAtMap, run),
     ];
+    const homepageURL = homepage || packageInfo.homepage;
+    if (downloadURL)
+        specialHeaders.push(["downloadURL", downloadURL]);
     if (supportURL)
         specialHeaders.push(["supportURL", supportURL]);
-    if (homepage)
-        specialHeaders.push(["homepageURL", homepage]);
+    if (homepageURL)
+        specialHeaders.push(["homepageURL", homepageURL]);
     if (inject)
         specialHeaders.push(["inject-into", inject]);
     const headers = [
@@ -45,6 +46,5 @@ const generateViolentmonkeyHeaders = async (packageInfo, { spaces, matches = [],
         ...requireHeaders,
         ...specialHeaders,
     ];
-    return (0, monkey_1.finalizeMonkeyHeaders)(headers, spaces);
+    return finalizeMonkeyHeaders(headers, spaces);
 };
-exports.generateViolentmonkeyHeaders = generateViolentmonkeyHeaders;

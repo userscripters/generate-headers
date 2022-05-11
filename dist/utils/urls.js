@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.explodePaths = void 0;
-const explodePaths = (url) => {
+export const explodePaths = (url) => {
     try {
         const { pathname, hash, origin, password, search, username } = new URL(url);
         const decoded = decodeURIComponent(pathname);
@@ -33,4 +30,3 @@ const explodePaths = (url) => {
         return [url];
     }
 };
-exports.explodePaths = explodePaths;

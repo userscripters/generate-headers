@@ -1,23 +1,17 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.scrapeNetworkSites = void 0;
-const got_1 = __importDefault(require("got"));
-const jsdom_1 = require("jsdom");
-got_1.default.extend({
+import got from "got";
+import { JSDOM } from "jsdom";
+got.extend({
     headers: {
         "User-Agent": "Header generator (https://stackapps.com/q/9088/78873)",
     },
 });
-const scrapeNetworkSites = async () => {
+export const scrapeNetworkSites = async () => {
     const url = new URL("https://stackexchange.com/sites");
-    const response = await (0, got_1.default)(url, { method: "GET" });
+    const response = await got(url, { method: "GET" });
     const { statusCode, body } = response;
     if (statusCode !== 200)
         return [];
-    const { window: { document }, } = new jsdom_1.JSDOM(body);
+    const { window: { document }, } = new JSDOM(body);
     const siteInfo = [];
     document
         .querySelectorAll(".gv-item[class*='category-']")
@@ -38,4 +32,3 @@ const scrapeNetworkSites = async () => {
     });
     return siteInfo;
 };
-exports.scrapeNetworkSites = scrapeNetworkSites;

@@ -1,12 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateTampermonkeyHeaders = void 0;
-const __1 = require("..");
-const common_1 = require("../common");
-const monkey_1 = require("../common/monkey");
-const generateTampermonkeyHeaders = async (packageInfo, { spaces, whitelist = [], requires = [], matches = [], grants = [], run = "start", pretty = false, collapse = false, }) => {
-    const matchHeaders = await (0, __1.generateMatchHeaders)(matches, collapse);
-    const requireHeaders = (0, __1.generateRequireHeaders)(requires);
+import { scrapeNetworkSites } from "../../utils/scraper.js";
+import { generateCommonHeaders } from "../common/index.js";
+import { finalizeMonkeyHeaders } from "../common/monkey.js";
+import { generateGrantHeaders, generateMatchHeaders, generateRequireHeaders, generateRunAtHeaders } from "../index.js";
+export const generateTampermonkeyHeaders = async (packageInfo, { downloadURL, homepage, updateURL, spaces, whitelist = [], requires = [], matches = [], grants = [], run = "start", pretty = false, collapse = false, namespace }) => {
+    const matchHeaders = await generateMatchHeaders(matches, scrapeNetworkSites, collapse);
+    const requireHeaders = generateRequireHeaders(requires);
     const grantMap = {
         set: "GM_setValue",
         get: "GM_getValue",
@@ -18,8 +16,8 @@ const generateTampermonkeyHeaders = async (packageInfo, { spaces, whitelist = []
         close: "window.close",
         focus: "window.focus",
     };
-    const grantHeaders = (0, __1.generateGrantHeaders)(grantMap, grants);
-    const commonHeaders = (0, common_1.generateCommonHeaders)(packageInfo, pretty);
+    const grantHeaders = generateGrantHeaders(grantMap, grants);
+    const commonHeaders = generateCommonHeaders(packageInfo, { namespace, pretty });
     const runAtMap = {
         start: "document-start",
         end: "document-end",
@@ -27,16 +25,21 @@ const generateTampermonkeyHeaders = async (packageInfo, { spaces, whitelist = []
         menu: "context-menu",
         body: "document-body",
     };
-    const { homepage, bugs: { url: supportURL } = {}, repository: { url: sourceURL } = {}, } = packageInfo;
+    const { bugs: { url: supportURL } = {}, repository: { url: sourceURL } = {}, } = packageInfo;
     const specialHeaders = [
-        ...(0, __1.generateRunAtHeaders)(runAtMap, run),
+        ...generateRunAtHeaders(runAtMap, run),
     ];
+    const homepageURL = homepage || packageInfo.homepage;
+    if (downloadURL)
+        specialHeaders.push(["downloadURL", downloadURL]);
     if (supportURL)
         specialHeaders.push(["supportURL", supportURL]);
+    if (updateURL)
+        specialHeaders.push(["updateURL", updateURL]);
     if (sourceURL)
         specialHeaders.push(["source", sourceURL]);
-    if (homepage)
-        specialHeaders.push(["homepage", homepage]);
+    if (homepageURL)
+        specialHeaders.push(["homepage", homepageURL]);
     if (grants.includes("fetch")) {
         whitelist.forEach((remote) => {
             const schemaStripped = remote.replace(/^.+?:\/\//, "");
@@ -50,6 +53,5 @@ const generateTampermonkeyHeaders = async (packageInfo, { spaces, whitelist = []
         ...grantHeaders,
         ...specialHeaders,
     ];
-    return (0, monkey_1.finalizeMonkeyHeaders)(headers, spaces);
+    return finalizeMonkeyHeaders(headers, spaces);
 };
-exports.generateTampermonkeyHeaders = generateTampermonkeyHeaders;

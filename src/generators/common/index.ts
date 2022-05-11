@@ -5,7 +5,7 @@ import type { CommonHeaders, HeaderEntries } from "../index.js";
 
 export type CommonGeneratorOptions = {
     namespace?: string;
-    pretty: boolean;
+    pretty?: boolean;
 }
 
 /**
@@ -17,7 +17,7 @@ export const generateCommonHeaders = (
     pkg: PackageInfo,
     options: CommonGeneratorOptions
 ) => {
-    const { namespace, pretty } = options;
+    const { namespace, pretty = false } = options;
 
     const {
         author,

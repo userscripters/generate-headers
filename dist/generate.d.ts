@@ -1,18 +1,22 @@
-import type { GrantOptions, UserScriptManagerName } from "./generators/index";
+import type { CommonGeneratorOptions } from "./generators/common/index.js";
+import type { GrantOptions, UserScriptManagerName } from "./generators/index.js";
 export declare type RunAtOption = "start" | "end" | "idle" | "body" | "menu";
-export declare type GeneratorOptions<T extends GrantOptions> = {
-    packagePath: string;
-    output: string;
-    spaces?: number;
-    inject?: string;
-    matches?: string[];
-    requires?: string[];
+export declare type GeneratorOptions<T extends GrantOptions> = CommonGeneratorOptions & {
     collapse: boolean;
+    direct?: boolean;
+    downloadURL?: string;
     eol?: string;
     grants?: T[];
-    whitelist?: Array<"self" | "localhost" | "*"> | string[];
-    run?: RunAtOption;
-    direct?: boolean;
+    homepage?: string;
+    inject?: string;
+    matches?: string[];
+    output: string;
+    packagePath: string;
     pretty?: boolean;
+    requires?: string[];
+    run?: RunAtOption;
+    spaces?: number;
+    updateURL?: string;
+    whitelist?: Array<"self" | "localhost" | "*"> | string[];
 };
-export declare const generate: <T extends GrantOptions>(type: UserScriptManagerName, { packagePath, output, spaces, eol, collapse, direct, matches, whitelist, ...rest }: GeneratorOptions<T>) => Promise<string>;
+export declare const generate: <T extends GrantOptions>(type: UserScriptManagerName, options: GeneratorOptions<T>, cli?: boolean) => Promise<string>;

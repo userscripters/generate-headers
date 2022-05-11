@@ -1,19 +1,15 @@
 #!/usr/bin/env node
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const yargs_1 = __importDefault(require("yargs"));
-const helpers_1 = require("yargs/helpers");
-const generate_1 = require("./generate");
-const common_1 = require("./utils/common");
+import { pathToFileURL } from "url";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
+import { generate } from "./generate.js";
+import { scase } from "./utils/common.js";
 const names = [
     "greasemonkey",
     "tampermonkey",
     "violentmonkey",
 ];
-const cli = (0, yargs_1.default)((0, helpers_1.hideBin)(process.argv));
+const cli = yargs(hideBin(process.argv));
 const sharedOpts = {
     c: {
         alias: "collapse",
@@ -27,26 +23,41 @@ const sharedOpts = {
         description: "Directs headers content to `process.stdout`",
         type: "boolean",
     },
+    du: {
+        alias: "download-url",
+        description: "URL for the @downloadURL header",
+        type: "string"
+    },
     e: {
         alias: "eol",
         default: "\n",
         description: "Sets the end-of-line character(s) (affects the check for existing headers)",
         type: "string",
     },
-    g: {
-        alias: "grant",
-        description: "generates @grant headers, can be repeated",
-        type: "array",
+    h: {
+        alias: "homepage",
+        description: "Overrides homepage for @homepage header",
+        type: "string",
     },
     i: {
         alias: "inject",
         description: "Adds @inject-into header for Violentmonkey, no-op otherwise",
         type: "string",
     },
+    g: {
+        alias: "grant",
+        description: "Generates @grant headers, can be repeated",
+        type: "array",
+    },
     m: {
         alias: "match",
-        description: "generates valid @match headers (repeatable)",
+        description: "Generates valid @match headers (repeatable)",
         type: "array",
+    },
+    n: {
+        alias: "namespace",
+        description: "Overrides namespace for @namespace header",
+        type: "string",
     },
     o: {
         alias: "output",
@@ -62,7 +73,7 @@ const sharedOpts = {
     },
     q: {
         alias: "require",
-        description: "generates valid @require headers (repeatable)",
+        description: "Generates valid @require headers (repeatable)",
         type: "array"
     },
     r: {
@@ -74,33 +85,42 @@ const sharedOpts = {
     s: {
         alias: "spaces",
         default: 4,
-        description: "number of spaces to indent header values with (total is the longest name + this value)",
+        description: "Number of spaces to indent header values with (total is the longest name + this value)",
         type: "number",
+    },
+    u: {
+        alias: "update-url",
+        description: "URL for the @updateURL header for Tampermonkey, no-op otherwise",
+        type: "string"
     },
     w: {
         alias: "whitelist",
-        description: "generates @connect headers (repeatable)",
+        description: "Generates @connect headers (repeatable)",
         type: "array",
     },
     pretty: {
         type: "boolean",
         default: false,
-        description: "prettifies outputted headers where possible",
+        description: "Prettifies outputted headers where possible",
     },
 };
-names.forEach((name) => cli.command(name, `generates ${(0, common_1.scase)(name)} headers`, sharedOpts, ({ c, d, e, g = [], i, m = [], q = [], o, p, r = "start", s, pretty, w = [] }) => void (0, generate_1.generate)(name, {
+names.forEach((name) => cli.command(name, `generates ${scase(name)} headers`, sharedOpts, ({ c, d, du, e, h, g = [], i, m = [], n, q = [], o, p, r = "start", s, pretty, u, w = [] }) => void generate(name, {
     collapse: c,
     direct: !!d,
+    downloadURL: du,
     eol: e,
+    homepage: h,
     inject: i,
     matches: m.map(String),
     requires: q.map(String),
     grants: g,
+    namespace: n,
     output: o,
     packagePath: p,
     run: r,
     spaces: s,
     pretty,
+    updateURL: u,
     whitelist: w.map(String)
-})));
+}, import.meta.url === pathToFileURL(process.argv[1]).href)));
 cli.demandCommand().help().parse();

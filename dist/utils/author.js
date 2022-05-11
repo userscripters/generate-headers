@@ -1,9 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseAuthor = exports.formatAuthor = void 0;
-const formatAuthor = ({ name, email, url, }) => name + (email ? ` <${email}>` : "") + (url ? ` (${url})` : "");
-exports.formatAuthor = formatAuthor;
-const parseAuthor = (info) => {
+export const formatAuthor = ({ name, email, url, }) => name + (email ? ` <${email}>` : "") + (url ? ` (${url})` : "");
+export const parseAuthor = (info) => {
     if (typeof info === "object")
         return info;
     const authorRegex = /(\w+(?:\s\w+)?)(?:\s<(.+?)>)?(?:\s\((.+?)\))?$/i;
@@ -17,4 +13,3 @@ const parseAuthor = (info) => {
         url,
     };
 };
-exports.parseAuthor = parseAuthor;

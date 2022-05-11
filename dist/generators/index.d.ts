@@ -1,10 +1,11 @@
 /// <reference types="node" />
-import type { GeneratorOptions, RunAtOption } from "../generate";
-import { type RequiredProps } from "../utils/common";
-import type { PackageInfo, PackagePerson } from "../utils/package";
-import type { GreasemonkeyGrantOptions } from "./greasemonkey/types";
-import type { TampermonkeyGrantOptions } from "./tampermonkey/types";
-import type { ViolentmonkeyGrantOptions } from "./violentmonkey/types";
+import type { GeneratorOptions, RunAtOption } from "../generate.js";
+import { type RequiredProps } from "../utils/common.js";
+import type { PackageInfo, PackagePerson } from "../utils/package.js";
+import { NetworkSiteInfo } from "../utils/scraper.js";
+import type { GreasemonkeyGrantOptions } from "./greasemonkey/types.js";
+import type { TampermonkeyGrantOptions } from "./tampermonkey/types.js";
+import type { ViolentmonkeyGrantOptions } from "./violentmonkey/types.js";
 declare global {
     interface String {
         padEnd<T extends string>(maxLength: number, fillString?: string): T;
@@ -68,7 +69,7 @@ export declare const generateMatchHeaders: <T extends {
     require: string[];
     version: `${number}.${number}.${number}`;
     grant: string;
-}>(matches: string[], collapse?: boolean) => Promise<HeaderEntries<T>>;
+}>(matches: string[], networkSiteScraper: () => Promise<NetworkSiteInfo[]>, collapse?: boolean) => Promise<HeaderEntries<T>>;
 export declare const generateRunAtHeaders: <T extends {
     "run-at": string;
 }>(runAtMap: {

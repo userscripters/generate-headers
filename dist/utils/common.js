@@ -1,11 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.uniqify = exports.mdLink = exports.scase = exports.getLongest = void 0;
-const getLongest = (words) => Math.max(...words.map(({ length }) => length));
-exports.getLongest = getLongest;
-const scase = (text) => `${text[0].toUpperCase()}${text.slice(1).toLowerCase()}`;
-exports.scase = scase;
-const mdLink = (lbl, href) => `[${lbl}](${href})`;
-exports.mdLink = mdLink;
-const uniqify = (arr) => [...new Set(arr)];
-exports.uniqify = uniqify;
+export const getLongest = (words) => Math.max(...words.map(({ length }) => length));
+export const scase = (text) => `${text[0].toUpperCase()}${text.slice(1).toLowerCase()}`;
+export const mdLink = (lbl, href) => `[${lbl}](${href})`;
+export const uniqify = (arr) => [...new Set(arr)];

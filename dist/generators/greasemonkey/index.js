@@ -1,10 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateGreasemonkeyHeaders = void 0;
-const __1 = require("..");
-const common_1 = require("../common");
-const monkey_1 = require("../common/monkey");
-const generateGreasemonkeyHeaders = async (packageInfo, { matches = [], requires = [], grants = [], run = "start", pretty = false, collapse = false, }) => {
+import { scrapeNetworkSites } from "../../utils/scraper.js";
+import { generateCommonHeaders } from "../common/index.js";
+import { finalizeMonkeyHeaders } from "../common/monkey.js";
+import { generateGrantHeaders, generateMatchHeaders, generateRequireHeaders, generateRunAtHeaders } from "../index.js";
+export const generateGreasemonkeyHeaders = async (packageInfo, { matches = [], requires = [], grants = [], run = "start", pretty = false, collapse = false, namespace }) => {
     const grantMap = {
         set: "GM.setValue",
         get: "GM.getValue",
@@ -15,17 +13,17 @@ const generateGreasemonkeyHeaders = async (packageInfo, { matches = [], requires
         fetch: "GM.xmlHttpRequest",
         unsafe: "unsafeWindow",
     };
-    const commonHeaders = (0, common_1.generateCommonHeaders)(packageInfo, pretty);
-    const matchHeaders = await (0, __1.generateMatchHeaders)(matches, collapse);
-    const requireHeaders = (0, __1.generateRequireHeaders)(requires);
-    const grantHeaders = (0, __1.generateGrantHeaders)(grantMap, grants);
+    const commonHeaders = generateCommonHeaders(packageInfo, { namespace, pretty });
+    const matchHeaders = await generateMatchHeaders(matches, scrapeNetworkSites, collapse);
+    const requireHeaders = generateRequireHeaders(requires);
+    const grantHeaders = generateGrantHeaders(grantMap, grants);
     const runAtMap = {
         start: "document-start",
         end: "document-end",
         idle: "document-idle",
     };
     const specialHeaders = [
-        ...(0, __1.generateRunAtHeaders)(runAtMap, run),
+        ...generateRunAtHeaders(runAtMap, run),
     ];
     const runsAt = runAtMap[run];
     if (runsAt)
@@ -37,6 +35,5 @@ const generateGreasemonkeyHeaders = async (packageInfo, { matches = [], requires
         ...requireHeaders,
         ...specialHeaders,
     ];
-    return (0, monkey_1.finalizeMonkeyHeaders)(headers, 4);
+    return finalizeMonkeyHeaders(headers, 4);
 };
-exports.generateGreasemonkeyHeaders = generateGreasemonkeyHeaders;
