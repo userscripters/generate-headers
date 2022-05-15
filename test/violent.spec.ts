@@ -6,7 +6,7 @@ import type {
     ViolentmonkeyGrantOptions,
     ViolentmonkeyHeaders
 } from "../src/generators/violentmonkey/types.js";
-import { common, grantOptionsVM, grantsVM, output, requires } from "./index.spec.js";
+import { allMatches, common, grantOptionsVM, grantsVM, output, requires } from "./index.spec.js";
 
 describe("ViolentMonkey", async () => {
     const artefacts: string[] = [];
@@ -47,11 +47,19 @@ describe("ViolentMonkey", async () => {
         const vmSpecificHeaders: Exclude<
             keyof ViolentmonkeyHeaders,
             keyof CommonHeaders
-            >[] = ["homepageURL", "inject-into", "run-at", "supportURL", "downloadURL"];
+            >[] = [
+                "exclude-match",
+                "homepageURL",
+                "inject-into",
+                "run-at",
+                "supportURL",
+                "downloadURL"
+            ];
 
         const content = await generate("violentmonkey", {
             ...directCommon,
             downloadURL: requires[1],
+            excludes: allMatches.slice(0, -1),
             homepage: requires[1]
         });
 
