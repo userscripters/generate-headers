@@ -90,7 +90,7 @@ export const generateGrantHeaders = <
 export const generateExcludeHeaders = <T extends CommonHeaders>(
     excludes: string[],
 ): HeaderEntries<T> => {
-    return excludes.flatMap(explodePaths).map((uri) => [`exclude`, uri]);
+    return excludes.flatMap(explodePaths).map((uri) => ["exclude", uri]);
 };
 
 /**
@@ -100,7 +100,7 @@ export const generateExcludeHeaders = <T extends CommonHeaders>(
 export const generateExcludeMatchHeaders = <T extends { "exclude-match": string[]; }>(
     excludes: string[],
 ): HeaderEntries<T> => {
-    return excludes.flatMap(explodePaths).map((uri) => [`exclude-match`, uri]);
+    return excludes.flatMap(explodePaths).map((uri) => ["exclude-match", uri]);
 };
 
 /**
