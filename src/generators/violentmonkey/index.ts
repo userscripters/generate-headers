@@ -17,42 +17,48 @@ import type {
     ViolentmonkeyHeaders
 } from "./types.js";
 
+/**
+ * @see https://violentmonkey.github.io/api/metadata-block/
+ *
+ * @summary generates Violentmonkey metadata block
+ * @param packageInfo parsed {@link PackageInfo}
+ * @param options generator configuration
+ */
 export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOptions> =
-    async (
-        packageInfo,
-        {
+    async (packageInfo, options) => {
+        const {
+            collapse = false,
             downloadURL,
             excludes = [],
-            homepage,
-            spaces,
-            matches = [],
-            requires = [],
             grants = [],
+            homepage,
             inject = "page",
-            run = "start",
-            pretty = false,
+            matches = [],
+            namespace,
             noframes = false,
-            collapse = false,
-            namespace
-        }
-    ) => {
+            pretty = false,
+            requires = [],
+            run = "start",
+            spaces,
+        } = options;
+
         const commonHeaders = generateCommonHeaders(packageInfo, { namespace, noframes, pretty });
 
         const grantMap: Record<ViolentmonkeyGrantOptions, ViolentmonkeyGrants> =
-            {
-                set: "GM_setValue",
-                get: "GM_getValue",
-                list: "GM_listValues",
-                delete: "GM_deleteValue",
-                download: "GM_download",
-                clip: "GM_setClipboard",
-                fetch: "GM_xmlhttpRequest",
-                notify: "GM_notification",
-                style: "GM_addStyle",
-                unsafe: "unsafeWindow",
-                close: "window.close",
-                focus: "window.focus",
-            };
+        {
+            set: "GM_setValue",
+            get: "GM_getValue",
+            list: "GM_listValues",
+            delete: "GM_deleteValue",
+            download: "GM_download",
+            clip: "GM_setClipboard",
+            fetch: "GM_xmlhttpRequest",
+            notify: "GM_notification",
+            style: "GM_addStyle",
+            unsafe: "unsafeWindow",
+            close: "window.close",
+            focus: "window.focus",
+        };
 
         const grantHeaders = generateGrantHeaders<
             ViolentmonkeyHeaders,
@@ -85,9 +91,9 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
         const homepageURL = homepage || packageInfo.homepage || sourceURL;
 
         if (downloadURL) specialHeaders.push(["downloadURL", downloadURL]);
-        if (supportURL) specialHeaders.push(["supportURL", supportURL]);
-        if (homepageURL) specialHeaders.push(["homepageURL", homepageURL]);
         if (inject) specialHeaders.push(["inject-into", inject]);
+        if (homepageURL) specialHeaders.push(["homepageURL", homepageURL]);
+        if (supportURL) specialHeaders.push(["supportURL", supportURL]);
 
         const headers: HeaderEntries<ViolentmonkeyHeaders> = [
             ...commonHeaders,
@@ -97,5 +103,6 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
             ...requireHeaders,
             ...specialHeaders,
         ];
+
         return finalizeMonkeyHeaders(headers, spaces);
     };
