@@ -43,7 +43,7 @@ describe("Tampermonkey", async () => {
     });
 
     it("special headers should be generated", async () => {
-        const vmSpecificHeaders: Exclude<
+        const tmSpecificHeaders: Exclude<
             keyof TampermonkeyHeaders,
             keyof CommonHeaders
             >[] = ["downloadURL", "homepage", "updateURL"];
@@ -55,7 +55,7 @@ describe("Tampermonkey", async () => {
             updateURL: requires[1]
         });
 
-        vmSpecificHeaders.forEach((header) => {
+        tmSpecificHeaders.forEach((header) => {
             const status = new RegExp(`\/\/ @${header}\\s+.+?`, "gm").test(
                 content
             );
