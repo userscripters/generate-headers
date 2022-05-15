@@ -64,6 +64,18 @@ describe("common", () => {
         });
     });
 
+    it('@exclude headers should be generated', async () => {
+        const allExcludes = allMatches.slice(0, -1);
+
+        const content = await generate("greasemonkey", {
+            ...directCommon,
+            excludes: allExcludes
+        });
+
+        const matched = content.match(/@exclude\s+(.+)/g) || [];
+        expect(matched).length(allExcludes.length);
+    });
+
     it("@match headers should be generated", async () => {
         const content = await generate("violentmonkey", {
             ...directCommon,
