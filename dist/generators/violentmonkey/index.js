@@ -1,8 +1,8 @@
 import { scrapeNetworkSites } from "../../utils/scraper.js";
 import { generateCommonHeaders } from "../common/index.js";
 import { finalizeMonkeyHeaders } from "../common/monkey.js";
-import { generateGrantHeaders, generateMatchHeaders, generateRequireHeaders, generateRunAtHeaders } from "../index.js";
-export const generateViolentmonkeyHeaders = async (packageInfo, { downloadURL, homepage, spaces, matches = [], requires = [], grants = [], inject = "page", run = "start", pretty = false, collapse = false, namespace }) => {
+import { generateExcludeMatchHeaders, generateGrantHeaders, generateMatchHeaders, generateRequireHeaders, generateRunAtHeaders } from "../index.js";
+export const generateViolentmonkeyHeaders = async (packageInfo, { downloadURL, excludes = [], homepage, spaces, matches = [], requires = [], grants = [], inject = "page", run = "start", pretty = false, collapse = false, namespace }) => {
     const commonHeaders = generateCommonHeaders(packageInfo, { namespace, pretty });
     const grantMap = {
         set: "GM_setValue",
@@ -20,17 +20,18 @@ export const generateViolentmonkeyHeaders = async (packageInfo, { downloadURL, h
     };
     const grantHeaders = generateGrantHeaders(grantMap, grants);
     const matchHeaders = await generateMatchHeaders(matches, scrapeNetworkSites, collapse);
+    const excludeHeaders = generateExcludeMatchHeaders(excludes);
     const requireHeaders = generateRequireHeaders(requires);
     const runAtMap = {
         start: "document-start",
         end: "document-end",
         idle: "document-idle",
     };
-    const { bugs: { url: supportURL } = {} } = packageInfo;
+    const { bugs: { url: supportURL } = {}, repository: { url: sourceURL } = {}, } = packageInfo;
     const specialHeaders = [
         ...generateRunAtHeaders(runAtMap, run),
     ];
-    const homepageURL = homepage || packageInfo.homepage;
+    const homepageURL = homepage || packageInfo.homepage || sourceURL;
     if (downloadURL)
         specialHeaders.push(["downloadURL", downloadURL]);
     if (supportURL)
@@ -41,6 +42,7 @@ export const generateViolentmonkeyHeaders = async (packageInfo, { downloadURL, h
         specialHeaders.push(["inject-into", inject]);
     const headers = [
         ...commonHeaders,
+        ...excludeHeaders,
         ...grantHeaders,
         ...matchHeaders,
         ...requireHeaders,

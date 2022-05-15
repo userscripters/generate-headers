@@ -6,9 +6,9 @@ import { generateTampermonkeyHeaders } from "./generators/tampermonkey/index.js"
 import { generateViolentmonkeyHeaders } from "./generators/violentmonkey/index.js";
 import { replaceFileContent } from "./utils/filesystem.js";
 import { getPackage } from "./utils/package.js";
-import { getExistingHeadersOffset, validateConnectHeaders, validateMatchHeaders, validateOptionalHeaders, validateRequiredHeaders } from "./utils/validators.js";
+import { getExistingHeadersOffset, validateConnectHeaders, validateExcludeHeaders, validateMatchHeaders, validateOptionalHeaders, validateRequiredHeaders } from "./utils/validators.js";
 export const generate = async (type, options, cli = false) => {
-    const { packagePath, output, spaces = 4, eol, collapse = true, direct = false, matches = [], whitelist = [], ...rest } = options;
+    const { packagePath, output, spaces = 4, eol, collapse = true, direct = false, excludes = [], matches = [], whitelist = [], ...rest } = options;
     const managerTypeMap = {
         greasemonkey: generateGreasemonkeyHeaders,
         tampermonkey: generateTampermonkeyHeaders,
@@ -23,6 +23,10 @@ export const generate = async (type, options, cli = false) => {
         const { invalid: matchInvalid, status: matchStatus, valid: validMatches } = validateMatchHeaders(matches);
         if (!matchStatus) {
             console.log(chulk.bgRed `Invalid @match headers:\n` + matchInvalid.join("\n"));
+        }
+        const { invalid: excludeInvalid, status: excludeStatus, valid: validExcludes } = validateExcludeHeaders(excludes);
+        if (!excludeStatus) {
+            console.log(chulk.bgRed `Invalid @exclude headers:\n` + excludeInvalid.join("\n"));
         }
         const { invalid: connectInvalid, status: connectStatus, valid: validConnects } = validateConnectHeaders(whitelist);
         if (!connectStatus) {
@@ -48,6 +52,7 @@ export const generate = async (type, options, cli = false) => {
         const content = await handler(parsedPackage, {
             ...rest,
             collapse,
+            excludes: validExcludes,
             matches: validMatches,
             whitelist: validConnects,
             spaces,

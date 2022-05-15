@@ -32,6 +32,7 @@ export type ViolentmonkeyGrants =
 
 export type ViolentmonkeyHeaders = CustomHeaders &
     CommonHeaders<{
+        "exclude-match": string[];
         "grant": ViolentmonkeyGrants;
         "run-at": CommonRunAt;
         "noframes": "";

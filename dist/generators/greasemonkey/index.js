@@ -1,8 +1,8 @@
 import { scrapeNetworkSites } from "../../utils/scraper.js";
 import { generateCommonHeaders } from "../common/index.js";
 import { finalizeMonkeyHeaders } from "../common/monkey.js";
-import { generateGrantHeaders, generateMatchHeaders, generateRequireHeaders, generateRunAtHeaders } from "../index.js";
-export const generateGreasemonkeyHeaders = async (packageInfo, { matches = [], requires = [], grants = [], run = "start", pretty = false, collapse = false, namespace }) => {
+import { generateExcludeHeaders, generateGrantHeaders, generateMatchHeaders, generateRequireHeaders, generateRunAtHeaders } from "../index.js";
+export const generateGreasemonkeyHeaders = async (packageInfo, { excludes = [], matches = [], requires = [], grants = [], run = "start", pretty = false, collapse = false, namespace }) => {
     const grantMap = {
         set: "GM.setValue",
         get: "GM.getValue",
@@ -15,6 +15,7 @@ export const generateGreasemonkeyHeaders = async (packageInfo, { matches = [], r
     };
     const commonHeaders = generateCommonHeaders(packageInfo, { namespace, pretty });
     const matchHeaders = await generateMatchHeaders(matches, scrapeNetworkSites, collapse);
+    const excludeHeaders = generateExcludeHeaders(excludes);
     const requireHeaders = generateRequireHeaders(requires);
     const grantHeaders = generateGrantHeaders(grantMap, grants);
     const runAtMap = {
@@ -30,6 +31,7 @@ export const generateGreasemonkeyHeaders = async (packageInfo, { matches = [], r
         specialHeaders.push(["run-at", runsAt]);
     const headers = [
         ...commonHeaders,
+        ...excludeHeaders,
         ...grantHeaders,
         ...matchHeaders,
         ...requireHeaders,

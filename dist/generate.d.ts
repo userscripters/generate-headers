@@ -6,6 +6,7 @@ export declare type GeneratorOptions<T extends GrantOptions> = CommonGeneratorOp
     direct?: boolean;
     downloadURL?: string;
     eol?: string;
+    excludes?: string[];
     grants?: T[];
     homepage?: string;
     inject?: string;

@@ -13,6 +13,12 @@ export const generateGrantHeaders = (grantMap, grants) => {
         ? headers
         : [["grant", "none"]];
 };
+export const generateExcludeHeaders = (excludes) => {
+    return excludes.flatMap(explodePaths).map((uri) => ["exclude", uri]);
+};
+export const generateExcludeMatchHeaders = (excludes) => {
+    return excludes.flatMap(explodePaths).map((uri) => ["exclude-match", uri]);
+};
 export const generateMatchHeaders = async (matches, networkSiteScraper, collapse = true) => {
     if (matches.includes("all")) {
         const match = matches.find((m) => /domain/.test(m)) || "https://domain/*";

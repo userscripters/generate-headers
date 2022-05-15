@@ -54,6 +54,25 @@ export declare const generateGrantHeaders: <T extends {
     version: `${number}.${number}.${number}`;
     grant: string;
 }, U extends GrantOptions>(grantMap: Record<U, T["grant"]>, grants: U[]) => HeaderEntries<T>;
+export declare const generateExcludeHeaders: <T extends {
+    author: PackagePerson;
+    contributors?: PackagePerson[] | undefined;
+    description: string;
+    exclude: string[];
+    icon: string;
+    include: string[];
+    match: string[];
+    name: string;
+    namespace: string;
+    noframes: "";
+    resource: string[];
+    require: string[];
+    version: `${number}.${number}.${number}`;
+    grant: string;
+}>(excludes: string[]) => HeaderEntries<T>;
+export declare const generateExcludeMatchHeaders: <T extends {
+    "exclude-match": string[];
+}>(excludes: string[]) => HeaderEntries<T>;
 export declare const generateMatchHeaders: <T extends {
     author: PackagePerson;
     contributors?: PackagePerson[] | undefined;

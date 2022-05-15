@@ -3,6 +3,7 @@ import { scrapeNetworkSites } from "../../utils/scraper.js";
 import { generateCommonHeaders } from "../common/index.js";
 import { finalizeMonkeyHeaders } from "../common/monkey.js";
 import {
+    generateExcludeHeaders,
     generateGrantHeaders,
     generateMatchHeaders,
     generateRequireHeaders,
@@ -20,6 +21,7 @@ export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptio
     async (
         packageInfo,
         {
+            excludes = [],
             matches = [],
             requires = [],
             grants = [],
@@ -43,6 +45,8 @@ export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptio
         const commonHeaders = generateCommonHeaders(packageInfo, { namespace, pretty });
 
         const matchHeaders = await generateMatchHeaders(matches, scrapeNetworkSites, collapse);
+
+        const excludeHeaders = generateExcludeHeaders(excludes);
 
         const requireHeaders = generateRequireHeaders(requires);
 
@@ -68,6 +72,7 @@ export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptio
 
         const headers: HeaderEntries<GreasemonkeyHeaders> = [
             ...commonHeaders,
+            ...excludeHeaders,
             ...grantHeaders,
             ...matchHeaders,
             ...requireHeaders,

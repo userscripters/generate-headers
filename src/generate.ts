@@ -15,6 +15,7 @@ import { getPackage } from "./utils/package.js";
 import {
     getExistingHeadersOffset,
     validateConnectHeaders,
+    validateExcludeHeaders,
     validateMatchHeaders,
     validateOptionalHeaders,
     validateRequiredHeaders
@@ -27,6 +28,7 @@ export type GeneratorOptions<T extends GrantOptions> = CommonGeneratorOptions & 
     direct?: boolean;
     downloadURL?: string;
     eol?: string;
+    excludes?: string[];
     grants?: T[];
     homepage?: string;
     inject?: string;
@@ -59,6 +61,7 @@ export const generate = async <T extends GrantOptions>(
         eol,
         collapse = true,
         direct = false,
+        excludes = [],
         matches = [],
         whitelist = [],
         ...rest
@@ -85,6 +88,15 @@ export const generate = async <T extends GrantOptions>(
         } = validateMatchHeaders(matches);
         if (!matchStatus) {
             console.log(chulk.bgRed`Invalid @match headers:\n` + matchInvalid.join("\n"));
+        }
+
+        const {
+            invalid: excludeInvalid,
+            status: excludeStatus,
+            valid: validExcludes
+        } = validateExcludeHeaders(excludes);
+        if (!excludeStatus) {
+            console.log(chulk.bgRed`Invalid @exclude headers:\n` + excludeInvalid.join("\n"));
         }
 
         const {
@@ -130,6 +142,7 @@ export const generate = async <T extends GrantOptions>(
         const content = await handler(parsedPackage, {
             ...rest,
             collapse,
+            excludes: validExcludes,
             matches: validMatches,
             whitelist: validConnects,
             spaces,

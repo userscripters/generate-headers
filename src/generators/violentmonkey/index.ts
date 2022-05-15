@@ -3,6 +3,7 @@ import { scrapeNetworkSites } from "../../utils/scraper.js";
 import { generateCommonHeaders } from "../common/index.js";
 import { finalizeMonkeyHeaders } from "../common/monkey.js";
 import {
+    generateExcludeMatchHeaders,
     generateGrantHeaders,
     generateMatchHeaders,
     generateRequireHeaders,
@@ -21,6 +22,7 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
         packageInfo,
         {
             downloadURL,
+            excludes = [],
             homepage,
             spaces,
             matches = [],
@@ -58,6 +60,8 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
 
         const matchHeaders = await generateMatchHeaders(matches, scrapeNetworkSites, collapse);
 
+        const excludeHeaders = generateExcludeMatchHeaders(excludes);
+
         const requireHeaders = generateRequireHeaders(requires);
 
         const runAtMap: {
@@ -86,6 +90,7 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
 
         const headers: HeaderEntries<ViolentmonkeyHeaders> = [
             ...commonHeaders,
+            ...excludeHeaders,
             ...grantHeaders,
             ...matchHeaders,
             ...requireHeaders,

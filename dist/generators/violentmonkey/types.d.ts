@@ -2,6 +2,7 @@ import type { CommonGrantOptions, CommonGrants, CommonHeaders, CommonRunAt, Cust
 export declare type ViolentmonkeyGrantOptions = CommonGrantOptions | "notify" | "clip" | "fetch" | "download" | "style" | "close" | "focus";
 export declare type ViolentmonkeyGrants = CommonGrants | "GM_setValue" | "GM_getValue" | "GM_listValues" | "GM_deleteValue" | "window.close" | "window.focus" | "GM_download" | "GM_xmlhttpRequest" | "GM_setClipboard" | "GM_notification" | "GM_addStyle";
 export declare type ViolentmonkeyHeaders = CustomHeaders & CommonHeaders<{
+    "exclude-match": string[];
     "grant": ViolentmonkeyGrants;
     "run-at": CommonRunAt;
     "noframes": "";

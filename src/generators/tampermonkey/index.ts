@@ -3,6 +3,7 @@ import { scrapeNetworkSites } from "../../utils/scraper.js";
 import { generateCommonHeaders } from "../common/index.js";
 import { finalizeMonkeyHeaders } from "../common/monkey.js";
 import {
+    generateExcludeHeaders,
     generateGrantHeaders,
     generateMatchHeaders,
     generateRequireHeaders,
@@ -21,6 +22,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
         packageInfo,
         {
             downloadURL,
+            excludes = [],
             homepage,
             updateURL,
             spaces,
@@ -35,6 +37,8 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
         }
     ) => {
         const matchHeaders = await generateMatchHeaders(matches, scrapeNetworkSites, collapse);
+
+        const excludeHeaders = generateExcludeHeaders(excludes);
 
         const requireHeaders = generateRequireHeaders(requires);
 
@@ -93,6 +97,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
 
         const headers = [
             ...commonHeaders,
+            ...excludeHeaders,
             ...matchHeaders,
             ...requireHeaders,
             ...grantHeaders,
@@ -101,8 +106,6 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
 
         //Unused headers:
         // @icon64 and @icon64URL
-        // @include
-        // @exclude
         // @resource
         // @antifeature
         // @noframes

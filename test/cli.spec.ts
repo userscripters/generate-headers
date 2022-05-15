@@ -136,6 +136,26 @@ describe("CLI Options", function () {
         expect(matched).length(allMatches.length);
     });
 
+    it("-x options should correctly add @exclude", async () => {
+        // without <all_urls>
+        const xs = allMatches.slice(0, -1).map((x) => `-x "${x}"`).join(" ");
+
+        const { stdout } = await aexec(`${cliPfx} tampermonkey ${xs} -p ${pkg} -o ${output} -d`);
+
+        const matched = stdout.match(/@exclude\s+(.+)/g) || [];
+        expect(matched).length(allMatches.length - 1);
+    });
+
+    it("-x options should correctly add @exclude-match headers for Violentmonkey", async () => {
+        // without <all_urls>
+        const xs = allMatches.slice(0, -1).map((x) => `-x "${x}"`).join(" ");
+
+        const { stdout } = await aexec(`${cliPfx} violentmonkey ${xs} -p ${pkg} -o ${output} -d`);
+
+        const matched = stdout.match(/@exclude-match\s+(.+)/g) || [];
+        expect(matched).length(allMatches.length - 1);
+    });
+
     it('-q options should correctly add @require', async () => {
         const rOpts = requires.map((m) => `-q "${m}"`).join(" ");
 

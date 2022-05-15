@@ -1,9 +1,10 @@
 import { scrapeNetworkSites } from "../../utils/scraper.js";
 import { generateCommonHeaders } from "../common/index.js";
 import { finalizeMonkeyHeaders } from "../common/monkey.js";
-import { generateGrantHeaders, generateMatchHeaders, generateRequireHeaders, generateRunAtHeaders } from "../index.js";
-export const generateTampermonkeyHeaders = async (packageInfo, { downloadURL, homepage, updateURL, spaces, whitelist = [], requires = [], matches = [], grants = [], run = "start", pretty = false, collapse = false, namespace }) => {
+import { generateExcludeHeaders, generateGrantHeaders, generateMatchHeaders, generateRequireHeaders, generateRunAtHeaders } from "../index.js";
+export const generateTampermonkeyHeaders = async (packageInfo, { downloadURL, excludes = [], homepage, updateURL, spaces, whitelist = [], requires = [], matches = [], grants = [], run = "start", pretty = false, collapse = false, namespace }) => {
     const matchHeaders = await generateMatchHeaders(matches, scrapeNetworkSites, collapse);
+    const excludeHeaders = generateExcludeHeaders(excludes);
     const requireHeaders = generateRequireHeaders(requires);
     const grantMap = {
         set: "GM_setValue",
@@ -29,7 +30,7 @@ export const generateTampermonkeyHeaders = async (packageInfo, { downloadURL, ho
     const specialHeaders = [
         ...generateRunAtHeaders(runAtMap, run),
     ];
-    const homepageURL = homepage || packageInfo.homepage;
+    const homepageURL = homepage || packageInfo.homepage || sourceURL;
     if (downloadURL)
         specialHeaders.push(["downloadURL", downloadURL]);
     if (supportURL)
@@ -48,6 +49,7 @@ export const generateTampermonkeyHeaders = async (packageInfo, { downloadURL, ho
     }
     const headers = [
         ...commonHeaders,
+        ...excludeHeaders,
         ...matchHeaders,
         ...requireHeaders,
         ...grantHeaders,

@@ -101,6 +101,11 @@ const sharedOpts = {
         description: "Generates @connect headers (repeatable)",
         type: "array",
     },
+    x: {
+        alias: "exclude",
+        description: "Generates @exclude[-match] headers (repeatable)",
+        type: "array",
+    },
     pretty: {
         type: "boolean",
         default: false,
@@ -113,12 +118,13 @@ names.forEach((name) =>
         name,
         `generates ${scase(name)} headers`,
         sharedOpts,
-        ({ c, d, du, e, h, g = [], i, m = [], n, q = [], o, p, r = "start", s, pretty, u, w = [] }) =>
+        ({ c, d, du, e, h, g = [], i, m = [], n, q = [], o, p, r = "start", s, pretty, u, w = [], x = [] }) =>
             void generate<GrantOptions>(name, {
                 collapse: c,
                 direct: !!d,
                 downloadURL: du,
                 eol: e,
+                excludes: x.map(String),
                 homepage: h,
                 inject: i,
                 matches: m.map(String),

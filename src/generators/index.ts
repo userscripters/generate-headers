@@ -84,6 +84,26 @@ export const generateGrantHeaders = <
 };
 
 /**
+ * @summary abstract '@exclude' header generator
+ * @param excludes list of patterns to exclude
+ */
+export const generateExcludeHeaders = <T extends CommonHeaders>(
+    excludes: string[],
+): HeaderEntries<T> => {
+    return excludes.flatMap(explodePaths).map((uri) => [`exclude`, uri]);
+};
+
+/**
+ * @summary abstract '@exclude-match' header generator
+ * @param excludes list of patterns to exclude
+ */
+export const generateExcludeMatchHeaders = <T extends { "exclude-match": string[]; }>(
+    excludes: string[],
+): HeaderEntries<T> => {
+    return excludes.flatMap(explodePaths).map((uri) => [`exclude-match`, uri]);
+};
+
+/**
  * @summary abstract '@match' header generator
  */
 export const generateMatchHeaders = async <T extends CommonHeaders>(
