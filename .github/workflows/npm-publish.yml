@@ -35,14 +35,13 @@ jobs:
             - uses: actions/setup-node@v2
               with:
                   node-version: 14
-                  registry-url: https://npm.pkg.github.com
+                  registry-url: "https://registry.npmjs.org"
                   scope: "@${{github.repository_owner}}"
+            - run: npm install
             - run: |
+                  npm config set @${{github.repository_owner}}:registry https://npm.pkg.github.com
                   npm config set //npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN
-                  npm install
-              env:
-                  NODE_AUTH_TOKEN: ${{github.token}}
-            - run: npm publish
+                  npm publish --access public
               env:
                   NODE_AUTH_TOKEN: ${{secrets.PAT}}
 
@@ -56,17 +55,12 @@ jobs:
                   node-version: 14
                   registry-url: "https://registry.npmjs.org"
                   scope: "@${{github.repository_owner}}"
-            - run: |
-                  npm config set //npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN
-                  npm install
+            - run: npm install
               env:
                   NODE_AUTH_TOKEN: ${{github.token}}
             - run: |
+                  npm config set @${{github.repository_owner}}:registry https://registry.npmjs.org
                   npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
-                  declare repo_name=$(echo "${{github.repository}}" | cut -d '/' -f 2)
-                  declare temp_npmrc="/home/runner/work/$repo_name/$repo_name/.npmrc"
-                  truncate $temp_npmrc -s 0
-                  echo "@${{github.repository_owner}}:registry=https://registry.npmjs.org" >> $temp_npmrc
                   npm publish --access public
               env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+                  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
