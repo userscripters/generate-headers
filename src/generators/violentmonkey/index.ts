@@ -68,12 +68,16 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
             idle: "document-idle",
         };
 
-        const { bugs: { url: supportURL } = {} } = packageInfo;
+        const {
+            bugs: { url: supportURL } = {},
+            repository: { url: sourceURL } = {},
+        } = packageInfo;
+
         const specialHeaders: HeaderEntries<ViolentmonkeyHeaders> = [
             ...generateRunAtHeaders(runAtMap, run),
         ];
 
-        const homepageURL = homepage || packageInfo.homepage;
+        const homepageURL = homepage || packageInfo.homepage || sourceURL;
 
         if (downloadURL) specialHeaders.push(["downloadURL", downloadURL]);
         if (supportURL) specialHeaders.push(["supportURL", supportURL]);

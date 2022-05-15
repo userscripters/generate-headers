@@ -76,7 +76,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
             ...generateRunAtHeaders(runAtMap, run),
         ];
 
-        const homepageURL = homepage || packageInfo.homepage;
+        const homepageURL = homepage || packageInfo.homepage || sourceURL;
 
         if (downloadURL) specialHeaders.push(["downloadURL", downloadURL]);
         if (supportURL) specialHeaders.push(["supportURL", supportURL]);
