@@ -49,7 +49,7 @@ describe("common", () => {
     it("common headers should be generated", async () => {
         const content = await generate("greasemonkey", directCommon);
 
-        const commonHeaders: (keyof CommonHeaders)[] = [
+        const commonValuedHeaders: (keyof CommonHeaders)[] = [
             "author",
             "contributors",
             "description",
@@ -58,8 +58,17 @@ describe("common", () => {
             "version",
         ];
 
-        commonHeaders.forEach((header) => {
+        const commonNameOnlyHeaders: Array<keyof CommonHeaders> = [
+            "noframes"
+        ];
+
+        commonValuedHeaders.forEach((header) => {
             const matcher = new RegExp(`@${header}\\s+\\w+`, "g");
+            expect(matcher.test(content), `failed at ${header}`).to.be.true;
+        });
+
+        commonNameOnlyHeaders.forEach((header) => {
+            const matcher = new RegExp(`@${header}`, "g");
             expect(matcher.test(content), `failed at ${header}`).to.be.true;
         });
     });

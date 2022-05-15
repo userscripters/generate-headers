@@ -62,6 +62,11 @@ const sharedOpts = {
         description: "Overrides namespace for @namespace header",
         type: "string",
     },
+    nf: {
+        alias: "noframes",
+        description: "Adds @noframes header",
+        type: "boolean",
+    },
     o: {
         alias: "output",
         default: "./dist/headers.js",
@@ -118,7 +123,7 @@ names.forEach((name) =>
         name,
         `generates ${scase(name)} headers`,
         sharedOpts,
-        ({ c, d, du, e, h, g = [], i, m = [], n, q = [], o, p, r = "start", s, pretty, u, w = [], x = [] }) =>
+        ({ c, d, du, e, h, g = [], i, m = [], n, nf, q = [], o, p, r = "start", s, pretty, u, w = [], x = [] }) =>
             void generate<GrantOptions>(name, {
                 collapse: c,
                 direct: !!d,
@@ -128,6 +133,7 @@ names.forEach((name) =>
                 homepage: h,
                 inject: i,
                 matches: m.map(String),
+                noframes: !!nf,
                 requires: q.map(String),
                 grants: g as GrantOptions[],
                 namespace: n,

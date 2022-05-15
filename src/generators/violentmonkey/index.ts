@@ -31,11 +31,12 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
             inject = "page",
             run = "start",
             pretty = false,
+            noframes = false,
             collapse = false,
             namespace
         }
     ) => {
-        const commonHeaders = generateCommonHeaders(packageInfo, { namespace, pretty });
+        const commonHeaders = generateCommonHeaders(packageInfo, { namespace, noframes, pretty });
 
         const grantMap: Record<ViolentmonkeyGrantOptions, ViolentmonkeyGrants> =
             {

@@ -5,6 +5,7 @@ import type { CommonHeaders, HeaderEntries } from "../index.js";
 
 export type CommonGeneratorOptions = {
     namespace?: string;
+    noframes?: boolean;
     pretty?: boolean;
 }
 
@@ -17,7 +18,11 @@ export const generateCommonHeaders = (
     pkg: PackageInfo,
     options: CommonGeneratorOptions
 ) => {
-    const { namespace, pretty = false } = options;
+    const {
+        namespace,
+        noframes = false,
+        pretty = false
+    } = options;
 
     const {
         author,
@@ -42,6 +47,7 @@ export const generateCommonHeaders = (
     if (scopeOrNs) headers.push(["namespace", scopeOrNs]);
 
     if (icon) headers.push(["icon", icon]);
+    if (noframes) headers.push(["noframes", ""]);
 
     if (contributors.length) {
         const formatted = contributors.map((contributor) =>

@@ -33,6 +33,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
             run = "start",
             pretty = false,
             collapse = false,
+            noframes = false,
             namespace
         }
     ) => {
@@ -59,7 +60,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
             TampermonkeyGrantOptions
         >(grantMap, grants);
 
-        const commonHeaders = generateCommonHeaders(packageInfo, { namespace, pretty });
+        const commonHeaders = generateCommonHeaders(packageInfo, { namespace, noframes, pretty });
 
         const runAtMap: {
             [P in RunAtOption]?: TampermonkeyHeaders["run-at"];
@@ -108,7 +109,6 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
         // @icon64 and @icon64URL
         // @resource
         // @antifeature
-        // @noframes
         // @unwrap
         // @nocompat
 
