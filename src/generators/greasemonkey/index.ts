@@ -17,21 +17,29 @@ import type {
     GreasemonkeyHeaders
 } from "./types.js";
 
+/**
+ * @see https://wiki.greasespot.net/Metadata_Block
+ *
+ * @summary generates Greasemonkey metadata block
+ * @param packageInfo parsed {@link PackageInfo}
+ * @param options generator configuration
+ */
 export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptions> =
-    async (
-        packageInfo,
-        {
-            excludes = [],
-            matches = [],
-            requires = [],
-            grants = [],
-            run = "start",
-            pretty = false,
-            noframes = false,
+    async (packageInfo, options) => {
+        const {
             collapse = false,
-            namespace
-        }
-    ) => {
+            excludes = [],
+            grants = [],
+            matches = [],
+            namespace,
+            noframes = false,
+            pretty = false,
+            requires = [],
+            run = "start",
+        } = options;
+
+        const commonHeaders = generateCommonHeaders(packageInfo, { namespace, noframes, pretty });
+
         const grantMap: Record<GreasemonkeyGrantOptions, GreasemonkeyGrants> = {
             set: "GM.setValue",
             get: "GM.getValue",
@@ -42,8 +50,6 @@ export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptio
             fetch: "GM.xmlHttpRequest",
             unsafe: "unsafeWindow",
         };
-
-        const commonHeaders = generateCommonHeaders(packageInfo, { namespace, noframes, pretty });
 
         const matchHeaders = await generateMatchHeaders(matches, scrapeNetworkSites, collapse);
 
