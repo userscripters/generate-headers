@@ -17,26 +17,34 @@ import type {
     TampermonkeyHeaders
 } from "./types.js";
 
+/**
+ * @see https://www.tampermonkey.net/documentation.php
+ *
+ * @summary generates Tampermonkey metadata block
+ * @param packageInfo parsed {@link PackageInfo}
+ * @param options generator configuration
+ */
 export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptions> =
-    async (
-        packageInfo,
-        {
+    async (packageInfo, options) => {
+        const {
+            collapse = false,
             downloadURL,
             excludes = [],
-            homepage,
-            updateURL,
-            spaces,
-            whitelist = [],
-            requires = [],
-            matches = [],
             grants = [],
-            run = "start",
-            pretty = false,
-            collapse = false,
+            homepage,
+            matches = [],
+            namespace,
             noframes = false,
-            namespace
-        }
-    ) => {
+            pretty = false,
+            requires = [],
+            run = "start",
+            spaces,
+            updateURL,
+            whitelist = [],
+        } = options;
+
+        const commonHeaders = generateCommonHeaders(packageInfo, { namespace, noframes, pretty });
+
         const matchHeaders = await generateMatchHeaders(matches, scrapeNetworkSites, collapse);
 
         const excludeHeaders = generateExcludeHeaders(excludes);
@@ -59,8 +67,6 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
             TampermonkeyHeaders,
             TampermonkeyGrantOptions
         >(grantMap, grants);
-
-        const commonHeaders = generateCommonHeaders(packageInfo, { namespace, noframes, pretty });
 
         const runAtMap: {
             [P in RunAtOption]?: TampermonkeyHeaders["run-at"];
