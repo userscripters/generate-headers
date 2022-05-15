@@ -7,12 +7,11 @@ import { getPackage } from "../src/utils/package.js";
 import { explodePaths } from "../src/utils/urls.js";
 import {
     getExistingHeadersOffset,
-    validateConnectHeaders,
-    validateMatchHeaders,
+    validateConnectHeaders, validateExcludeHeaders, validateMatchHeaders,
     validateOptionalHeaders,
     validateRequiredHeaders
 } from "../src/utils/validators.js";
-import { requires } from "./index.spec.js";
+import { allMatches, requires } from "./index.spec.js";
 
 describe("validators", () => {
     const base = process.cwd();
@@ -43,6 +42,29 @@ describe("validators", () => {
                 ...sampleMatches,
                 typo,
             ]);
+            expect(status).to.be.false;
+            expect(invalid).to.contain(typo);
+        });
+    });
+
+    describe(validateExcludeHeaders.name, () => {
+        // without <all_urls>
+        const allExcludes = allMatches.slice(0, -1);
+
+        it("should correctly validate valid headers", () => {
+            const { status, invalid } = validateExcludeHeaders(allExcludes);
+            expect(status).to.be.true;
+            expect(invalid).to.be.empty;
+        });
+
+        it("should correctly validate invalid headers", () => {
+            const typo = "http//typo.ed/*";
+
+            const { status, invalid } = validateExcludeHeaders([
+                ...allExcludes,
+                typo,
+            ]);
+
             expect(status).to.be.false;
             expect(invalid).to.contain(typo);
         });

@@ -58,6 +58,20 @@ export const validateMatchHeaders = (matches: string[]) => {
     };
 };
 
+/**
+ * @summary validates `@exclude` / `@exclude-match` headers
+ * @param excludes list of exclude patterns
+ */
+export const validateExcludeHeaders = (excludes: string[]) => {
+    const validationRegex = /^((?:https?|file|ftp|\*)(?=:\/\/)|(?:urn(?=:))):(?:\/\/)?(?:((?:\*||.+?)(?=\/|$)))?(\/\*|(?:.+?\*?)+)?$/;
+    const invalid = excludes.filter((pattern) => !validationRegex.test(pattern));
+    return {
+        invalid,
+        status: !invalid.length,
+        valid: excludes.filter((e) => !invalid.includes(e)),
+    };
+};
+
 export const validateConnectHeaders = (whitelist: string[]) => {
     const specialWordRegex = /^localhost|self|\*$/;
     const ipv4Regex = /^((?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\.|$)){4}/;
