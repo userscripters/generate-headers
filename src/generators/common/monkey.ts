@@ -22,7 +22,7 @@ export const makeMonkeyTags = (
 export const makeMonkeyHeader = <T extends CommonHeaders>(header: HeaderEntry<T>) => {
     const [name, value,] = header;
     return <MonkeyHeader>(value ? `// @${name} ${value}` : `// @${name}`);
-}
+};
 
 /**
  * @summary common postprocessor for header generators

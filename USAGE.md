@@ -17,6 +17,7 @@ Options:
   -g, --grant               Generates @grant headers, can be repeated    [array]
   -m, --match               Generates valid @match headers (repeatable)  [array]
   -n, --namespace           Overrides namespace for @namespace header   [string]
+      --nf, --noframes      Adds @noframes header                      [boolean]
   -o, --output              Creates and populates a file with headers content
                                          [string] [default: "./dist/headers.js"]
   -p, --package             Path to package.json to extract info from
