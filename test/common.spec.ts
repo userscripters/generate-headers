@@ -1,7 +1,8 @@
 import { expect } from "chai";
 import sinon from "sinon";
 import { generate } from "../src/generate.js";
-import { CommonHeaders, generateMatchHeaders } from "../src/generators/index.js";
+import type { CommonHeaders } from "../src/generators/common/index.js";
+import { generateMatchHeaders } from "../src/generators/index.js";
 import { prettifyName } from "../src/utils/name.js";
 import type { scrapeNetworkSites } from "../src/utils/scraper.js";
 import { allMatches, directCommon, requires } from "./index.spec.js";

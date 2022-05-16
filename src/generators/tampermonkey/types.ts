@@ -2,9 +2,9 @@ import type {
     CommonGrantOptions,
     CommonGrants,
     CommonHeaders,
-    CommonRunAt,
-    CustomHeaders
-} from "../index.js";
+    CommonRunAt
+} from "../common/index.js";
+import type { CustomHeaders } from "../index.js";
 
 export type TampermonkeyGrantOptions =
     | CommonGrantOptions

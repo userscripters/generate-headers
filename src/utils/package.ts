@@ -27,6 +27,10 @@ export type PackageInfo = {
     };
 };
 
+/**
+ * @summary gets a package.json file info
+ * @param path path to package.json
+ */
 export const getPackage = async (path: string): Promise<PackageInfo | null> => {
     try {
         const contents = await readFile(path, { encoding: "utf-8" });

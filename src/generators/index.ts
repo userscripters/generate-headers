@@ -1,9 +1,11 @@
 import validator from "validator";
 import type { GeneratorOptions, RunAtOption } from "../generate.js";
-import { uniqify, type RequiredProps } from "../utils/common.js";
-import type { PackageInfo, PackagePerson } from "../utils/package.js";
-import { NetworkSiteInfo } from "../utils/scraper.js";
+import { uniquify } from "../utils/common.js";
+import type { PackageInfo } from "../utils/package.js";
+import type { NetworkSiteInfo } from "../utils/scraper.js";
+import type { RequiredProps } from "../utils/types.js";
 import { explodePaths } from "../utils/urls.js";
+import type { CommonHeaders } from "./common/index.js";
 import type { GreasemonkeyGrantOptions } from "./greasemonkey/types.js";
 import type { TampermonkeyGrantOptions } from "./tampermonkey/types.js";
 import type { ViolentmonkeyGrantOptions } from "./violentmonkey/types.js";
@@ -13,8 +15,6 @@ declare global {
         padEnd<T extends string>(maxLength: number, fillString?: string): T;
     }
 }
-
-export type CommonGrantOptions = "get" | "set" | "list" | "delete" | "unsafe";
 
 export type GrantOptions =
     | GreasemonkeyGrantOptions
@@ -27,31 +27,10 @@ export type UserScriptManagerName =
     | "violentmonkey"
     | "greasemonkey";
 
-export type CommonGrants = "none" | "unsafeWindow";
-
-export type CommonRunAt = "document-start" | "document-end" | "document-idle";
-
 export type HeaderGenerator<T extends GrantOptions> = (
     info: PackageInfo,
     options: RequiredProps<GeneratorOptions<T>, "spaces">
 ) => Promise<string>;
-
-export type CommonHeaders<T extends object = {}> = T & {
-    author: PackagePerson;
-    contributors?: PackagePerson[];
-    description: string;
-    exclude: string[];
-    icon: string;
-    include: string[];
-    match: string[];
-    name: string;
-    namespace: string;
-    noframes: "";
-    resource: string[];
-    require: string[];
-    version: `${number}.${number}.${number}`;
-    grant: string;
-};
 
 export type CustomHeaders = { contributors: string };
 
@@ -135,7 +114,7 @@ export const generateMatchHeaders = async <T extends CommonHeaders>(
             return match.replace("domain", domain);
         });
 
-        return generateMatchHeaders(uniqify(all), networkSiteScraper);
+        return generateMatchHeaders(uniquify(all), networkSiteScraper);
     }
 
     return matches.flatMap(explodePaths).map((uri) => ["match", uri]);

@@ -4,16 +4,32 @@ import validator from "validator";
 import type { GeneratorOptions } from "../generate.js";
 import { makeMonkeyTags } from "../generators/common/monkey.js";
 import type { GrantOptions } from "../generators/index.js";
-import { type PackageInfo } from "./package.js";
-import type { RequiredOnly } from "./types.js";
+import type { PackageInfo } from "./package.js";
+import type { OnlyOptional, RequiredOnly } from "./types.js";
 
-type OnlyOptional<T> = { [P in keyof T as undefined extends T[P] ? P : never]: T[P] };
-
-interface OptionalHeadersValidationResult {
+export type OptionalHeadersValidationResult = {
     isValidDownloadURL: boolean;
     isValidUpdateURL: boolean;
 }
 
+export type HeadersValidationResult = {
+    invalid: string[],
+    status: boolean,
+    valid: string[];
+}
+
+export type RequiredHeadersValidationResult = {
+    status: boolean,
+    isValidVersion: boolean,
+    isValidHomepage: boolean,
+    missing: string[];
+}
+
+/**
+ * @summary calculates existing headers offset from the start of the file
+ * @param path path to file with headers
+ * @param eol end of line character(s)
+ */
 export const getExistingHeadersOffset = async (path: string | URL, eol = EOL) => {
     const { createInterface } = await import("readline");
     const { createReadStream } = await import("fs");
@@ -47,7 +63,11 @@ export const getExistingHeadersOffset = async (path: string | URL, eol = EOL) =>
     });
 };
 
-export const validateMatchHeaders = (matches: string[]) => {
+/**
+ * @summary validates `@match` headers
+ * @param matches list of match patterns
+ */
+export const validateMatchHeaders = (matches: string[]): HeadersValidationResult => {
     const validationRegex =
         /^((?:https?|file|ftp|\*)(?=:\/\/)|(?:urn(?=:))):(?:\/\/)?(?:((?:\*||.+?)(?=\/|$)))?(\/\*|(?:.+?\*?)+)?|<all_urls>|all|meta$/;
     const invalid = matches.filter((match) => !validationRegex.test(match));
@@ -62,7 +82,7 @@ export const validateMatchHeaders = (matches: string[]) => {
  * @summary validates `@exclude` / `@exclude-match` headers
  * @param excludes list of exclude patterns
  */
-export const validateExcludeHeaders = (excludes: string[]) => {
+export const validateExcludeHeaders = (excludes: string[]): HeadersValidationResult => {
     const validationRegex = /^((?:https?|file|ftp|\*)(?=:\/\/)|(?:urn(?=:))):(?:\/\/)?(?:((?:\*||.+?)(?=\/|$)))?(\/\*|(?:.+?\*?)+)?$/;
     const invalid = excludes.filter((pattern) => !validationRegex.test(pattern));
     return {
@@ -72,7 +92,11 @@ export const validateExcludeHeaders = (excludes: string[]) => {
     };
 };
 
-export const validateConnectHeaders = (whitelist: string[]) => {
+/**
+ * @summary validates `@connect` headers
+ * @param whitelist list of URIs to whitelist
+ */
+export const validateConnectHeaders = (whitelist: string[]): HeadersValidationResult => {
     const specialWordRegex = /^localhost|self|\*$/;
     const ipv4Regex = /^((?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\.|$)){4}/;
     // https://stackoverflow.com/a/57129482/11407695
@@ -88,7 +112,11 @@ export const validateConnectHeaders = (whitelist: string[]) => {
     };
 };
 
-export const validateRequiredHeaders = (packageInfo: PackageInfo) => {
+/**
+ * @summary validates required headers
+ * @param packageInfo parsed {@link PackageInfo}
+ */
+export const validateRequiredHeaders = (packageInfo: PackageInfo): RequiredHeadersValidationResult => {
     const required: (keyof RequiredOnly<PackageInfo>)[] = [
         "author",
         "name",

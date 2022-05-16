@@ -3,7 +3,10 @@ export const makeMonkeyTags = (name = "UserScript") => [
     `// ==${name}==`,
     `// ==/${name}==`,
 ];
-export const makeMonkeyHeader = ([name, value,]) => (value ? `// @${name} ${value}` : `// @${name}`);
+export const makeMonkeyHeader = (header) => {
+    const [name, value,] = header;
+    return (value ? `// @${name} ${value}` : `// @${name}`);
+};
 export const finalizeMonkeyHeaders = (headers, spaces) => {
     const [openTag, closeTag] = makeMonkeyTags();
     const longest = getLongest(headers.map(([key]) => key)) + spaces;

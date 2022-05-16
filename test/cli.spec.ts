@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { exec } from "child_process";
 import { readFile, stat, unlink } from "fs/promises";
 import { promisify } from "util";
-import { TampermonkeyGrants } from "../src/generators/tampermonkey/types.js";
+import type { TampermonkeyGrants } from "../src/generators/tampermonkey/types.js";
 import { getLongest } from "../src/utils/common.js";
 import {
     allMatches,

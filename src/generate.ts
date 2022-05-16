@@ -53,7 +53,7 @@ export const generate = async <T extends GrantOptions>(
     type: UserScriptManagerName,
     options: GeneratorOptions<T>,
     cli = false
-) => {
+): Promise<string> => {
     const {
         packagePath,
         output,

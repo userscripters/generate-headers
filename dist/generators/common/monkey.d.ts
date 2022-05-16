@@ -16,7 +16,7 @@ export declare const makeMonkeyHeader: <T extends {
     require: string[];
     version: `${number}.${number}.${number}`;
     grant: string;
-}>([name, value,]: HeaderEntry<T>) => MonkeyHeader;
+}>(header: HeaderEntry<T>) => MonkeyHeader;
 export declare const finalizeMonkeyHeaders: <T extends {
     author: import("../../utils/package.js").PackagePerson;
     contributors?: import("../../utils/package.js").PackagePerson[] | undefined;

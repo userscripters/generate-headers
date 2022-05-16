@@ -1,12 +1,32 @@
-import type { PackageInfo } from "../../utils/package.js";
+import type { PackageInfo, PackagePerson } from "../../utils/package.js";
 import type { HeaderEntries } from "../index.js";
+export declare type CommonHeaders<T extends object = {}> = T & {
+    author: PackagePerson;
+    contributors?: PackagePerson[];
+    description: string;
+    exclude: string[];
+    icon: string;
+    include: string[];
+    match: string[];
+    name: string;
+    namespace: string;
+    noframes: "";
+    resource: string[];
+    require: string[];
+    version: `${number}.${number}.${number}`;
+    grant: string;
+};
+export declare type CommonGrantOptions = "get" | "set" | "list" | "delete" | "unsafe";
+export declare type CommonGrants = "none" | "unsafeWindow";
+export declare type CommonRunAt = "document-start" | "document-end" | "document-idle";
 export declare type CommonGeneratorOptions = {
     namespace?: string;
+    noframes?: boolean;
     pretty?: boolean;
 };
 export declare const generateCommonHeaders: (pkg: PackageInfo, options: CommonGeneratorOptions) => HeaderEntries<{
-    author: import("../../utils/package.js").PackagePerson;
-    contributors?: import("../../utils/package.js").PackagePerson[] | undefined;
+    author: PackagePerson;
+    contributors?: PackagePerson[] | undefined;
     description: string;
     exclude: string[];
     icon: string;

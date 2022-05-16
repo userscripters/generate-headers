@@ -2,7 +2,9 @@ import { scrapeNetworkSites } from "../../utils/scraper.js";
 import { generateCommonHeaders } from "../common/index.js";
 import { finalizeMonkeyHeaders } from "../common/monkey.js";
 import { generateExcludeHeaders, generateGrantHeaders, generateMatchHeaders, generateRequireHeaders, generateRunAtHeaders } from "../index.js";
-export const generateTampermonkeyHeaders = async (packageInfo, { downloadURL, excludes = [], homepage, updateURL, spaces, whitelist = [], requires = [], matches = [], grants = [], run = "start", pretty = false, collapse = false, namespace }) => {
+export const generateTampermonkeyHeaders = async (packageInfo, options) => {
+    const { collapse = false, downloadURL, excludes = [], grants = [], homepage, matches = [], namespace, noframes = false, pretty = false, requires = [], run = "start", spaces, updateURL, whitelist = [], } = options;
+    const commonHeaders = generateCommonHeaders(packageInfo, { namespace, noframes, pretty });
     const matchHeaders = await generateMatchHeaders(matches, scrapeNetworkSites, collapse);
     const excludeHeaders = generateExcludeHeaders(excludes);
     const requireHeaders = generateRequireHeaders(requires);
@@ -18,7 +20,6 @@ export const generateTampermonkeyHeaders = async (packageInfo, { downloadURL, ex
         focus: "window.focus",
     };
     const grantHeaders = generateGrantHeaders(grantMap, grants);
-    const commonHeaders = generateCommonHeaders(packageInfo, { namespace, pretty });
     const runAtMap = {
         start: "document-start",
         end: "document-end",

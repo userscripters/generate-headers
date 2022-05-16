@@ -1,5 +1,5 @@
 import validator from "validator";
-import { uniqify } from "../utils/common.js";
+import { uniquify } from "../utils/common.js";
 import { explodePaths } from "../utils/urls.js";
 export const generateGrantHeaders = (grantMap, grants) => {
     if (grants.find((g) => g === "all")) {
@@ -37,7 +37,7 @@ export const generateMatchHeaders = async (matches, networkSiteScraper, collapse
                 : site;
             return match.replace("domain", domain);
         });
-        return generateMatchHeaders(uniqify(all), networkSiteScraper);
+        return generateMatchHeaders(uniquify(all), networkSiteScraper);
     }
     return matches.flatMap(explodePaths).map((uri) => ["match", uri]);
 };

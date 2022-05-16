@@ -1,34 +1,25 @@
 import type { GeneratorOptions } from "../generate.js";
 import type { GrantOptions } from "../generators/index.js";
-import { type PackageInfo } from "./package.js";
-declare type OnlyOptional<T> = {
-    [P in keyof T as undefined extends T[P] ? P : never]: T[P];
-};
-interface OptionalHeadersValidationResult {
+import type { PackageInfo } from "./package.js";
+import type { OnlyOptional } from "./types.js";
+export declare type OptionalHeadersValidationResult = {
     isValidDownloadURL: boolean;
     isValidUpdateURL: boolean;
-}
-export declare const getExistingHeadersOffset: (path: string | URL, eol?: string) => Promise<[number, number]>;
-export declare const validateMatchHeaders: (matches: string[]) => {
+};
+export declare type HeadersValidationResult = {
     invalid: string[];
     status: boolean;
     valid: string[];
 };
-export declare const validateExcludeHeaders: (excludes: string[]) => {
-    invalid: string[];
-    status: boolean;
-    valid: string[];
-};
-export declare const validateConnectHeaders: (whitelist: string[]) => {
-    invalid: string[];
-    status: boolean;
-    valid: string[];
-};
-export declare const validateRequiredHeaders: (packageInfo: PackageInfo) => {
+export declare type RequiredHeadersValidationResult = {
     status: boolean;
     isValidVersion: boolean;
     isValidHomepage: boolean;
-    missing: ("author" | "name" | "description" | "homepage" | "version" | "bugs" | "repository" | "license")[];
+    missing: string[];
 };
+export declare const getExistingHeadersOffset: (path: string | URL, eol?: string) => Promise<[number, number]>;
+export declare const validateMatchHeaders: (matches: string[]) => HeadersValidationResult;
+export declare const validateExcludeHeaders: (excludes: string[]) => HeadersValidationResult;
+export declare const validateConnectHeaders: (whitelist: string[]) => HeadersValidationResult;
+export declare const validateRequiredHeaders: (packageInfo: PackageInfo) => RequiredHeadersValidationResult;
 export declare const validateOptionalHeaders: <T extends GrantOptions>(options: OnlyOptional<GeneratorOptions<T>>) => OptionalHeadersValidationResult;
-export {};

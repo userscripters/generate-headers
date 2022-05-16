@@ -2,8 +2,9 @@ import { scrapeNetworkSites } from "../../utils/scraper.js";
 import { generateCommonHeaders } from "../common/index.js";
 import { finalizeMonkeyHeaders } from "../common/monkey.js";
 import { generateExcludeMatchHeaders, generateGrantHeaders, generateMatchHeaders, generateRequireHeaders, generateRunAtHeaders } from "../index.js";
-export const generateViolentmonkeyHeaders = async (packageInfo, { downloadURL, excludes = [], homepage, spaces, matches = [], requires = [], grants = [], inject = "page", run = "start", pretty = false, collapse = false, namespace }) => {
-    const commonHeaders = generateCommonHeaders(packageInfo, { namespace, pretty });
+export const generateViolentmonkeyHeaders = async (packageInfo, options) => {
+    const { collapse = false, downloadURL, excludes = [], grants = [], homepage, inject = "page", matches = [], namespace, noframes = false, pretty = false, requires = [], run = "start", spaces, } = options;
+    const commonHeaders = generateCommonHeaders(packageInfo, { namespace, noframes, pretty });
     const grantMap = {
         set: "GM_setValue",
         get: "GM_getValue",
@@ -34,12 +35,12 @@ export const generateViolentmonkeyHeaders = async (packageInfo, { downloadURL, e
     const homepageURL = homepage || packageInfo.homepage || sourceURL;
     if (downloadURL)
         specialHeaders.push(["downloadURL", downloadURL]);
-    if (supportURL)
-        specialHeaders.push(["supportURL", supportURL]);
-    if (homepageURL)
-        specialHeaders.push(["homepageURL", homepageURL]);
     if (inject)
         specialHeaders.push(["inject-into", inject]);
+    if (homepageURL)
+        specialHeaders.push(["homepageURL", homepageURL]);
+    if (supportURL)
+        specialHeaders.push(["supportURL", supportURL]);
     const headers = [
         ...commonHeaders,
         ...excludeHeaders,

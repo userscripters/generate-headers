@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { unlink } from "fs/promises";
 import { generate, type GeneratorOptions } from "../src/generate.js";
-import type { CommonHeaders } from "../src/generators/index.js";
+import type { CommonHeaders } from "../src/generators/common/index.js";
 import type {
     ViolentmonkeyGrantOptions,
     ViolentmonkeyHeaders
