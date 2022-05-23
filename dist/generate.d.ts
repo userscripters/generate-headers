@@ -3,6 +3,7 @@ import type { GrantOptions, UserScriptManagerName } from "./generators/index.js"
 export declare type RunAtOption = "start" | "end" | "idle" | "body" | "menu";
 export declare type GeneratorOptions<T extends GrantOptions> = CommonGeneratorOptions & {
     collapse: boolean;
+    custom?: string[];
     direct?: boolean;
     downloadURL?: string;
     eol?: string;

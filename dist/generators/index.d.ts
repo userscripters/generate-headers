@@ -14,9 +14,6 @@ declare global {
 export declare type GrantOptions = GreasemonkeyGrantOptions | TampermonkeyGrantOptions | ViolentmonkeyGrantOptions | "all";
 export declare type UserScriptManagerName = "tampermonkey" | "violentmonkey" | "greasemonkey";
 export declare type HeaderGenerator<T extends GrantOptions> = (info: PackageInfo, options: RequiredProps<GeneratorOptions<T>, "spaces">) => Promise<string>;
-export declare type CustomHeaders = {
-    contributors: string;
-};
 export declare type HeaderEntry<T> = [keyof T & string, string];
 export declare type HeaderEntries<T> = HeaderEntry<T>[];
 export declare const generateGrantHeaders: <T extends {

@@ -17,6 +17,11 @@ const sharedOpts = {
         description: "When using `match all <template>` option value, collapses all *.stackexchange.com sites into one wildcard match",
         type: "boolean",
     },
+    ch: {
+        alias: "custom-header",
+        description: "Generates custom headers given a <name> and [value]",
+        type: "string",
+    },
     d: {
         alias: "direct",
         default: false,
@@ -114,8 +119,9 @@ const sharedOpts = {
         description: "Prettifies outputted headers where possible",
     },
 };
-names.forEach((name) => cli.command(name, `generates ${scase(name)} headers`, sharedOpts, ({ c, d, du, e, h, g = [], i, m = [], n, nf, q = [], o, p, r = "start", s, pretty, u, w = [], x = [] }) => void generate(name, {
+names.forEach((name) => cli.command(name, `generates ${scase(name)} headers`, sharedOpts, ({ c, ch = [], d, du, e, h, g = [], i, m = [], n, nf, q = [], o, p, r = "start", s, pretty, u, w = [], x = [] }) => void generate(name, {
     collapse: c,
+    custom: ch,
     direct: !!d,
     downloadURL: du,
     eol: e,

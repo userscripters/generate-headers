@@ -20,6 +20,11 @@ const sharedOpts = {
         description: "When using `match all <template>` option value, collapses all *.stackexchange.com sites into one wildcard match",
         type: "boolean",
     },
+    ch: {
+        alias: "custom-header",
+        description: "Generates custom headers given a <name> and [value]",
+        type: "string",
+    },
     d: {
         alias: "direct",
         default: false,
@@ -123,9 +128,11 @@ names.forEach((name) =>
         name,
         `generates ${scase(name)} headers`,
         sharedOpts,
-        ({ c, d, du, e, h, g = [], i, m = [], n, nf, q = [], o, p, r = "start", s, pretty, u, w = [], x = [] }) =>
+        ({ c, ch = [], d, du, e, h, g = [], i, m = [], n, nf, q = [], o, p, r = "start", s, pretty, u, w = [], x = [] }) =>
             void generate<GrantOptions>(name, {
                 collapse: c,
+                // @ts-expect-error
+                custom: ch,
                 direct: !!d,
                 downloadURL: du,
                 eol: e,

@@ -1,10 +1,12 @@
 import { scrapeNetworkSites } from "../../utils/scraper.js";
 import { generateCommonHeaders } from "../common/index.js";
 import { finalizeMonkeyHeaders } from "../common/monkey.js";
+import { generateCustomHeaders } from "../custom.js";
 import { generateExcludeHeaders, generateGrantHeaders, generateMatchHeaders, generateRequireHeaders, generateRunAtHeaders } from "../index.js";
 export const generateGreasemonkeyHeaders = async (packageInfo, options) => {
-    const { collapse = false, excludes = [], grants = [], matches = [], namespace, noframes = false, pretty = false, requires = [], run = "start", } = options;
+    const { collapse = false, custom = [], excludes = [], grants = [], matches = [], namespace, noframes = false, pretty = false, requires = [], run = "start", } = options;
     const commonHeaders = generateCommonHeaders(packageInfo, { namespace, noframes, pretty });
+    const customHeaders = generateCustomHeaders(custom);
     const grantMap = {
         set: "GM.setValue",
         get: "GM.getValue",
@@ -32,6 +34,7 @@ export const generateGreasemonkeyHeaders = async (packageInfo, options) => {
         specialHeaders.push(["run-at", runsAt]);
     const headers = [
         ...commonHeaders,
+        ...customHeaders,
         ...excludeHeaders,
         ...grantHeaders,
         ...matchHeaders,
