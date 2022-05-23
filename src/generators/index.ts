@@ -32,8 +32,6 @@ export type HeaderGenerator<T extends GrantOptions> = (
     options: RequiredProps<GeneratorOptions<T>, "spaces">
 ) => Promise<string>;
 
-export type CustomHeaders = { contributors: string };
-
 export type HeaderEntry<T> = [keyof T & string, string];
 
 export type HeaderEntries<T> = HeaderEntry<T>[];

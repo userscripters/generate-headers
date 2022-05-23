@@ -4,7 +4,7 @@ import type {
     CommonHeaders,
     CommonRunAt
 } from "../common/index.js";
-import type { CustomHeaders } from "../index.js";
+import type { CustomHeaders } from "../custom.js";
 
 export type TampermonkeyGrantOptions =
     | CommonGrantOptions
