@@ -7,6 +7,7 @@ import type {
     GreasemonkeyGrantOptions,
     GreasemonkeyGrants
 } from "../src/generators/greasemonkey/types.js";
+import { UserScriptManagerName } from "../src/generators/index.js";
 import type {
     TampermonkeyGrantOptions,
     TampermonkeyGrants
@@ -28,6 +29,12 @@ export const common: GeneratorOptions<CommonGrantOptions> = {
     collapse: true,
     noframes: true,
 };
+
+export const managers: UserScriptManagerName[] = [
+    "greasemonkey",
+    "tampermonkey",
+    "violentmonkey"
+];
 
 //@see https://developer.chrome.com/docs/extensions/mv2/match_patterns/
 export const allMatches: string[] = [
