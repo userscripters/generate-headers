@@ -38,14 +38,17 @@ export const finalizeMonkeyHeaders = <T extends CommonHeaders<CustomHeaders>>(
 
     const longest = getLongest(headers.map(([key]) => key as string)) + spaces;
 
-    const indentedHeaders: HeaderEntries<T> = headers.map(([key, val]) => [
+    // @name header should come first, the rest are sorted alphabetically
+    const sortedHeaders: HeaderEntries<T> = headers.sort(
+        ([a], [b]) => a === "name" ? -1 : a < b ? -1 : 1
+    );
+
+    const indentedHeaders: HeaderEntries<T> = sortedHeaders.map(([key, val]) => [
         key.padEnd(longest),
         val,
     ]);
 
-    const parsedHeaders: MonkeyHeader[] = indentedHeaders
-        .map(makeMonkeyHeader)
-        .sort();
+    const parsedHeaders: MonkeyHeader[] = indentedHeaders.map(makeMonkeyHeader);
 
     return [openTag, ...parsedHeaders, closeTag].join("\n");
 };

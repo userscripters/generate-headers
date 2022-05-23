@@ -5,7 +5,7 @@ import type { CommonHeaders } from "../src/generators/common/index.js";
 import { generateMatchHeaders } from "../src/generators/index.js";
 import { prettifyName } from "../src/utils/name.js";
 import type { scrapeNetworkSites } from "../src/utils/scraper.js";
-import { allMatches, directCommon, requires } from "./index.spec.js";
+import { allMatches, directCommon, managers, requires } from "./index.spec.js";
 
 describe("common", () => {
 
@@ -72,6 +72,14 @@ describe("common", () => {
             const matcher = new RegExp(`@${header}`, "g");
             expect(matcher.test(content), `failed at ${header}`).to.be.true;
         });
+    });
+
+    it('@name header should always be the first one', async () => {
+        for (const type of managers) {
+            const content = await generate(type, directCommon);
+            const [, name] = content.split(/\r?\n/);
+            expect(name).to.match(/^\/\/ @name\s+/m);
+        }
     });
 
     it('@exclude headers should be generated', async () => {
