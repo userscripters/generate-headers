@@ -1,4 +1,5 @@
 import { getLongest } from "../../utils/common.js";
+import { CustomHeaders } from "../custom.js";
 import type { HeaderEntries, HeaderEntry } from "../index.js";
 import type { CommonHeaders } from "./index.js";
 
@@ -29,7 +30,7 @@ export const makeMonkeyHeader = <T extends CommonHeaders>(header: HeaderEntry<T>
  * @param headers list of name-value header entries
  * @param spaces min number of spaces to separate names from values by
  */
-export const finalizeMonkeyHeaders = <T extends CommonHeaders>(
+export const finalizeMonkeyHeaders = <T extends CommonHeaders<CustomHeaders>>(
     headers: HeaderEntries<T>,
     spaces: number
 ) => {

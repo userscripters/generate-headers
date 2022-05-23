@@ -25,6 +25,7 @@ export type RunAtOption = "start" | "end" | "idle" | "body" | "menu";
 
 export type GeneratorOptions<T extends GrantOptions> = CommonGeneratorOptions & {
     collapse: boolean;
+    custom?: string[];
     direct?: boolean;
     downloadURL?: string;
     eol?: string;

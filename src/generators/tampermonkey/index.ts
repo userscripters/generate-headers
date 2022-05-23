@@ -2,6 +2,7 @@ import type { RunAtOption } from "../../generate.js";
 import { scrapeNetworkSites } from "../../utils/scraper.js";
 import { generateCommonHeaders } from "../common/index.js";
 import { finalizeMonkeyHeaders } from "../common/monkey.js";
+import { generateCustomHeaders } from "../custom.js";
 import {
     generateExcludeHeaders,
     generateGrantHeaders,
@@ -28,6 +29,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
     async (packageInfo, options) => {
         const {
             collapse = false,
+            custom = [],
             downloadURL,
             excludes = [],
             grants = [],
@@ -44,6 +46,8 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
         } = options;
 
         const commonHeaders = generateCommonHeaders(packageInfo, { namespace, noframes, pretty });
+
+        const customHeaders = generateCustomHeaders(custom);
 
         const matchHeaders = await generateMatchHeaders(matches, scrapeNetworkSites, collapse);
 
@@ -104,6 +108,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
 
         const headers = [
             ...commonHeaders,
+            ...customHeaders,
             ...excludeHeaders,
             ...matchHeaders,
             ...requireHeaders,

@@ -2,6 +2,7 @@ import type { RunAtOption } from "../../generate.js";
 import { scrapeNetworkSites } from "../../utils/scraper.js";
 import { generateCommonHeaders } from "../common/index.js";
 import { finalizeMonkeyHeaders } from "../common/monkey.js";
+import { generateCustomHeaders } from "../custom.js";
 import {
     generateExcludeHeaders,
     generateGrantHeaders,
@@ -28,6 +29,7 @@ export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptio
     async (packageInfo, options) => {
         const {
             collapse = false,
+            custom = [],
             excludes = [],
             grants = [],
             matches = [],
@@ -39,6 +41,8 @@ export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptio
         } = options;
 
         const commonHeaders = generateCommonHeaders(packageInfo, { namespace, noframes, pretty });
+
+        const customHeaders = generateCustomHeaders(custom);
 
         const grantMap: Record<GreasemonkeyGrantOptions, GreasemonkeyGrants> = {
             set: "GM.setValue",
@@ -79,6 +83,7 @@ export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptio
 
         const headers: HeaderEntries<GreasemonkeyHeaders> = [
             ...commonHeaders,
+            ...customHeaders,
             ...excludeHeaders,
             ...grantHeaders,
             ...matchHeaders,

@@ -2,6 +2,7 @@ import type { RunAtOption } from "../../generate.js";
 import { scrapeNetworkSites } from "../../utils/scraper.js";
 import { generateCommonHeaders } from "../common/index.js";
 import { finalizeMonkeyHeaders } from "../common/monkey.js";
+import { generateCustomHeaders } from "../custom.js";
 import {
     generateExcludeMatchHeaders,
     generateGrantHeaders,
@@ -28,6 +29,7 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
     async (packageInfo, options) => {
         const {
             collapse = false,
+            custom = [],
             downloadURL,
             excludes = [],
             grants = [],
@@ -43,6 +45,8 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
         } = options;
 
         const commonHeaders = generateCommonHeaders(packageInfo, { namespace, noframes, pretty });
+
+        const customHeaders = generateCustomHeaders(custom);
 
         const grantMap: Record<ViolentmonkeyGrantOptions, ViolentmonkeyGrants> =
         {
@@ -97,6 +101,7 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
 
         const headers: HeaderEntries<ViolentmonkeyHeaders> = [
             ...commonHeaders,
+            ...customHeaders,
             ...excludeHeaders,
             ...grantHeaders,
             ...matchHeaders,
