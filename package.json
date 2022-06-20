@@ -68,7 +68,7 @@
     "dependencies": {
         "chalk": "^5.0.1",
         "got": "^12.1.0",
-        "jsdom": "^19.0.0",
+        "jsdom": "^20.0.0",
         "semver": "^7.3.7",
         "validator": "^13.7.0",
         "yargs": "^17.5.1"
