@@ -10,6 +10,7 @@ import type {
 } from "./generators/index.js";
 import { generateTampermonkeyHeaders } from "./generators/tampermonkey/index.js";
 import { generateViolentmonkeyHeaders } from "./generators/violentmonkey/index.js";
+import { lintHeaders } from "./linters/index.js";
 import { replaceFileContent } from "./utils/filesystem.js";
 import { getPackage } from "./utils/package.js";
 import {
@@ -30,9 +31,11 @@ export type GeneratorOptions<T extends GrantOptions> = CommonGeneratorOptions & 
     downloadURL?: string;
     eol?: string;
     excludes?: string[];
+    fix?: boolean;
     grants?: T[];
     homepage?: string;
     inject?: string;
+    lint?: boolean;
     matches?: string[];
     output: string;
     packagePath: string;
@@ -43,6 +46,44 @@ export type GeneratorOptions<T extends GrantOptions> = CommonGeneratorOptions & 
     updateURL?: string;
     whitelist?: Array<"self" | "localhost" | "*"> | string[];
 };
+
+export type WriteHeadersOptions = {
+    cli: boolean;
+    direct: boolean;
+    eol?: string;
+    output: string;
+};
+
+/**
+ * @summary writes the generated headers to a file or to stdout
+ * @param content generated headers
+ * @param options configuration options
+ */
+export const writeHeaders = async (content: string, options: WriteHeadersOptions): Promise<string> => {
+    const { cli, direct, eol, output } = options;
+
+    if (!direct) {
+        if (!existsSync(output)) {
+            await appendFile(output, content, { encoding: "utf-8", flag: "w+" });
+            return content;
+        }
+
+        const [openOffset, closeOffset] = await getExistingHeadersOffset(output, eol);
+
+        if (openOffset > -1 && closeOffset > -1) {
+            await replaceFileContent(output, openOffset, closeOffset, content);
+            return content;
+        }
+
+        await replaceFileContent(output, 0, 0, `${content}${eol}`);
+        return content;
+    }
+
+    //running from CLI with file emit disabled
+    if (cli) process.stdout.write(content);
+
+    return content;
+}
 
 /**
  * @summary main header generator function
@@ -60,9 +101,11 @@ export const generate = async <T extends GrantOptions>(
         output,
         spaces = 4,
         eol,
+        fix = false,
         collapse = true,
         direct = false,
         excludes = [],
+        lint = false,
         matches = [],
         whitelist = [],
         ...rest
@@ -151,27 +194,13 @@ export const generate = async <T extends GrantOptions>(
             output,
         });
 
-        if (!direct) {
-            if (!existsSync(output)) {
-                await appendFile(output, content, { encoding: "utf-8", flag: "w+" });
-                return content;
-            }
-
-            const [openOffset, closeOffset] = await getExistingHeadersOffset(output, eol);
-
-            if (openOffset > -1 && closeOffset > -1) {
-                await replaceFileContent(output, openOffset, closeOffset, content);
-                return content;
-            }
-
-            await replaceFileContent(output, 0, 0, `${content}${eol}`);
-            return content;
+        if (lint || fix) {
+            const { error, headers } = await lintHeaders(content, { spaces, fix });
+            if (error) console.log(error); // 'error' contains a preformatted string
+            return writeHeaders(headers, { cli, direct, eol, output });
         }
 
-        //running from CLI with file emit disabled
-        if (cli) process.stdout.write(content);
-
-        return content;
+        return writeHeaders(content, { cli, direct, eol, output });
     } catch (error) {
         const exceptionObject = error as NodeJS.ErrnoException;
         const { code, name } = exceptionObject;
