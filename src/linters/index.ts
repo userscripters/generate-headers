@@ -19,7 +19,7 @@ export type LintResult = {
  * @param metadataBlock generated headers to lint
  * @param options lint configuration
  */
-export const lint = async (metadataBlock: string, options: LintOptions = {}): Promise<LintResult> => {
+export const lintHeaders = async (metadataBlock: string, options: LintOptions = {}): Promise<LintResult> => {
     const { fix = false, isHomepageAllowed = false, spaces = 4 } = options;
 
     const eslint = new ESLint({
