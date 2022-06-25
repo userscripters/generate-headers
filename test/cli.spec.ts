@@ -221,7 +221,7 @@ describe("CLI Options", function () {
         const [firstHeader] = headlines;
 
         const index = firstHeader?.search(/(?<=^\/\/\s@\w+\s+)\w/);
-        expect(longest + sp + 1).to.be.equal(index);
+        expect(longest + sp).to.be.equal(index);
     });
 
     it("--pretty option should format headers correctly", async () => {
