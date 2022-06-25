@@ -57,6 +57,18 @@ const sharedOpts = {
         description: "Generates @grant headers, can be repeated",
         type: "array",
     },
+    l: {
+        alias: "lint",
+        describe: "Lints the generated headers with ESLint",
+        default: false,
+        type: "boolean",
+    },
+    lf: {
+        alias: "lint-fix",
+        describe: "Fixes lint issues found with ESLint (implies --lint)",
+        default: false,
+        type: "boolean",
+    },
     m: {
         alias: "match",
         description: "Generates valid @match headers (repeatable)",
@@ -128,7 +140,7 @@ names.forEach((name) =>
         name,
         `generates ${scase(name)} headers`,
         sharedOpts,
-        ({ c, ch = [], d, du, e, h, g = [], i, m = [], n, nf, q = [], o, p, r = "start", s, pretty, u, w = [], x = [] }) =>
+        ({ c, ch = [], d, du, e, h, g = [], i, l, lf, m = [], n, nf, q = [], o, p, r = "start", s, pretty, u, w = [], x = [] }) =>
             void generate<GrantOptions>(name, {
                 collapse: c,
                 // @ts-expect-error
@@ -137,8 +149,10 @@ names.forEach((name) =>
                 downloadURL: du,
                 eol: e,
                 excludes: x.map(String),
+                fix: !!lf,
                 homepage: h,
                 inject: i,
+                lint: !!l,
                 matches: m.map(String),
                 noframes: !!nf,
                 requires: q.map(String),
