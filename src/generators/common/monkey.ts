@@ -36,7 +36,7 @@ export const finalizeMonkeyHeaders = <T extends CommonHeaders<CustomHeaders>>(
 ) => {
     const [openTag, closeTag] = makeMonkeyTags();
 
-    const longest = getLongest(headers.map(([key]) => key as string)) + spaces;
+    const longest = getLongest(headers.map(([key]) => key as string)) + spaces - 1;
 
     // @name header should come first, the rest are sorted alphabetically
     const sortedHeaders: HeaderEntries<T> = headers.sort(
