@@ -49,8 +49,7 @@ describe("CLI Options", function () {
             aexec(`${cliPfx} tampermonkey -i "page" -p ${pkg} -o ${output} -d ${gOpts} ${mOpts} ${rOpts} ${xOpts} -s ${spaces}`),
             aexec(`${cliPfx} tampermonkey -p ${pkg} -o ${output} -d -r menu`),
             aexec(`${cliPfx} violentmonkey -p ${pkg} -o ${output} -d -g all ${xOpts} -r end`),
-            aexec(`${cliPfx} tampermonkey -m all -c -d`),
-            aexec(`${cliPfx} tampermonkey -p ${pkg} -d --pretty`),
+            aexec(`${cliPfx} tampermonkey -p ${pkg} -m all -c -d --pretty`),
             aexec(`${cliPfx} greasemonkey  -p ${pkg} -d -r idle`),
         ]);
 
@@ -173,7 +172,7 @@ describe("CLI Options", function () {
     it("-r option should correctly add @run-at", () => {
         const { stdout: tmout } = cliRuns[3];
         const { stdout: vmout } = cliRuns[4];
-        const { stdout: gmout } = cliRuns[7];
+        const { stdout: gmout } = cliRuns[6];
 
         expect(tmout).to.match(/^\/\/ @run-at\s+context-menu$/gm);
         expect(vmout).to.match(/^\/\/ @run-at\s+document-end$/gm);
@@ -201,7 +200,7 @@ describe("CLI Options", function () {
     });
 
     it("--pretty option should format headers correctly", () => {
-        const { stdout } = cliRuns[6];
+        const { stdout } = cliRuns[5];
         const [, name] = /\/\/ @name\s+(.+)$/m.exec(stdout) || [];
         expect(name).to.be.equal("Generate Headers");
     });
