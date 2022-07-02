@@ -121,7 +121,7 @@ export const generate = async <T extends GrantOptions>(
         const parsedPackage = await getPackage(packagePath);
 
         if (!parsedPackage) {
-            console.log(chulk.bgRed`missing or corrupted package`);
+            console.error(chulk.bgRed`missing or corrupted package`);
             return "";
         }
 
@@ -131,7 +131,7 @@ export const generate = async <T extends GrantOptions>(
             valid: validMatches
         } = validateMatchHeaders(matches);
         if (!matchStatus) {
-            console.log(chulk.bgRed`Invalid @match headers:\n` + matchInvalid.join("\n"));
+            console.error(chulk.bgRed`Invalid @match headers:\n` + matchInvalid.join("\n"));
         }
 
         const {
@@ -140,7 +140,7 @@ export const generate = async <T extends GrantOptions>(
             valid: validExcludes
         } = validateExcludeHeaders(excludes);
         if (!excludeStatus) {
-            console.log(chulk.bgRed`Invalid @exclude headers:\n` + excludeInvalid.join("\n"));
+            console.error(chulk.bgRed`Invalid @exclude headers:\n` + excludeInvalid.join("\n"));
         }
 
         const {
@@ -149,7 +149,7 @@ export const generate = async <T extends GrantOptions>(
             valid: validConnects
         } = validateConnectHeaders(whitelist);
         if (!connectStatus) {
-            console.log(chulk.bgRed`Invalid @connect headers:\n` + connectInvalid.join("\n"));
+            console.error(chulk.bgRed`Invalid @connect headers:\n` + connectInvalid.join("\n"));
         }
 
         const {
@@ -160,23 +160,21 @@ export const generate = async <T extends GrantOptions>(
         } = validateRequiredHeaders(parsedPackage);
 
         if (!isValidHomepage) {
-            console.log(
-                chulk.bgRed`Invalid homepage URL:\n` + parsedPackage.homepage
-            );
+            console.error(chulk.bgRed`Invalid homepage URL:\n` + parsedPackage.homepage);
         }
 
         const { isValidDownloadURL } = validateOptionalHeaders(options);
 
         if (!isValidDownloadURL) {
-            console.log(chulk.bgRed`Invalid @downloadURL:\n` + options.downloadURL);
+            console.error(chulk.bgRed`Invalid @downloadURL:\n` + options.downloadURL);
         }
 
         if (!isValidVersion) {
-            console.log(chulk.bgRed`Invalid version:\n` + parsedPackage.version);
+            console.error(chulk.bgRed`Invalid version:\n` + parsedPackage.version);
         }
 
         if (missing.length) {
-            console.log(chulk.bgRed`Missing required fields:\n` + missing.join("\n"));
+            console.error(chulk.bgRed`Missing required fields:\n` + missing.join("\n"));
         }
 
         if (!reqStatus) return "";
@@ -196,7 +194,7 @@ export const generate = async <T extends GrantOptions>(
 
         if (lint || fix) {
             const { error, headers } = await lintHeaders(content, { spaces, fix });
-            if (error) console.log(error); // 'error' contains a preformatted string
+            if (error) console.error(error); // 'error' contains a preformatted string
             return writeHeaders(headers, { cli, direct, eol, output });
         }
 
@@ -216,7 +214,7 @@ export const generate = async <T extends GrantOptions>(
 
         const [postfix, message] = handler(exceptionObject);
 
-        console.log(chulk.bgRed`[${name}] ${postfix}` + `\n\n${message}`);
+        console.error(chulk.bgRed`[${name}] ${postfix}` + `\n\n${message}`);
 
         return "";
     }
