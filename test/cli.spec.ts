@@ -46,10 +46,11 @@ describe("CLI Options", function () {
             aexec(`${cliPfx} tampermonkey -p ${pkg} -d --du ${requires[1]} -u ${requires[1]} -n testing -h ${requires[1]} --nf --ch "name1 value1" --ch name2`),
             aexec(`${cliPfx} violentmonkey -i "content" -p ${pkg} -o ${output} -d`),
             aexec(`${cliPfx} tampermonkey -i "page" -p ${pkg} -o ${output} -d ${gOpts} ${mOpts} ${rOpts} ${xOpts}`),
-            aexec(`${cliPfx} tampermonkey -p ${pkg} -o ${output} -d`),
-            aexec(`${cliPfx} violentmonkey -p ${pkg} -o ${output} -d -g all ${xOpts}`),
+            aexec(`${cliPfx} tampermonkey -p ${pkg} -o ${output} -d -r menu`),
+            aexec(`${cliPfx} violentmonkey -p ${pkg} -o ${output} -d -g all ${xOpts} -r end`),
             aexec(`${cliPfx} tampermonkey -m all -c -d`),
             aexec(`${cliPfx} tampermonkey -p ${pkg} -d --pretty`),
+            aexec(`${cliPfx} greasemonkey  -p ${pkg} -d -r idle`),
         ]);
 
         cliRuns.push(...runs);
@@ -168,17 +169,10 @@ describe("CLI Options", function () {
         expect(stdout).to.match(/\*\.stackexchange\.com/);
     });
 
-    it("-r option should correctly add @run-at", async function () {
-        this.timeout(1e4);
-
-        const opts = `-p ${pkg} -o ${output} -d`;
-
-        const [{ stdout: tmout }, { stdout: vmout }, { stdout: gmout }] =
-            await Promise.all([
-                aexec(`${cliPfx} tampermonkey ${opts} --run menu`),
-                aexec(`${cliPfx} violentmonkey ${opts} -r end`),
-                aexec(`${cliPfx} greasemonkey ${opts} -r idle`),
-            ]);
+    it("-r option should correctly add @run-at", () => {
+        const { stdout: tmout } = cliRuns[3];
+        const { stdout: vmout } = cliRuns[4];
+        const { stdout: gmout } = cliRuns[7];
 
         expect(tmout).to.match(/^\/\/ @run-at\s+context-menu$/gm);
         expect(vmout).to.match(/^\/\/ @run-at\s+document-end$/gm);
