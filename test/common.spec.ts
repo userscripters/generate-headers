@@ -10,6 +10,7 @@ import { allMatches, directCommon, managers, requires } from "./index.spec.js";
 describe("common", () => {
 
     before(() => sinon.stub(console, "log"));
+    before(() => sinon.stub(console, "error"));
 
     after(() => sinon.restore());
 
