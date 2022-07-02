@@ -39,12 +39,15 @@ describe("CLI Options", function () {
         const mOpts = allMatches.map((m) => `-m "${m}"`).join(" ");
         const rOpts = requires.map((m) => `-q "${m}"`).join(" ");
 
+        // without <all_urls>
+        const xOpts = allMatches.slice(0, -1).map((x) => `-x "${x}"`).join(" ");
+
         const runs = await Promise.all([
             aexec(`${cliPfx} tampermonkey -p ${pkg} -d --du ${requires[1]} -u ${requires[1]} -n testing -h ${requires[1]} --nf --ch "name1 value1" --ch name2`),
             aexec(`${cliPfx} violentmonkey -i "content" -p ${pkg} -o ${output} -d`),
-            aexec(`${cliPfx} tampermonkey -i "page" -p ${pkg} -o ${output} -d ${gOpts} ${mOpts} ${rOpts}`),
+            aexec(`${cliPfx} tampermonkey -i "page" -p ${pkg} -o ${output} -d ${gOpts} ${mOpts} ${rOpts} ${xOpts}`),
             aexec(`${cliPfx} tampermonkey -p ${pkg} -o ${output} -d`),
-            aexec(`${cliPfx} violentmonkey -p ${pkg} -o ${output} -d -g all`),
+            aexec(`${cliPfx} violentmonkey -p ${pkg} -o ${output} -d -g all ${xOpts}`),
             aexec(`${cliPfx} tampermonkey -m all -c -d`),
             aexec(`${cliPfx} tampermonkey -p ${pkg} -d --pretty`),
         ]);
@@ -143,21 +146,13 @@ describe("CLI Options", function () {
     });
 
     it("-x options should correctly add @exclude", async () => {
-        // without <all_urls>
-        const xs = allMatches.slice(0, -1).map((x) => `-x "${x}"`).join(" ");
-
-        const { stdout } = await aexec(`${cliPfx} tampermonkey ${xs} -p ${pkg} -o ${output} -d`);
-
+        const { stdout } = cliRuns[2];
         const matched = stdout.match(/@exclude\s+(.+)/g) || [];
         expect(matched).length(allMatches.length - 1);
     });
 
     it("-x options should correctly add @exclude-match headers for Violentmonkey", async () => {
-        // without <all_urls>
-        const xs = allMatches.slice(0, -1).map((x) => `-x "${x}"`).join(" ");
-
-        const { stdout } = await aexec(`${cliPfx} violentmonkey ${xs} -p ${pkg} -o ${output} -d`);
-
+        const { stdout } = cliRuns[4];
         const matched = stdout.match(/@exclude-match\s+(.+)/g) || [];
         expect(matched).length(allMatches.length - 1);
     });
