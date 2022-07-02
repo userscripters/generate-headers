@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { exec } from "child_process";
-import { readFile, stat, unlink } from "fs/promises";
+import { stat, unlink } from "fs/promises";
 import { promisify } from "util";
 import type { TampermonkeyGrants } from "../src/generators/tampermonkey/types.js";
 import { getLongest } from "../src/utils/common.js";
@@ -21,6 +21,7 @@ describe("CLI Options", function () {
 
     const entry = "./src/cli.ts";
     const cliPfx = `node --loader ts-node/esm ${entry}`;
+    const spaces = 8;
 
     afterEach(async () =>
         stat(output)
@@ -45,7 +46,7 @@ describe("CLI Options", function () {
         const runs = await Promise.all([
             aexec(`${cliPfx} tampermonkey -p ${pkg} -d --du ${requires[1]} -u ${requires[1]} -n testing -h ${requires[1]} --nf --ch "name1 value1" --ch name2`),
             aexec(`${cliPfx} violentmonkey -i "content" -p ${pkg} -o ${output} -d`),
-            aexec(`${cliPfx} tampermonkey -i "page" -p ${pkg} -o ${output} -d ${gOpts} ${mOpts} ${rOpts} ${xOpts}`),
+            aexec(`${cliPfx} tampermonkey -i "page" -p ${pkg} -o ${output} -d ${gOpts} ${mOpts} ${rOpts} ${xOpts} -s ${spaces}`),
             aexec(`${cliPfx} tampermonkey -p ${pkg} -o ${output} -d -r menu`),
             aexec(`${cliPfx} violentmonkey -p ${pkg} -o ${output} -d -g all ${xOpts} -r end`),
             aexec(`${cliPfx} tampermonkey -m all -c -d`),
@@ -179,12 +180,8 @@ describe("CLI Options", function () {
         expect(gmout).to.match(/^\/\/ @run-at\s+document-idle$/gm);
     });
 
-    it("-s option should control number of spaces added", async () => {
-        const sp = 8;
-
-        await aexec(`${cliPfx} tampermonkey -s ${sp} -p ${pkg} -o ${output}`);
-
-        const contents = await readFile(output, { encoding: "utf-8" });
+    it("-s option should control number of spaces added", () => {
+        const { stdout: contents } = cliRuns[2];
 
         const lines = contents.split("\n");
 
@@ -200,7 +197,7 @@ describe("CLI Options", function () {
         const [firstHeader] = headlines;
 
         const index = firstHeader?.search(/(?<=^\/\/\s@\w+\s+)\w/);
-        expect(longest + sp).to.be.equal(index);
+        expect(longest + spaces).to.be.equal(index);
     });
 
     it("--pretty option should format headers correctly", () => {
