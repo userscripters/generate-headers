@@ -44,12 +44,9 @@ describe("CLI Options", function () {
         const xOpts = allMatches.slice(0, -1).map((x) => `-x "${x}"`).join(" ");
 
         const runs = await Promise.all([
-            aexec(`${cliPfx} tampermonkey -p ${pkg} -d --du ${requires[1]} -u ${requires[1]} -n testing -h ${requires[1]} --nf --ch "name1 value1" --ch name2`),
-            aexec(`${cliPfx} violentmonkey -i "content" -p ${pkg} -o ${output} -d`),
+            aexec(`${cliPfx} tampermonkey -p ${pkg} -d --du ${requires[1]} -u ${requires[1]} -n testing -h ${requires[1]} --nf --ch "name1 value1" --ch name2 -r menu -m all -c --pretty`),
+            aexec(`${cliPfx} violentmonkey -i "content" -p ${pkg} -o ${output} -d  -g all ${xOpts} -r end`),
             aexec(`${cliPfx} tampermonkey -i "page" -p ${pkg} -o ${output} -d ${gOpts} ${mOpts} ${rOpts} ${xOpts} -s ${spaces}`),
-            aexec(`${cliPfx} tampermonkey -p ${pkg} -o ${output} -d -r menu`),
-            aexec(`${cliPfx} violentmonkey -p ${pkg} -o ${output} -d -g all ${xOpts} -r end`),
-            aexec(`${cliPfx} tampermonkey -p ${pkg} -m all -c -d --pretty`),
             aexec(`${cliPfx} greasemonkey  -p ${pkg} -d -r idle`),
         ]);
 
@@ -125,13 +122,13 @@ describe("CLI Options", function () {
     });
 
     it('no -g options should add @grant "none"', () => {
-        const { stdout } = cliRuns[3];
+        const { stdout } = cliRuns[0];
         const isNone = /@grant\s+none/.test(stdout);
         expect(isNone).to.be.true;
     });
 
     it("-g option set to 'all' should include all possible grants", () => {
-        const { stdout } = cliRuns[4];
+        const { stdout } = cliRuns[1];
 
         grantsVM.forEach((grant) => {
             const status = new RegExp(`^// @grant\\s+${grant}$`, "gm").test(
@@ -154,7 +151,7 @@ describe("CLI Options", function () {
     });
 
     it("-x options should correctly add @exclude-match headers for Violentmonkey", () => {
-        const { stdout } = cliRuns[4];
+        const { stdout } = cliRuns[1];
         const matched = stdout.match(/@exclude-match\s+(.+)/g) || [];
         expect(matched).length(allMatches.length - 1);
     });
@@ -166,14 +163,14 @@ describe("CLI Options", function () {
     });
 
     it("-c option should correctly collapse -m all [template] output", () => {
-        const { stdout } = cliRuns[5];
+        const { stdout } = cliRuns[0];
         expect(stdout).to.match(/\*\.stackexchange\.com/);
     });
 
     it("-r option should correctly add @run-at", () => {
-        const { stdout: tmout } = cliRuns[3];
-        const { stdout: vmout } = cliRuns[4];
-        const { stdout: gmout } = cliRuns[6];
+        const { stdout: tmout } = cliRuns[0];
+        const { stdout: vmout } = cliRuns[1];
+        const { stdout: gmout } = cliRuns[3];
 
         expect(tmout).to.match(/^\/\/ @run-at\s+context-menu$/gm);
         expect(vmout).to.match(/^\/\/ @run-at\s+document-end$/gm);
@@ -201,7 +198,7 @@ describe("CLI Options", function () {
     });
 
     it("--pretty option should format headers correctly", () => {
-        const { stdout } = cliRuns[5];
+        const { stdout } = cliRuns[0];
         const [, name] = /\/\/ @name\s+(.+)$/m.exec(stdout) || [];
         expect(name).to.be.equal("Generate Headers");
     });
