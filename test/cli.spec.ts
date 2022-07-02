@@ -55,7 +55,7 @@ describe("CLI Options", function () {
         cliRuns.push(...runs);
     });
 
-    it("-d option should forgo file generation", async () => {
+    it("-d option should forgo file generation", () => {
         const { stdout } = cliRuns[0];
         expect(!!stdout).to.be.true;
         expect(stat(output)).to.eventually.be.rejected;
@@ -77,7 +77,7 @@ describe("CLI Options", function () {
         expect(stdout).to.match(/^\/\/ @name2\s*$/m);
     });
 
-    it('--du option should add @downloadURL header', async () => {
+    it('--du option should add @downloadURL header', () => {
         const { stdout } = cliRuns[0];
         expect(stdout).to.match(new RegExp(`^\\/\\/ @downloadURL\\s+${requires[1]}$`, "m"));
     });
@@ -107,7 +107,7 @@ describe("CLI Options", function () {
         expect(stdout).to.not.match(/^\/\/ @inject-into\s+page$/gm);
     });
 
-    it("-g options should correctly add @grant", async () => {
+    it("-g options should correctly add @grant", () => {
         const { stdout } = cliRuns[2];
 
         const matched = stdout.match(/@grant\s+(.+)/g) || [];
@@ -139,19 +139,19 @@ describe("CLI Options", function () {
         });
     });
 
-    it("-m options should correctly add @matches", async () => {
+    it("-m options should correctly add @matches", () => {
         const { stdout } = cliRuns[2];
         const matched = stdout.match(/@match\s+(.+)/g) || [];
         expect(matched).length(allMatches.length);
     });
 
-    it("-x options should correctly add @exclude", async () => {
+    it("-x options should correctly add @exclude", () => {
         const { stdout } = cliRuns[2];
         const matched = stdout.match(/@exclude\s+(.+)/g) || [];
         expect(matched).length(allMatches.length - 1);
     });
 
-    it("-x options should correctly add @exclude-match headers for Violentmonkey", async () => {
+    it("-x options should correctly add @exclude-match headers for Violentmonkey", () => {
         const { stdout } = cliRuns[4];
         const matched = stdout.match(/@exclude-match\s+(.+)/g) || [];
         expect(matched).length(allMatches.length - 1);
@@ -163,7 +163,7 @@ describe("CLI Options", function () {
         expect(required).length(2);
     });
 
-    it("-c option should correctly collapse -m all [template] output", async () => {
+    it("-c option should correctly collapse -m all [template] output", () => {
         const { stdout } = cliRuns[5];
         expect(stdout).to.match(/\*\.stackexchange\.com/);
     });
@@ -209,7 +209,7 @@ describe("CLI Options", function () {
         expect(longest + sp).to.be.equal(index);
     });
 
-    it("--pretty option should format headers correctly", async () => {
+    it("--pretty option should format headers correctly", () => {
         const { stdout } = cliRuns[6];
         const [, name] = /\/\/ @name\s+(.+)$/m.exec(stdout) || [];
         expect(name).to.be.equal("Generate Headers");
