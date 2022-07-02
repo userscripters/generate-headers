@@ -35,10 +35,12 @@ describe("CLI Options", function () {
     const cliRuns: { stdout: string; stderr: string; }[] = [];
 
     before(async () => {
+        const gOpts = grantOptionsTM.map((g) => `-g "${g}"`).join(" ");
+
         const runs = await Promise.all([
             aexec(`${cliPfx} tampermonkey -p ${pkg} -d --du ${requires[1]} -u ${requires[1]} -n testing -h ${requires[1]} --nf --ch "name1 value1" --ch name2`),
             aexec(`${cliPfx} violentmonkey -i "content" -p ${pkg} -o ${output} -d`),
-            aexec(`${cliPfx} tampermonkey -i "page" -p ${pkg} -o ${output} -d`),
+            aexec(`${cliPfx} tampermonkey -i "page" -p ${pkg} -o ${output} -d ${gOpts}`),
             aexec(`${cliPfx} tampermonkey -p ${pkg} -o ${output} -d`),
             aexec(`${cliPfx} violentmonkey -p ${pkg} -o ${output} -d -g all`),
             aexec(`${cliPfx} tampermonkey -m all -c -d`),
@@ -101,11 +103,7 @@ describe("CLI Options", function () {
     });
 
     it("-g options should correctly add @grant", async () => {
-        const gOpts = grantOptionsTM.map((g) => `-g "${g}"`).join(" ");
-
-        const { stdout } = await aexec(
-            `${cliPfx} tampermonkey ${gOpts} -p ${pkg} -o ${output} -d`
-        );
+        const { stdout } = cliRuns[2];
 
         const matched = stdout.match(/@grant\s+(.+)/g) || [];
         expect(matched).length(grantOptionsTM.length);
