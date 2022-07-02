@@ -62,7 +62,8 @@ describe("CLI Options", function () {
         expect(stat(output)).to.eventually.be.rejected;
     });
 
-    it("-d option should override -o", async () => {
+    it("-d option should override -o", async function () {
+        this.timeout(1e4); // ensure CI does not fail if exec is slow
         await aexec(`${cliPfx} tampermonkey -p ${pkg} -o ${output} -d`);
         expect(stat(output)).to.eventually.be.rejected;
     });
