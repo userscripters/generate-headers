@@ -1,5 +1,5 @@
 <!-- thumbnail: https://i.stack.imgur.com/Z1HJy.png -->
-<!-- version: 3.2.2 -->
+<!-- version: 3.4.0 -->
 <!-- tag: library -->
 <!-- excerpt: Tired of writing out userscript headers by hand? Of small typos in your @match headers leading to wasted time? Generate Headers to the rescue: this utility package automates header generation for popular userscript managers like Tampermonkey, Violentmonkey, and Greasemonkey  -->
 
@@ -41,6 +41,7 @@ Example output:
 
 ```javascript
 // ==UserScript==
+// @name            bring-back-404
 // @author          Oleg Valter <oleg.a.valter@gmail.com>
 // @connect         self
 // @description     Brings back 404 pages to Stack Exchange network
@@ -56,7 +57,6 @@ Example output:
 // @match           https://*.stackapps.com/*
 // @match           https://*.stackexchange.com/*
 // @match           https://*.stackoverflow.com/*
-// @name            bring-back-404
 // @namespace       userscripters
 // @source          git+https://github.com/userscripters/bring-back-404.git
 // @supportURL      https://github.com/userscripters/bring-back-404/issues
@@ -246,6 +246,10 @@ And here is an example output if the package.json has major issues:
 Since v2.10.0, Generate Headers validates `@connect` headers for complying with allowed values (see the "Valid whitelists" section above for details). Just as with `@match` headers, incorrect values will be dropped from the output, and an error will be logged.
 
 Since v2.12.0, Generate Headers validates `@require` headers for being valid URLs and not file URLs (as they are disallowed by userscript managers).
+
+### Linting
+
+Since v3.4.0, Generate Headers has `--lint` and `--lint-fix` options (both CLI and programmatic API) that integrate with the [eslint-plugin-userscripts](https://github.com/Yash-Singh1/eslint-plugin-userscripts) plugin for ESLint. The package guarantees that generated headers pass linting by default, but those options are useful if you want to enforce consistent addition of both `@homepage` and `@homepageURL` headers to userscript managers that support them, as well as for future-proofing against changes to metadata block schemas.
 
 ### Platform
 
