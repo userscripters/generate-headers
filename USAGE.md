@@ -17,6 +17,10 @@ Options:
   -i, --inject               Adds @inject-into header for Violentmonkey, no-op o
                              therwise                                   [string]
   -g, --grant                Generates @grant headers, can be repeated   [array]
+  -l, --lint                 Lints the generated headers with ESLint
+                                                      [boolean] [default: false]
+      --lf, --lint-fix       Fixes lint issues found with ESLint (implies --lint
+                             )                        [boolean] [default: false]
   -m, --match                Generates valid @match headers (repeatable) [array]
   -n, --namespace            Overrides namespace for @namespace header  [string]
       --nf, --noframes       Adds @noframes header                     [boolean]

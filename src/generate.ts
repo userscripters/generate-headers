@@ -87,7 +87,7 @@ export const writeHeaders = async (content: string, options: WriteHeadersOptions
     if (cli) process.stdout.write(content);
 
     return content;
-}
+};
 
 /**
  * @summary main header generator function
