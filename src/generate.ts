@@ -54,6 +54,10 @@ export type WriteHeadersOptions = {
     output: string;
 };
 
+export const managersSupportingHomepage = new Set<UserScriptManagerName>(
+    ["tampermonkey", "violentmonkey"]
+);
+
 /**
  * @summary writes the generated headers to a file or to stdout
  * @param content generated headers
@@ -193,7 +197,11 @@ export const generate = async <T extends GrantOptions>(
         });
 
         if (lint || fix) {
-            const { error, headers } = await lintHeaders(content, { spaces, fix });
+            const { error, headers } = await lintHeaders(content, {
+                fix,
+                spaces,
+                isHomepageAllowed: managersSupportingHomepage.has(type),
+            });
             if (error) console.error(error); // 'error' contains a preformatted string
             return writeHeaders(headers, { cli, direct, eol, output });
         }
