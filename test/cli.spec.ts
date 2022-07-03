@@ -45,7 +45,7 @@ describe("CLI Options", function () {
 
         const runs = await Promise.all([
             aexec(`${cliPfx} tampermonkey -p ${pkg} -d --du ${requires[1]} -u ${requires[1]} -n testing -h ${requires[1]} --nf --ch "name1 value1" --ch name2 -r menu -m all -c --pretty`),
-            aexec(`${cliPfx} violentmonkey -i "content" -p ${pkg} -o ${output} -d  -g all ${xOpts} -r end`),
+            aexec(`${cliPfx} violentmonkey -i "content" -p ${pkg} -o ${output} -d  -g all ${xOpts} -r end --lint`),
             aexec(`${cliPfx} tampermonkey -i "page" -p ${pkg} -o ${output} -d ${gOpts} ${mOpts} ${rOpts} ${xOpts} -s ${spaces}`),
             aexec(`${cliPfx} greasemonkey  -p ${pkg} -d -r idle`),
         ]);
@@ -80,6 +80,11 @@ describe("CLI Options", function () {
         const { stdout } = cliRuns[0];
         expect(stdout).to.match(new RegExp(`^\\/\\/ @downloadURL\\s+${requires[1]}$`, "m"));
     });
+
+    it("-l option should output linting errors to stderr", () => {
+        const { stderr } = cliRuns[1];
+        expect(stderr).to.include("userscripts/use-homepage-and-url");
+    })
 
     it('-n option should override @namespace header', () => {
         const { stdout } = cliRuns[0];

@@ -8,9 +8,11 @@ export declare type GeneratorOptions<T extends GrantOptions> = CommonGeneratorOp
     downloadURL?: string;
     eol?: string;
     excludes?: string[];
+    fix?: boolean;
     grants?: T[];
     homepage?: string;
     inject?: string;
+    lint?: boolean;
     matches?: string[];
     output: string;
     packagePath: string;
@@ -21,4 +23,12 @@ export declare type GeneratorOptions<T extends GrantOptions> = CommonGeneratorOp
     updateURL?: string;
     whitelist?: Array<"self" | "localhost" | "*"> | string[];
 };
+export declare type WriteHeadersOptions = {
+    cli: boolean;
+    direct: boolean;
+    eol?: string;
+    output: string;
+};
+export declare const managersSupportingHomepage: Set<UserScriptManagerName>;
+export declare const writeHeaders: (content: string, options: WriteHeadersOptions) => Promise<string>;
 export declare const generate: <T extends GrantOptions>(type: UserScriptManagerName, options: GeneratorOptions<T>, cli?: boolean) => Promise<string>;

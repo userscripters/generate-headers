@@ -4,11 +4,32 @@ import { appendFile } from "fs/promises";
 import { generateGreasemonkeyHeaders } from "./generators/greasemonkey/index.js";
 import { generateTampermonkeyHeaders } from "./generators/tampermonkey/index.js";
 import { generateViolentmonkeyHeaders } from "./generators/violentmonkey/index.js";
+import { lintHeaders } from "./linters/index.js";
 import { replaceFileContent } from "./utils/filesystem.js";
 import { getPackage } from "./utils/package.js";
 import { getExistingHeadersOffset, validateConnectHeaders, validateExcludeHeaders, validateMatchHeaders, validateOptionalHeaders, validateRequiredHeaders } from "./utils/validators.js";
+export const managersSupportingHomepage = new Set(["tampermonkey", "violentmonkey"]);
+export const writeHeaders = async (content, options) => {
+    const { cli, direct, eol, output } = options;
+    if (!direct) {
+        if (!existsSync(output)) {
+            await appendFile(output, content, { encoding: "utf-8", flag: "w+" });
+            return content;
+        }
+        const [openOffset, closeOffset] = await getExistingHeadersOffset(output, eol);
+        if (openOffset > -1 && closeOffset > -1) {
+            await replaceFileContent(output, openOffset, closeOffset, content);
+            return content;
+        }
+        await replaceFileContent(output, 0, 0, `${content}${eol}`);
+        return content;
+    }
+    if (cli)
+        process.stdout.write(content);
+    return content;
+};
 export const generate = async (type, options, cli = false) => {
-    const { packagePath, output, spaces = 4, eol, collapse = true, direct = false, excludes = [], matches = [], whitelist = [], ...rest } = options;
+    const { packagePath, output, spaces = 4, eol, fix = false, collapse = true, direct = false, excludes = [], lint = false, matches = [], whitelist = [], ...rest } = options;
     const managerTypeMap = {
         greasemonkey: generateGreasemonkeyHeaders,
         tampermonkey: generateTampermonkeyHeaders,
@@ -17,34 +38,34 @@ export const generate = async (type, options, cli = false) => {
     try {
         const parsedPackage = await getPackage(packagePath);
         if (!parsedPackage) {
-            console.log(chulk.bgRed `missing or corrupted package`);
+            console.error(chulk.bgRed `missing or corrupted package`);
             return "";
         }
         const { invalid: matchInvalid, status: matchStatus, valid: validMatches } = validateMatchHeaders(matches);
         if (!matchStatus) {
-            console.log(chulk.bgRed `Invalid @match headers:\n` + matchInvalid.join("\n"));
+            console.error(chulk.bgRed `Invalid @match headers:\n` + matchInvalid.join("\n"));
         }
         const { invalid: excludeInvalid, status: excludeStatus, valid: validExcludes } = validateExcludeHeaders(excludes);
         if (!excludeStatus) {
-            console.log(chulk.bgRed `Invalid @exclude headers:\n` + excludeInvalid.join("\n"));
+            console.error(chulk.bgRed `Invalid @exclude headers:\n` + excludeInvalid.join("\n"));
         }
         const { invalid: connectInvalid, status: connectStatus, valid: validConnects } = validateConnectHeaders(whitelist);
         if (!connectStatus) {
-            console.log(chulk.bgRed `Invalid @connect headers:\n` + connectInvalid.join("\n"));
+            console.error(chulk.bgRed `Invalid @connect headers:\n` + connectInvalid.join("\n"));
         }
         const { status: reqStatus, isValidHomepage, isValidVersion, missing, } = validateRequiredHeaders(parsedPackage);
         if (!isValidHomepage) {
-            console.log(chulk.bgRed `Invalid homepage URL:\n` + parsedPackage.homepage);
+            console.error(chulk.bgRed `Invalid homepage URL:\n` + parsedPackage.homepage);
         }
         const { isValidDownloadURL } = validateOptionalHeaders(options);
         if (!isValidDownloadURL) {
-            console.log(chulk.bgRed `Invalid @downloadURL:\n` + options.downloadURL);
+            console.error(chulk.bgRed `Invalid @downloadURL:\n` + options.downloadURL);
         }
         if (!isValidVersion) {
-            console.log(chulk.bgRed `Invalid version:\n` + parsedPackage.version);
+            console.error(chulk.bgRed `Invalid version:\n` + parsedPackage.version);
         }
         if (missing.length) {
-            console.log(chulk.bgRed `Missing required fields:\n` + missing.join("\n"));
+            console.error(chulk.bgRed `Missing required fields:\n` + missing.join("\n"));
         }
         if (!reqStatus)
             return "";
@@ -59,22 +80,17 @@ export const generate = async (type, options, cli = false) => {
             packagePath,
             output,
         });
-        if (!direct) {
-            if (!existsSync(output)) {
-                await appendFile(output, content, { encoding: "utf-8", flag: "w+" });
-                return content;
-            }
-            const [openOffset, closeOffset] = await getExistingHeadersOffset(output, eol);
-            if (openOffset > -1 && closeOffset > -1) {
-                await replaceFileContent(output, openOffset, closeOffset, content);
-                return content;
-            }
-            await replaceFileContent(output, 0, 0, `${content}${eol}`);
-            return content;
+        if (lint || fix) {
+            const { error, headers } = await lintHeaders(content, {
+                fix,
+                spaces,
+                isHomepageAllowed: managersSupportingHomepage.has(type),
+            });
+            if (error)
+                console.error(error);
+            return writeHeaders(headers, { cli, direct, eol, output });
         }
-        if (cli)
-            process.stdout.write(content);
-        return content;
+        return writeHeaders(content, { cli, direct, eol, output });
     }
     catch (error) {
         const exceptionObject = error;
@@ -86,7 +102,7 @@ export const generate = async (type, options, cli = false) => {
         };
         const handler = errMap[code || "default"] || errMap.default;
         const [postfix, message] = handler(exceptionObject);
-        console.log(chulk.bgRed `[${name}] ${postfix}` + `\n\n${message}`);
+        console.error(chulk.bgRed `[${name}] ${postfix}` + `\n\n${message}`);
         return "";
     }
 };

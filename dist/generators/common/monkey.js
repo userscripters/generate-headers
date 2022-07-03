@@ -9,7 +9,7 @@ export const makeMonkeyHeader = (header) => {
 };
 export const finalizeMonkeyHeaders = (headers, spaces) => {
     const [openTag, closeTag] = makeMonkeyTags();
-    const longest = getLongest(headers.map(([key]) => key)) + spaces;
+    const longest = getLongest(headers.map(([key]) => key)) + spaces - 1;
     const sortedHeaders = headers.sort(([a], [b]) => a === "name" ? -1 : a < b ? -1 : 1);
     const indentedHeaders = sortedHeaders.map(([key, val]) => [
         key.padEnd(longest),
