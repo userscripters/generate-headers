@@ -189,7 +189,7 @@ describe("CLI Options", function () {
 
         const matches = lines
             .map((line) => line.match(/(\/\/ @\w+)\s+/) || [])
-            .filter(({ length }) => length);
+            .filter(({ length }) => length) as RegExpMatchArray[];
 
         const headers = matches.map(([, header]) => header);
         const headlines = matches.map(({ input }) => input);

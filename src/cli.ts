@@ -1,7 +1,7 @@
 import { pathToFileURL } from "url";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-import { generate } from "./generate.js";
+import { generate, RunAtOption } from "./generate.js";
 import type { GrantOptions, UserScriptManagerName } from "./generators/index.js";
 import { scase } from "./utils/common.js";
 
@@ -160,7 +160,7 @@ names.forEach((name) =>
                 namespace: n,
                 output: o,
                 packagePath: p,
-                run: r,
+                run: r as RunAtOption,
                 spaces: s,
                 pretty,
                 updateURL: u,
