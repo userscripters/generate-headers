@@ -70,7 +70,7 @@
         "chalk": "^5.2.0",
         "eslint-plugin-userscripts": "^0.2.10",
         "got": "^12.5.3",
-        "jsdom": "^20.0.3",
+        "jsdom": "^21.0.0",
         "semver": "^7.3.8",
         "validator": "^13.7.0",
         "yargs": "^17.6.2"
