@@ -4,23 +4,4 @@ on: [push, pull_request]
 
 jobs:
     build:
-        runs-on: ubuntu-latest
-
-        steps:
-            - uses: actions/checkout@v2
-            - name: Using Node 14
-              uses: actions/setup-node@v1
-              with:
-                  node-version: 14
-            - name: Update npm version to latest
-              run: npm install -g npm@latest # stop showing warnings about the lockfile
-            - name: Install dependencies
-              run: |
-                  npm config set //npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN
-                  npm install
-              env:
-                  NODE_AUTH_TOKEN: ${{github.token}}
-            - name: Compile
-              run: npm run build
-            - name: Run tests
-              run: npm run test
+        uses: userscripters/shared-actions/.github/workflows/workflow-nodejs.yml@master
