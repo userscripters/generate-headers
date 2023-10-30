@@ -51,7 +51,7 @@
         "@types/node": "^20.8.9",
         "@types/semver": "^7.5.4",
         "@types/sinon": "^10.0.20",
-        "@types/tampermonkey": "^4.20.4",
+        "@types/tampermonkey": "^5.0.0",
         "@types/validator": "^13.11.5",
         "@types/yargs": "^17.0.29",
         "@typescript-eslint/eslint-plugin": "^6.9.0",
