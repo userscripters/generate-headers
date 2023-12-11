@@ -9,11 +9,11 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v2
-            - name: Using Node 14
-              uses: actions/setup-node@v1
+            - uses: actions/checkout@v4
+            - name: Using Node 18
+              uses: actions/setup-node@v4
               with:
-                  node-version: 14
+                  node-version: 18
             - name: Update npm version to latest
               run: npm install -g npm@latest
             - name: Install dependencies
@@ -31,10 +31,10 @@ jobs:
         needs: build
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
               with:
-                  node-version: 16
+                  node-version: 18
                   registry-url: "https://registry.npmjs.org"
                   scope: "@${{github.repository_owner}}"
             - run: npm install
@@ -48,10 +48,10 @@ jobs:
         needs: build
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
               with:
-                  node-version: 16
+                  node-version: 18
                   registry-url: "https://registry.npmjs.org"
                   scope: "@${{github.repository_owner}}"
             - run: npm install
