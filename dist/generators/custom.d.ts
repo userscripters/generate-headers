@@ -1,5 +1,5 @@
 import type { HeaderEntries } from "./index.js";
-export declare type CustomHeaders = {
+export type CustomHeaders = {
     contributors: string;
 } & {
     [name: string]: string;

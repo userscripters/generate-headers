@@ -11,11 +11,11 @@ declare global {
         padEnd<T extends string>(maxLength: number, fillString?: string): T;
     }
 }
-export declare type GrantOptions = GreasemonkeyGrantOptions | TampermonkeyGrantOptions | ViolentmonkeyGrantOptions | "all";
-export declare type UserScriptManagerName = "tampermonkey" | "violentmonkey" | "greasemonkey";
-export declare type HeaderGenerator<T extends GrantOptions> = (info: PackageInfo, options: RequiredProps<GeneratorOptions<T>, "spaces">) => Promise<string>;
-export declare type HeaderEntry<T> = [keyof T & string, string];
-export declare type HeaderEntries<T> = HeaderEntry<T>[];
+export type GrantOptions = GreasemonkeyGrantOptions | TampermonkeyGrantOptions | ViolentmonkeyGrantOptions | "all";
+export type UserScriptManagerName = "tampermonkey" | "violentmonkey" | "greasemonkey";
+export type HeaderGenerator<T extends GrantOptions> = (info: PackageInfo, options: RequiredProps<GeneratorOptions<T>, "spaces">) => Promise<string>;
+export type HeaderEntry<T> = [keyof T & string, string];
+export type HeaderEntries<T> = HeaderEntry<T>[];
 export declare const generateGrantHeaders: <T extends {
     author: import("../utils/package.js").PackagePerson;
     contributors?: import("../utils/package.js").PackagePerson[] | undefined;
@@ -70,10 +70,10 @@ export declare const generateMatchHeaders: <T extends {
 export declare const generateRunAtHeaders: <T extends {
     "run-at": string;
 }>(runAtMap: {
+    end?: T["run-at"] | undefined;
     body?: T["run-at"] | undefined;
     menu?: T["run-at"] | undefined;
     start?: T["run-at"] | undefined;
-    end?: T["run-at"] | undefined;
     idle?: T["run-at"] | undefined;
 } & {
     [x: string]: unknown;

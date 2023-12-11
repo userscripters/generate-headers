@@ -1,4 +1,4 @@
-export declare type ParsedName = {
+export type ParsedName = {
     scope?: string;
     packageName: string;
 };

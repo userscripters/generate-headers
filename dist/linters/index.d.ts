@@ -1,10 +1,10 @@
 /// <reference path="../../src/linters/eslint-plugin-userscripts.d.ts" />
-export declare type LintOptions = {
+export type LintOptions = {
     fix?: boolean;
     isHomepageAllowed?: boolean;
     spaces?: number;
 };
-export declare type LintResult = {
+export type LintResult = {
     error: string;
     headers: string;
 };

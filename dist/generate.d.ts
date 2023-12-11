@@ -1,7 +1,7 @@
 import type { CommonGeneratorOptions } from "./generators/common/index.js";
 import type { GrantOptions, UserScriptManagerName } from "./generators/index.js";
-export declare type RunAtOption = "start" | "end" | "idle" | "body" | "menu";
-export declare type GeneratorOptions<T extends GrantOptions> = CommonGeneratorOptions & {
+export type RunAtOption = "start" | "end" | "idle" | "body" | "menu";
+export type GeneratorOptions<T extends GrantOptions> = CommonGeneratorOptions & {
     collapse: boolean;
     custom?: string[];
     direct?: boolean;
@@ -23,7 +23,7 @@ export declare type GeneratorOptions<T extends GrantOptions> = CommonGeneratorOp
     updateURL?: string;
     whitelist?: Array<"self" | "localhost" | "*"> | string[];
 };
-export declare type WriteHeadersOptions = {
+export type WriteHeadersOptions = {
     cli: boolean;
     direct: boolean;
     eol?: string;

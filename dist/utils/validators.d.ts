@@ -2,16 +2,16 @@ import type { GeneratorOptions } from "../generate.js";
 import type { GrantOptions } from "../generators/index.js";
 import type { PackageInfo } from "./package.js";
 import type { OnlyOptional } from "./types.js";
-export declare type OptionalHeadersValidationResult = {
+export type OptionalHeadersValidationResult = {
     isValidDownloadURL: boolean;
     isValidUpdateURL: boolean;
 };
-export declare type HeadersValidationResult = {
+export type HeadersValidationResult = {
     invalid: string[];
     status: boolean;
     valid: string[];
 };
-export declare type RequiredHeadersValidationResult = {
+export type RequiredHeadersValidationResult = {
     status: boolean;
     isValidVersion: boolean;
     isValidHomepage: boolean;

@@ -1,4 +1,4 @@
-export declare type NetworkSiteInfo = {
+export type NetworkSiteInfo = {
     icon: string;
     site: string;
     name: string;

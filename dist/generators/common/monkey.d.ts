@@ -1,7 +1,7 @@
 import { CustomHeaders } from "../custom.js";
 import type { HeaderEntries, HeaderEntry } from "../index.js";
 import type { CommonHeaders } from "./index.js";
-export declare type MonkeyHeader = `// @${string} ${string}` | `// @${string}`;
+export type MonkeyHeader = `// @${string} ${string}` | `// @${string}`;
 export declare const makeMonkeyTags: (name?: string) => readonly [openTag: string, closeTag: string];
 export declare const makeMonkeyHeader: <T extends {
     author: import("../../utils/package.js").PackagePerson;
