@@ -1,4 +1,3 @@
-/// <reference path="../../src/linters/eslint-plugin-userscripts.d.ts" />
 export type LintOptions = {
     fix?: boolean;
     isHomepageAllowed?: boolean;

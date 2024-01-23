@@ -1,5 +1,3 @@
-/// <reference path="./eslint-plugin-userscripts.d.ts" />
-
 import { ESLint } from "eslint";
 import { configs } from "eslint-plugin-userscripts";
 
