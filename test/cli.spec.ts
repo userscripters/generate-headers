@@ -2,8 +2,8 @@ import { expect } from "chai";
 import { exec } from "child_process";
 import { stat, unlink } from "fs/promises";
 import { promisify } from "util";
-import type { TampermonkeyGrants } from "../src/generators/tampermonkey/types.js";
-import { getLongest } from "../src/utils/common.js";
+import type { TampermonkeyGrants } from "../src/generators/tampermonkey/types";
+import { getLongest } from "../src/utils/common";
 import {
     allMatches,
     grantOptionsTM,
@@ -12,7 +12,7 @@ import {
     output,
     pkg,
     requires
-} from "./index.spec.js";
+} from "./index.spec";
 
 const aexec = promisify(exec);
 
@@ -56,13 +56,23 @@ describe("CLI Options", function () {
     it("-d option should forgo file generation", () => {
         const { stdout } = cliRuns[0];
         expect(!!stdout).to.be.true;
-        expect(stat(output)).to.eventually.be.rejected;
+
+        stat(output)
+            .then(() => {
+                throw new Error("Promise was not supposed to resolve");
+            })
+            .catch(() => expect(true).to.be.true);
     });
 
     it("-d option should override -o", async function () {
         this.timeout(1e4); // ensure CI does not fail if exec is slow
         await aexec(`${cliPfx} tampermonkey -p ${pkg} -o ${output} -d`);
-        expect(stat(output)).to.eventually.be.rejected;
+
+        stat(output)
+            .then(() => {
+                throw new Error("Promise was not supposed to resolve");
+            })
+            .catch(() => expect(true).to.be.true);
     });
 
     it('-h option should override @homepage header', () => {

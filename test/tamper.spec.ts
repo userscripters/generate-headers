@@ -1,8 +1,8 @@
 import { expect } from "chai";
-import { generate } from "../src/generate.js";
-import type { CommonHeaders } from "../src/generators/common/index.js";
-import type { TampermonkeyHeaders } from "../src/generators/tampermonkey/types.js";
-import { directCommon, grantOptionsTM, requires } from "./index.spec.js";
+import { generate } from "../src/generate";
+import type { CommonHeaders } from "../src/generators/common/index";
+import type { TampermonkeyHeaders } from "../src/generators/tampermonkey/types";
+import { directCommon, grantOptionsTM, requires } from "./index.spec";
 
 describe("Tampermonkey", async () => {
     it("headers are generated correctly", async () => {

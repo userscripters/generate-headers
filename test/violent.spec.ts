@@ -1,12 +1,12 @@
 import { expect } from "chai";
 import { unlink } from "fs/promises";
-import { generate, type GeneratorOptions } from "../src/generate.js";
-import type { CommonHeaders } from "../src/generators/common/index.js";
+import { generate, type GeneratorOptions } from "../src/generate";
+import type { CommonHeaders } from "../src/generators/common/index";
 import type {
     ViolentmonkeyGrantOptions,
     ViolentmonkeyHeaders
-} from "../src/generators/violentmonkey/types.js";
-import { allMatches, common, grantOptionsVM, grantsVM, output, requires } from "./index.spec.js";
+} from "../src/generators/violentmonkey/types";
+import { allMatches, common, grantOptionsVM, grantsVM, output, requires } from "./index.spec";
 
 describe("ViolentMonkey", async () => {
     const artefacts: string[] = [];

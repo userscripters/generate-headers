@@ -1,7 +1,7 @@
 import { expect } from "chai";
-import { generate } from "../src/generate.js";
-import { generateCustomHeaders } from "../src/generators/custom.js";
-import { directCommon, managers } from "./index.spec.js";
+import { generate } from "../src/generate";
+import { generateCustomHeaders } from "../src/generators/custom";
+import { directCommon, managers } from "./index.spec";
 
 describe('custom', () => {
     const custom = ["name1 value1", "name2"];

@@ -1,8 +1,8 @@
 import { expect } from "chai";
 import { appendFile, readFile, rm } from "fs/promises";
 import { join } from "path";
-import { replaceFileContent } from "../src/utils/filesystem.js";
-import { explodePaths } from "../src/utils/urls.js";
+import { replaceFileContent } from "../src/utils/filesystem";
+import { explodePaths } from "../src/utils/urls";
 
 describe("filesystem", () => {
 

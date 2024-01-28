@@ -8,8 +8,9 @@
     "spec": [
         "test/**/*.spec.*"
     ],
-    "loader": [
-        "ts-node/esm"
+    "node-option": [
+        "experimental-specifier-resolution=node",
+        "loader=ts-node/esm"
     ],
     "bail": true,
     "check-leaks": true,

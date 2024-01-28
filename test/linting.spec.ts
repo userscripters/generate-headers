@@ -1,9 +1,9 @@
-import { lintHeaders } from "../src/linters/index.js";
+import { lintHeaders } from "../src/linters/index";
 
-import { generate } from "../src/generate.js";
+import { generate } from "../src/generate";
 
 import { expect } from "chai";
-import { managers, output, pkg } from "./index.spec.js";
+import { managers, output, pkg } from "./index.spec";
 
 describe(lintHeaders.name, () => {
     it("should return empty 'error' and same 'output' on no errors", async () => {

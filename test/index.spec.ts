@@ -1,23 +1,19 @@
-import { use } from "chai";
-import cpr from "chai-as-promised";
 import { join } from "path";
-import type { GeneratorOptions } from "../src/generate.js";
-import type { CommonGrantOptions } from "../src/generators/common/index.js";
+import type { GeneratorOptions } from "../src/generate";
+import type { CommonGrantOptions } from "../src/generators/common/index";
 import type {
     GreasemonkeyGrantOptions,
     GreasemonkeyGrants
-} from "../src/generators/greasemonkey/types.js";
-import { UserScriptManagerName } from "../src/generators/index.js";
+} from "../src/generators/greasemonkey/types";
+import { UserScriptManagerName } from "../src/generators/index";
 import type {
     TampermonkeyGrantOptions,
     TampermonkeyGrants
-} from "../src/generators/tampermonkey/types.js";
+} from "../src/generators/tampermonkey/types";
 import type {
     ViolentmonkeyGrantOptions,
     ViolentmonkeyGrants
-} from "../src/generators/violentmonkey/types.js";
-
-use(cpr);
+} from "../src/generators/violentmonkey/types";
 
 export const base = process.cwd();
 export const pkg = join(base, "/package.json");

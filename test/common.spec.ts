@@ -1,11 +1,11 @@
 import { expect } from "chai";
 import sinon from "sinon";
-import { generate } from "../src/generate.js";
-import type { CommonHeaders } from "../src/generators/common/index.js";
-import { generateMatchHeaders } from "../src/generators/index.js";
-import { prettifyName } from "../src/utils/name.js";
-import type { scrapeNetworkSites } from "../src/utils/scraper.js";
-import { allMatches, directCommon, managers, requires } from "./index.spec.js";
+import { generate } from "../src/generate";
+import type { CommonHeaders } from "../src/generators/common/index";
+import { generateMatchHeaders } from "../src/generators/index";
+import { prettifyName } from "../src/utils/name";
+import type { scrapeNetworkSites } from "../src/utils/scraper";
+import { allMatches, directCommon, managers, requires } from "./index.spec";
 
 describe("common", () => {
 
