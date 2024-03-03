@@ -70,11 +70,11 @@ export declare const generateMatchHeaders: <T extends {
 export declare const generateRunAtHeaders: <T extends {
     "run-at": string;
 }>(runAtMap: {
+    start?: T["run-at"] | undefined;
     end?: T["run-at"] | undefined;
+    idle?: T["run-at"] | undefined;
     body?: T["run-at"] | undefined;
     menu?: T["run-at"] | undefined;
-    start?: T["run-at"] | undefined;
-    idle?: T["run-at"] | undefined;
 } & {
     [x: string]: unknown;
 }, runAt: T["run-at"]) => HeaderEntries<Pick<T, "run-at">>;

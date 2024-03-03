@@ -1,34 +1,29 @@
-import got from "got";
-import { JSDOM } from "jsdom";
-got.extend({
-    headers: {
-        "User-Agent": "Header generator (https://stackapps.com/q/9088/78873)",
-    },
-});
 export const scrapeNetworkSites = async () => {
-    const url = new URL("https://stackexchange.com/sites");
-    const response = await got(url, { method: "GET" });
-    const { statusCode, body } = response;
-    if (statusCode !== 200)
-        return [];
-    const { window: { document }, } = new JSDOM(body);
+    const url = new URL("https://api.stackexchange.com/2.3/sites");
+    url.searchParams.set("key", "52HhpSRv*u6t*)tOFwEIHw((");
+    url.searchParams.set("pagesize", "100");
+    url.searchParams.set("filter", "!SldCuNUOe7I(DQo2T0");
     const siteInfo = [];
-    document
-        .querySelectorAll(".gv-item[class*='category-']")
-        .forEach((elem) => {
-        const img = elem.querySelector("img.site-icon");
-        const name = elem.querySelector(".gv-expanded-site-name");
-        const link = elem.closest("a");
-        const desc = elem.querySelector(".gv-expanded-site-description");
-        if (!desc || !link || !name || !img)
-            return;
-        const { href } = link;
-        siteInfo.push({
-            icon: img.src,
-            site: href.replace(/^https?:\/\//, "").replace(/\/$/, ""),
-            name: name.textContent || "",
-            description: desc.textContent || "",
+    let hasMore = true;
+    let page = 1;
+    while (hasMore) {
+        url.searchParams.set("page", page.toString());
+        const call = await fetch(url);
+        const result = await call.json();
+        const { items, backoff, has_more } = result;
+        if (backoff) {
+            await new Promise((resolve) => setTimeout(resolve, backoff * 1000));
+        }
+        items
+            .forEach(({ icon_url: icon, site_url: site, name }) => {
+            siteInfo.push({
+                icon,
+                site: site.replace(/^https?:\/\//, "").replace(/\/$/, ""),
+                name
+            });
         });
-    });
+        page++;
+        hasMore = has_more;
+    }
     return siteInfo;
 };
