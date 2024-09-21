@@ -55,6 +55,7 @@ describe("common", () => {
             "author",
             "contributors",
             "description",
+            "license",
             "name",
             "namespace",
             "version",

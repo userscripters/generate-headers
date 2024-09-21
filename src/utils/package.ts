@@ -12,7 +12,7 @@ export type PackageInfo = {
     author: PackagePerson;
     contributors?: PackagePerson[];
     icon?: string;
-    license: string;
+    license?: string;
     homepage: string;
     keywords?: string[];
     name: string;

@@ -10,6 +10,7 @@ export type CommonHeaders<T extends object = {}> = T & {
     exclude: string[];
     icon: string;
     include: string[];
+    license: string;
     match: string[];
     name: string;
     namespace: string;
@@ -54,6 +55,7 @@ export const generateCommonHeaders = (
         version,
         icon,
         contributors = [],
+        license
     } = pkg;
 
     const parsedAuthor = parseAuthor(author);
@@ -69,6 +71,7 @@ export const generateCommonHeaders = (
     const scopeOrNs = namespace || scope;
     if (scopeOrNs) headers.push(["namespace", scopeOrNs]);
 
+    if (license) headers.push(["license", license]);
     if (icon) headers.push(["icon", icon]);
     if (noframes) headers.push(["noframes", ""]);
 
