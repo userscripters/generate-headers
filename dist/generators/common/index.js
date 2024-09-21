@@ -2,7 +2,7 @@ import { formatAuthor, parseAuthor } from "../../utils/author.js";
 import { parseName, prettifyName } from "../../utils/name.js";
 export const generateCommonHeaders = (pkg, options) => {
     const { namespace, noframes = false, pretty = false } = options;
-    const { author, description, name, version, icon, contributors = [], } = pkg;
+    const { author, description, name, version, icon, contributors = [], license } = pkg;
     const parsedAuthor = parseAuthor(author);
     const { packageName, scope } = parseName(name);
     const headers = [
@@ -14,6 +14,8 @@ export const generateCommonHeaders = (pkg, options) => {
     const scopeOrNs = namespace || scope;
     if (scopeOrNs)
         headers.push(["namespace", scopeOrNs]);
+    if (license)
+        headers.push(["license", license]);
     if (icon)
         headers.push(["icon", icon]);
     if (noframes)
