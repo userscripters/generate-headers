@@ -16,9 +16,9 @@ export const replaceFileContent = async (
     const original = await readFile(pathlike);
 
     const update = Buffer.concat([
-        original.slice(0, startOffset),
+        original.subarray(0, startOffset),
         Buffer.from(newContent),
-        original.slice(endOffset)
+        original.subarray(endOffset)
     ]);
 
     return writeFile(pathlike, update);
