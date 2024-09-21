@@ -10,10 +10,10 @@ jobs:
 
         steps:
             - uses: actions/checkout@v4
-            - name: Using Node 18
+            - name: Using Node 20
               uses: actions/setup-node@v4
               with:
-                  node-version: 18
+                  node-version: 20
             - name: Update npm version to latest
               run: npm install -g npm@latest
             - name: Install dependencies
@@ -34,7 +34,7 @@ jobs:
             - uses: actions/checkout@v4
             - uses: actions/setup-node@v4
               with:
-                  node-version: 18
+                  node-version: 20
                   registry-url: "https://registry.npmjs.org"
                   scope: "@${{github.repository_owner}}"
             - run: npm install
@@ -51,7 +51,7 @@ jobs:
             - uses: actions/checkout@v4
             - uses: actions/setup-node@v4
               with:
-                  node-version: 18
+                  node-version: 20
                   registry-url: "https://registry.npmjs.org"
                   scope: "@${{github.repository_owner}}"
             - run: npm install
