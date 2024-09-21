@@ -7,6 +7,7 @@ export type CommonHeaders<T extends object = {}> = T & {
     exclude: string[];
     icon: string;
     include: string[];
+    license: string;
     match: string[];
     name: string;
     namespace: string;
@@ -26,11 +27,12 @@ export type CommonGeneratorOptions = {
 };
 export declare const generateCommonHeaders: (pkg: PackageInfo, options: CommonGeneratorOptions) => HeaderEntries<{
     author: PackagePerson;
-    contributors?: PackagePerson[] | undefined;
+    contributors?: PackagePerson[];
     description: string;
     exclude: string[];
     icon: string;
     include: string[];
+    license: string;
     match: string[];
     name: string;
     namespace: string;
