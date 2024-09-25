@@ -42,10 +42,10 @@
     },
     "homepage": "https://github.com/userscripters/generate-headers#readme",
     "devDependencies": {
-        "@types/chai": "^4.3.19",
+        "@types/chai": "5.0.0",
         "@types/eslint": "^8.56.12",
         "@types/mocha": "^10.0.8",
-        "@types/node": "^20.16.5",
+        "@types/node": "^22.7.0",
         "@types/semver": "^7.5.8",
         "@types/sinon": "^17.0.3",
         "@types/tampermonkey": "^5.0.3",
@@ -58,10 +58,9 @@
         "chai": "^5.1.1",
         "eslint": "^8.57.1",
         "mocha": "^10.7.3",
-        "sinon": "^17.0.2",
+        "sinon": "^19.0.2",
         "ts-node": "^10.9.2",
-        "typescript": "^5.6.2",
-        "uglify-js": "^3.19.3"
+        "typescript": "^5.6.2"
     },
     "dependencies": {
         "chalk": "^5.3.0",
