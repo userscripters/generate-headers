@@ -1,20 +1,20 @@
-export type NetworkSiteInfo = {
+export interface NetworkSiteInfo {
     icon: string;
     site: string;
     name: string;
-};
+}
 
-type ApiItems = {
+interface ApiItems {
     icon_url: string;
     site_url: string;
     name: string;
-};
+}
 
-type ApiResponse = {
+interface ApiResponse {
     items: ApiItems[];
     has_more: boolean;
     backoff?: number;
-};
+}
 
 /**
  * @summary scrapes Stack Exchange network site list
@@ -38,7 +38,7 @@ export const scrapeNetworkSites = async () => {
         const { items, backoff, has_more } = result;
 
         if (backoff) {
-            await new Promise((resolve) => setTimeout(resolve, backoff * 1000));
+            await new Promise(resolve => setTimeout(resolve, backoff * 1000));
         }
 
         items
@@ -46,7 +46,7 @@ export const scrapeNetworkSites = async () => {
                 siteInfo.push({
                     icon,
                     site: site.replace(/^https?:\/\//, "").replace(/\/$/, ""),
-                    name
+                    name,
                 });
             });
 

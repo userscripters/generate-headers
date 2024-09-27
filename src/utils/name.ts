@@ -1,16 +1,16 @@
 import { scase } from "./common.js";
 
-export type ParsedName = {
+export interface ParsedName {
     scope?: string;
     packageName: string;
-};
+}
 
 /**
  * @summary parses a given name into an scope and unscoped package name pair
  * @param name scoped package name
  */
 export const parseName = (name: string): ParsedName => {
-    const [, scope, packageName] = name.match(/(?:@([\w-]+)\/)?([\w-]+)/) || [];
+    const [, scope, packageName] = (/(?:@([\w-]+)\/)?([\w-]+)/.exec(name)) || [];
     return { scope, packageName };
 };
 

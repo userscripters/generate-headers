@@ -6,7 +6,7 @@ import { generateGreasemonkeyHeaders } from "./generators/greasemonkey/index.js"
 import type {
     GrantOptions,
     HeaderGenerator,
-    UserScriptManagerName
+    UserScriptManagerName,
 } from "./generators/index.js";
 import { generateTampermonkeyHeaders } from "./generators/tampermonkey/index.js";
 import { generateViolentmonkeyHeaders } from "./generators/violentmonkey/index.js";
@@ -19,7 +19,7 @@ import {
     validateExcludeHeaders,
     validateMatchHeaders,
     validateOptionalHeaders,
-    validateRequiredHeaders
+    validateRequiredHeaders,
 } from "./utils/validators.js";
 
 export type RunAtOption = "start" | "end" | "idle" | "body" | "menu";
@@ -44,18 +44,18 @@ export type GeneratorOptions<T extends GrantOptions> = CommonGeneratorOptions & 
     run?: RunAtOption;
     spaces?: number;
     updateURL?: string;
-    whitelist?: Array<"self" | "localhost" | "*"> | string[];
+    whitelist?: ("self" | "localhost" | "*")[] | string[];
 };
 
-export type WriteHeadersOptions = {
+export interface WriteHeadersOptions {
     cli: boolean;
     direct: boolean;
     eol?: string;
     output: string;
-};
+}
 
 export const managersSupportingHomepage = new Set<UserScriptManagerName>(
-    ["tampermonkey", "violentmonkey"]
+    ["tampermonkey", "violentmonkey"],
 );
 
 /**
@@ -79,11 +79,11 @@ export const writeHeaders = async (content: string, options: WriteHeadersOptions
             return content;
         }
 
-        await replaceFileContent(output, 0, 0, `${content}${eol}`);
+        await replaceFileContent(output, 0, 0, `${content}${eol || ""}`);
         return content;
     }
 
-    //running from CLI with file emit disabled
+    // running from CLI with file emit disabled
     if (cli) process.stdout.write(content);
 
     return content;
@@ -98,7 +98,7 @@ export const writeHeaders = async (content: string, options: WriteHeadersOptions
 export const generate = async <T extends GrantOptions>(
     type: UserScriptManagerName,
     options: GeneratorOptions<T>,
-    cli = false
+    cli = false,
 ): Promise<string> => {
     const {
         packagePath,
@@ -132,7 +132,7 @@ export const generate = async <T extends GrantOptions>(
         const {
             invalid: matchInvalid,
             status: matchStatus,
-            valid: validMatches
+            valid: validMatches,
         } = validateMatchHeaders(matches);
         if (!matchStatus) {
             console.error(chulk.bgRed`Invalid @match headers:\n` + matchInvalid.join("\n"));
@@ -141,7 +141,7 @@ export const generate = async <T extends GrantOptions>(
         const {
             invalid: excludeInvalid,
             status: excludeStatus,
-            valid: validExcludes
+            valid: validExcludes,
         } = validateExcludeHeaders(excludes);
         if (!excludeStatus) {
             console.error(chulk.bgRed`Invalid @exclude headers:\n` + excludeInvalid.join("\n"));
@@ -150,7 +150,7 @@ export const generate = async <T extends GrantOptions>(
         const {
             invalid: connectInvalid,
             status: connectStatus,
-            valid: validConnects
+            valid: validConnects,
         } = validateConnectHeaders(whitelist);
         if (!connectStatus) {
             console.error(chulk.bgRed`Invalid @connect headers:\n` + connectInvalid.join("\n"));
@@ -169,7 +169,7 @@ export const generate = async <T extends GrantOptions>(
 
         const { isValidDownloadURL } = validateOptionalHeaders(options);
 
-        if (!isValidDownloadURL) {
+        if (!isValidDownloadURL && options.downloadURL) {
             console.error(chulk.bgRed`Invalid @downloadURL:\n` + options.downloadURL);
         }
 
@@ -203,22 +203,24 @@ export const generate = async <T extends GrantOptions>(
                 isHomepageAllowed: managersSupportingHomepage.has(type),
             });
             if (error) console.error(error); // 'error' contains a preformatted string
-            return writeHeaders(headers, { cli, direct, eol, output });
+            return await writeHeaders(headers, { cli, direct, eol, output });
         }
 
-        return writeHeaders(content, { cli, direct, eol, output });
+        return await writeHeaders(content, { cli, direct, eol, output });
     } catch (error) {
         const exceptionObject = error as NodeJS.ErrnoException;
         const { code, name } = exceptionObject;
-        const errMap: {
-            [code: string]: (err: NodeJS.ErrnoException) => [string, string];
-        } = {
-            ENOENT: ({ path }) => ["Missing path:", path!],
+        const errMap: Record<
+            "ENOENT" | "ENOTFOUND" | "default",
+            (err: NodeJS.ErrnoException) => [string, string]
+        > = {
+            ENOENT: ({ path }) => ["Missing path:", path || ""],
             ENOTFOUND: ({ message }) => ["Network failure:", message],
             default: ({ message }) => ["Something went wrong:", message],
         };
 
-        const handler = errMap[code || "default"] || errMap.default;
+        const key = code === "ENOENT" || code === "ENOTFOUND" ? code : "default";
+        const handler = errMap[key];
 
         const [postfix, message] = handler(exceptionObject);
 

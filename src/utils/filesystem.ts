@@ -9,7 +9,7 @@ export const replaceFileContent = async (
     pathlike: string | URL,
     startOffset: number,
     endOffset: number,
-    newContent: string
+    newContent: string,
 ) => {
     const { writeFile, readFile } = await import("fs/promises");
 
@@ -18,7 +18,7 @@ export const replaceFileContent = async (
     const update = Buffer.concat([
         original.subarray(0, startOffset),
         Buffer.from(newContent),
-        original.subarray(endOffset)
+        original.subarray(endOffset),
     ]);
 
     return writeFile(pathlike, update);

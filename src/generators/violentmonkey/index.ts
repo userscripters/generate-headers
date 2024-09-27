@@ -10,12 +10,12 @@ import {
     generateRequireHeaders,
     generateRunAtHeaders,
     type HeaderEntries,
-    type HeaderGenerator
+    type HeaderGenerator,
 } from "../index.js";
 import type {
     ViolentmonkeyGrantOptions,
     ViolentmonkeyGrants,
-    ViolentmonkeyHeaders
+    ViolentmonkeyHeaders,
 } from "./types.js";
 
 /**
@@ -25,8 +25,8 @@ import type {
  * @param packageInfo parsed {@link PackageInfo}
  * @param options generator configuration
  */
-export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOptions> =
-    async (packageInfo, options) => {
+export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOptions>
+    = async (packageInfo, options) => {
         const {
             collapse = false,
             custom = [],
@@ -48,8 +48,8 @@ export const generateViolentmonkeyHeaders: HeaderGenerator<ViolentmonkeyGrantOpt
 
         const customHeaders = generateCustomHeaders(custom);
 
-        const grantMap: Record<ViolentmonkeyGrantOptions, ViolentmonkeyGrants> =
-        {
+        const grantMap: Record<ViolentmonkeyGrantOptions, ViolentmonkeyGrants>
+        = {
             set: "GM_setValue",
             get: "GM_getValue",
             list: "GM_listValues",

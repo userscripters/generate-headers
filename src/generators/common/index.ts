@@ -3,6 +3,7 @@ import { parseName, prettifyName } from "../../utils/name.js";
 import type { PackageInfo, PackagePerson } from "../../utils/package.js";
 import type { HeaderEntries } from "../index.js";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export type CommonHeaders<T extends object = {}> = T & {
     author: PackagePerson;
     contributors?: PackagePerson[];
@@ -27,11 +28,11 @@ export type CommonGrants = "none" | "unsafeWindow";
 
 export type CommonRunAt = "document-start" | "document-end" | "document-idle";
 
-export type CommonGeneratorOptions = {
+export interface CommonGeneratorOptions {
     namespace?: string;
     noframes?: boolean;
     pretty?: boolean;
-}
+};
 
 /**
  * @summary generates headers common to all userscript managers
@@ -40,12 +41,12 @@ export type CommonGeneratorOptions = {
  */
 export const generateCommonHeaders = (
     pkg: PackageInfo,
-    options: CommonGeneratorOptions
+    options: CommonGeneratorOptions,
 ) => {
     const {
         namespace,
         noframes = false,
-        pretty = false
+        pretty = false,
     } = options;
 
     const {
@@ -55,7 +56,7 @@ export const generateCommonHeaders = (
         version,
         icon,
         contributors = [],
-        license
+        license,
     } = pkg;
 
     const parsedAuthor = parseAuthor(author);
@@ -76,8 +77,8 @@ export const generateCommonHeaders = (
     if (noframes) headers.push(["noframes", ""]);
 
     if (contributors.length) {
-        const formatted = contributors.map((contributor) =>
-            formatAuthor(parseAuthor(contributor))
+        const formatted = contributors.map(contributor =>
+            formatAuthor(parseAuthor(contributor)),
         );
         headers.push(["contributors", formatted.join(", ")]);
     }

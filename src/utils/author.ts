@@ -8,7 +8,7 @@ export const formatAuthor = ({
     name + (email ? ` <${email}>` : "") + (url ? ` (${url})` : "");
 
 export const parseAuthor = (
-    info: PackageInfo["author"]
+    info: PackageInfo["author"],
 ): Exclude<PackageInfo["author"], string> => {
     if (typeof info === "object") return info;
 
@@ -18,7 +18,7 @@ export const parseAuthor = (
 
     if (!match) throw new Error(`unable to parse author field: ${info}`);
 
-    const [_full, name, email, url] = match;
+    const [, name, email, url] = match;
 
     return {
         name,

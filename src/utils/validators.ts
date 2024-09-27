@@ -7,23 +7,23 @@ import type { GrantOptions } from "../generators/index.js";
 import type { PackageInfo } from "./package.js";
 import type { OnlyOptional, RequiredOnly } from "./types.js";
 
-export type OptionalHeadersValidationResult = {
+export interface OptionalHeadersValidationResult {
     isValidDownloadURL: boolean;
     isValidUpdateURL: boolean;
-}
+};
 
-export type HeadersValidationResult = {
-    invalid: string[],
-    status: boolean,
+export interface HeadersValidationResult {
+    invalid: string[];
+    status: boolean;
     valid: string[];
-}
+};
 
-export type RequiredHeadersValidationResult = {
-    status: boolean,
-    isValidVersion: boolean,
-    isValidHomepage: boolean,
+export interface RequiredHeadersValidationResult {
+    status: boolean;
+    isValidVersion: boolean;
+    isValidHomepage: boolean;
     missing: string[];
-}
+};
 
 /**
  * @summary calculates existing headers offset from the start of the file
@@ -59,7 +59,9 @@ export const getExistingHeadersOffset = async (path: string | URL, eol = EOL) =>
         });
 
         readline.on("error", reject);
-        readline.on("close", () => resolve([openTagOffset, closeTagOffset]));
+        readline.on("close", () => {
+            resolve([openTagOffset, closeTagOffset]);
+        });
     });
 };
 
@@ -68,13 +70,13 @@ export const getExistingHeadersOffset = async (path: string | URL, eol = EOL) =>
  * @param matches list of match patterns
  */
 export const validateMatchHeaders = (matches: string[]): HeadersValidationResult => {
-    const validationRegex =
-        /^((?:https?|file|ftp|\*)(?=:\/\/)|(?:urn(?=:))):(?:\/\/)?(?:((?:\*||.+?)(?=\/|$)))?(\/\*|(?:.+?\*?)+)?|<all_urls>|all|meta$/;
-    const invalid = matches.filter((match) => !validationRegex.test(match));
+    const validationRegex
+        = /^((?:https?|file|ftp|\*)(?=:\/\/)|(?:urn(?=:))):(?:\/\/)?(?:((?:\*||.+?)(?=\/|$)))?(\/\*|(?:.+?\*?)+)?|<all_urls>|all|meta$/;
+    const invalid = matches.filter(match => !validationRegex.test(match));
     return {
         invalid,
         status: !invalid.length,
-        valid: matches.filter((m) => !invalid.includes(m)),
+        valid: matches.filter(m => !invalid.includes(m)),
     };
 };
 
@@ -84,11 +86,11 @@ export const validateMatchHeaders = (matches: string[]): HeadersValidationResult
  */
 export const validateExcludeHeaders = (excludes: string[]): HeadersValidationResult => {
     const validationRegex = /^((?:https?|file|ftp|\*)(?=:\/\/)|(?:urn(?=:))):(?:\/\/)?(?:((?:\*||.+?)(?=\/|$)))?(\/\*|(?:.+?\*?)+)?$/;
-    const invalid = excludes.filter((pattern) => !validationRegex.test(pattern));
+    const invalid = excludes.filter(pattern => !validationRegex.test(pattern));
     return {
         invalid,
         status: !invalid.length,
-        valid: excludes.filter((e) => !invalid.includes(e)),
+        valid: excludes.filter(e => !invalid.includes(e)),
     };
 };
 
@@ -100,15 +102,15 @@ export const validateConnectHeaders = (whitelist: string[]): HeadersValidationRe
     const specialWordRegex = /^localhost|self|\*$/;
     const ipv4Regex = /^((?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\.|$)){4}/;
     // https://stackoverflow.com/a/57129482/11407695
-    const domainRegex = /^(?!.*?_.*?)(?!(?:[\w]+?\.)?\-[\w\.\-]*?)(?![\w]+?\-\.(?:[\w\.\-]+?))(?=[\w])(?=[\w\.\-]*?\.+[\w\.\-]*?)(?![\w\.\-]{254})(?!(?:\.?[\w\-\.]*?[\w\-]{64,}\.)+?)[\w\.\-]+?(?<![\w\-\.]*?\.[\d]+?)(?<=[\w\-]{2,})(?<![\w\-]{25})$/;
+    const domainRegex = /^(?!.*?_.*?)(?!(?:[\w]+?\.)?-[\w.-]*?)(?![\w]+?-\.(?:[\w.-]+?))(?=[\w])(?=[\w.-]*?\.+[\w.-]*?)(?![\w.-]{254})(?!(?:\.?[\w\-.]*?[\w-]{64,}\.)+?)[\w.-]+?(?<![\w\-.]*?\.[\d]+?)(?<=[\w-]{2,})(?<![\w-]{25})$/;
 
     const checks: RegExp[] = [specialWordRegex, ipv4Regex, domainRegex];
 
-    const invalid = whitelist.filter((remote) => !checks.some((r) => r.test(remote)));
+    const invalid = whitelist.filter(remote => !checks.some(r => r.test(remote)));
     return {
         invalid,
         status: !invalid.length,
-        valid: whitelist.filter((r) => !invalid.includes(r))
+        valid: whitelist.filter(r => !invalid.includes(r)),
     };
 };
 
@@ -123,15 +125,15 @@ export const validateRequiredHeaders = (packageInfo: PackageInfo): RequiredHeade
         "version",
         "description",
     ];
-    const missing = required.filter((p) => !(p in packageInfo));
+    const missing = required.filter(p => !(p in packageInfo));
 
     const { homepage, version } = packageInfo;
 
     const isValidVersion = !!semver.valid(version);
-    const isValidHomepage = homepage === void 0 || validator.isURL(homepage);
+    const isValidHomepage = validator.isURL(homepage);
 
     const status = [isValidVersion, isValidHomepage, !missing.length].reduce(
-        (a, c) => a && c
+        (a, c) => a && c,
     );
 
     return {
@@ -147,7 +149,7 @@ export const validateRequiredHeaders = (packageInfo: PackageInfo): RequiredHeade
  * @param options generator options
  */
 export const validateOptionalHeaders = <T extends GrantOptions>(
-    options: OnlyOptional<GeneratorOptions<T>>
+    options: OnlyOptional<GeneratorOptions<T>>,
 ): OptionalHeadersValidationResult => {
     const { downloadURL, updateURL } = options;
 
@@ -156,6 +158,6 @@ export const validateOptionalHeaders = <T extends GrantOptions>(
 
     return {
         isValidDownloadURL,
-        isValidUpdateURL
+        isValidUpdateURL,
     };
 };

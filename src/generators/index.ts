@@ -10,12 +10,6 @@ import type { GreasemonkeyGrantOptions } from "./greasemonkey/types.js";
 import type { TampermonkeyGrantOptions } from "./tampermonkey/types.js";
 import type { ViolentmonkeyGrantOptions } from "./violentmonkey/types.js";
 
-declare global {
-    interface String {
-        padEnd<T extends string>(maxLength: number, fillString?: string): T;
-    }
-}
-
 export type GrantOptions =
     | GreasemonkeyGrantOptions
     | TampermonkeyGrantOptions
@@ -41,19 +35,19 @@ export type HeaderEntries<T> = HeaderEntry<T>[];
  */
 export const generateGrantHeaders = <
     T extends CommonHeaders,
-    U extends GrantOptions
+    U extends GrantOptions,
 >(
-        grantMap: Record<U, T["grant"]>,
-        grants: U[]
-    ) => {
-    if (grants.find((g) => g === "all")) {
+    grantMap: Record<U, T["grant"]>,
+    grants: U[],
+) => {
+    if (grants.find(g => g === "all")) {
         return Object.entries(grantMap).map(([, v]) => [
             "grant",
             v,
         ]) as HeaderEntries<T>;
     }
 
-    const headers: HeaderEntries<T> = grants.map((g) => ["grant", grantMap[g]]);
+    const headers: HeaderEntries<T> = grants.map(g => ["grant", grantMap[g]]);
 
     return headers.length
         ? headers
@@ -67,17 +61,17 @@ export const generateGrantHeaders = <
 export const generateExcludeHeaders = <T extends CommonHeaders>(
     excludes: string[],
 ): HeaderEntries<T> => {
-    return excludes.flatMap(explodePaths).map((uri) => ["exclude", uri]);
+    return excludes.flatMap(explodePaths).map(uri => ["exclude", uri]);
 };
 
 /**
  * @summary abstract '@exclude-match' header generator
  * @param excludes list of patterns to exclude
  */
-export const generateExcludeMatchHeaders = <T extends { "exclude-match": string[]; }>(
+export const generateExcludeMatchHeaders = <T extends { "exclude-match": string[] }>(
     excludes: string[],
 ): HeaderEntries<T> => {
-    return excludes.flatMap(explodePaths).map((uri) => ["exclude-match", uri]);
+    return excludes.flatMap(explodePaths).map(uri => ["exclude-match", uri]);
 };
 
 /**
@@ -86,27 +80,27 @@ export const generateExcludeMatchHeaders = <T extends { "exclude-match": string[
 export const generateMatchHeaders = async <T extends CommonHeaders>(
     matches: string[],
     networkSiteScraper: () => Promise<NetworkSiteInfo[]>,
-    collapse = true
+    collapse = true,
 ): Promise<HeaderEntries<T>> => {
     if (matches.includes("all")) {
-        const match =
-            matches.find((m) => /domain/.test(m)) || "https://domain/*";
+        const match
+            = matches.find(m => m.includes("domain")) || "https://domain/*";
 
         const sites = await networkSiteScraper();
 
         if (matches.includes("meta")) {
             const metaSites = sites.flatMap(({ site, ...rest }) => {
-                return collapse && /stackexchange/.test(site) || /stackapps/.test(site) ? [] : [{
-                    ...rest, site: site.replace(/^(.+?\.(?=.+\.)|)/, "$1meta.")
-                }];
+                return collapse && (site.includes("stackexchange") || site.includes("stackapps"))
+                    ? []
+                    : [{ ...rest, site: site.replace(/^(.+?\.(?=.+\.)|)/, "$1meta.") }];
             });
 
             sites.push(...metaSites);
         }
 
         const all = sites.map(({ site }) => {
-            const domain =
-                collapse && /stackexchange/.test(site)
+            const domain
+                = collapse && site.includes("stackexchange")
                     ? "*.stackexchange.com"
                     : site;
             return match.replace("domain", domain);
@@ -115,15 +109,15 @@ export const generateMatchHeaders = async <T extends CommonHeaders>(
         return generateMatchHeaders(uniquify(all), networkSiteScraper);
     }
 
-    return matches.flatMap(explodePaths).map((uri) => ["match", uri]);
+    return matches.flatMap(explodePaths).map(uri => ["match", uri]);
 };
 
 /**
  * @summary abstract '@run-at' header generator
  */
 export const generateRunAtHeaders = <T extends { "run-at": string }>(
-    runAtMap: { [P in RunAtOption]?: T["run-at"] } & { [x: string]: unknown },
-    runAt: T["run-at"]
+    runAtMap: { [P in RunAtOption]?: T["run-at"] } & Record<string, unknown>,
+    runAt: T["run-at"],
 ) => {
     const runsAt = runAtMap[runAt];
     return runsAt
@@ -135,12 +129,12 @@ export const generateRunAtHeaders = <T extends { "run-at": string }>(
  * @summary abstract '@require' header generator
  */
 export const generateRequireHeaders = (
-    requires: string[]
-): HeaderEntries<{ require: string; }> => {
+    requires: string[],
+): HeaderEntries<{ require: string }> => {
     return requires
-        .filter((url) => validator.isURL(url, {
-            allow_protocol_relative_urls: true
+        .filter(url => validator.isURL(url, {
+            allow_protocol_relative_urls: true,
         }))
         .flatMap(explodePaths)
-        .map((url) => ["require", url]);
+        .map(url => ["require", url]);
 };

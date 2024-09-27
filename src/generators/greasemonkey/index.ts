@@ -10,12 +10,12 @@ import {
     generateRequireHeaders,
     generateRunAtHeaders,
     type HeaderEntries,
-    type HeaderGenerator
+    type HeaderGenerator,
 } from "../index.js";
 import type {
     GreasemonkeyGrantOptions,
     GreasemonkeyGrants,
-    GreasemonkeyHeaders
+    GreasemonkeyHeaders,
 } from "./types.js";
 
 /**
@@ -25,8 +25,8 @@ import type {
  * @param packageInfo parsed {@link PackageInfo}
  * @param options generator configuration
  */
-export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptions> =
-    async (packageInfo, options) => {
+export const generateGreasemonkeyHeaders: HeaderGenerator<GreasemonkeyGrantOptions>
+    = async (packageInfo, options) => {
         const {
             collapse = false,
             custom = [],

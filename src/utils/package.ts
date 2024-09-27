@@ -3,12 +3,12 @@ import { readFile } from "fs/promises";
 export type PackagePerson =
     | string
     | {
-          name: string;
-          email?: string;
-          url?: string;
-      };
+        name: string;
+        email?: string;
+        url?: string;
+    };
 
-export type PackageInfo = {
+export interface PackageInfo {
     author: PackagePerson;
     contributors?: PackagePerson[];
     icon?: string;
@@ -25,7 +25,7 @@ export type PackageInfo = {
         type: "git" | "https";
         url: string;
     };
-};
+}
 
 /**
  * @summary gets a package.json file info
@@ -34,8 +34,9 @@ export type PackageInfo = {
 export const getPackage = async (path: string): Promise<PackageInfo | null> => {
     try {
         const contents = await readFile(path, { encoding: "utf-8" });
-        return JSON.parse(contents);
-    } catch (error) {
+
+        return JSON.parse(contents) as PackageInfo;
+    } catch {
         return null;
     }
 };

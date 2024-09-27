@@ -1,16 +1,16 @@
 import { ESLint } from "eslint";
-import { configs } from "eslint-plugin-userscripts";
+import userscripts from "eslint-plugin-userscripts";
 
-export type LintOptions = {
+export interface LintOptions {
     fix?: boolean;
     isHomepageAllowed?: boolean;
     spaces?: number;
-};
+}
 
-export type LintResult = {
+export interface LintResult {
     error: string;
     headers: string;
-};
+}
 
 /**
  * @summary lints generated userscript headers
@@ -22,14 +22,15 @@ export const lintHeaders = async (metadataBlock: string, options: LintOptions = 
 
     const eslint = new ESLint({
         baseConfig: {
-            plugins: ["userscripts"],
+            plugins: { userscripts },
             rules: {
-                ...configs.recommended.rules,
+                ...userscripts.configs.recommended.rules,
                 "userscripts/align-attributes": ["error", spaces],
                 "userscripts/use-homepage-and-url": isHomepageAllowed ? "error" : "off",
+                "userscripts/filename-user": "off",
             },
         },
-        useEslintrc: false,
+        overrideConfigFile: true,
         fix,
     });
 
@@ -41,6 +42,6 @@ export const lintHeaders = async (metadataBlock: string, options: LintOptions = 
 
     return {
         error: await formatter.format(results),
-        headers: fix && output ? output : metadataBlock
+        headers: fix && output ? output : metadataBlock,
     };
 };

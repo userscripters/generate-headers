@@ -35,7 +35,7 @@ export const explodePaths = (url: string): string[] => {
             url.pathname = path;
             return url.toString().replace(/\/$/, "");
         });
-    } catch (error) {
+    } catch {
         return [url];
     }
 };

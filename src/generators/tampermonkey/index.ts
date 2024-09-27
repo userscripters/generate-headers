@@ -10,12 +10,12 @@ import {
     generateRequireHeaders,
     generateRunAtHeaders,
     type HeaderEntries,
-    type HeaderGenerator
+    type HeaderGenerator,
 } from "../index.js";
 import type {
     TampermonkeyGrantOptions,
     TampermonkeyGrants,
-    TampermonkeyHeaders
+    TampermonkeyHeaders,
 } from "./types.js";
 
 /**
@@ -25,8 +25,8 @@ import type {
  * @param packageInfo parsed {@link PackageInfo}
  * @param options generator configuration
  */
-export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptions> =
-    async (packageInfo, options) => {
+export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptions>
+    = async (packageInfo, options) => {
         const {
             collapse = false,
             custom = [],
@@ -116,7 +116,7 @@ export const generateTampermonkeyHeaders: HeaderGenerator<TampermonkeyGrantOptio
             ...specialHeaders,
         ];
 
-        //Unused headers:
+        // Unused headers:
         // @icon64 and @icon64URL
         // @resource
         // @antifeature

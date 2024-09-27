@@ -10,7 +10,7 @@ export type MonkeyHeader = `// @${string} ${string}` | `// @${string}`;
  * @param name optional script name (defaults to UserScript)
  */
 export const makeMonkeyTags = (
-    name = "UserScript"
+    name = "UserScript",
 ): readonly [openTag: string, closeTag: string] => [
     `// ==${name}==`,
     `// ==/${name}==`,
@@ -21,8 +21,8 @@ export const makeMonkeyTags = (
  * @param header name-value header entry
  */
 export const makeMonkeyHeader = <T extends CommonHeaders>(header: HeaderEntry<T>) => {
-    const [name, value,] = header;
-    return <MonkeyHeader>(value ? `// @${name} ${value}` : `// @${name}`);
+    const [name, value] = header;
+    return (value ? `// @${name} ${value}` : `// @${name}`) as MonkeyHeader;
 };
 
 /**
@@ -32,15 +32,15 @@ export const makeMonkeyHeader = <T extends CommonHeaders>(header: HeaderEntry<T>
  */
 export const finalizeMonkeyHeaders = <T extends CommonHeaders<CustomHeaders>>(
     headers: HeaderEntries<T>,
-    spaces: number
+    spaces: number,
 ) => {
     const [openTag, closeTag] = makeMonkeyTags();
 
-    const longest = getLongest(headers.map(([key]) => key as string)) + spaces - 1;
+    const longest = getLongest(headers.map(([key]) => key)) + spaces - 1;
 
     // @name header should come first, the rest are sorted alphabetically
     const sortedHeaders: HeaderEntries<T> = headers.sort(
-        ([a], [b]) => a === "name" ? -1 : a < b ? -1 : 1
+        ([a], [b]) => a === "name" ? -1 : a < b ? -1 : 1,
     );
 
     const indentedHeaders: HeaderEntries<T> = sortedHeaders.map(([key, val]) => [

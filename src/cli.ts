@@ -34,7 +34,7 @@ const sharedOpts = {
     du: {
         alias: "download-url",
         description: "URL for the @downloadURL header",
-        type: "string"
+        type: "string",
     },
     e: {
         alias: "eol",
@@ -99,7 +99,7 @@ const sharedOpts = {
     q: {
         alias: "require",
         description: "Generates valid @require headers (repeatable)",
-        type: "array"
+        type: "array",
     },
     r: {
         alias: "run",
@@ -116,7 +116,7 @@ const sharedOpts = {
     u: {
         alias: "update-url",
         description: "URL for the @updateURL header for Tampermonkey, no-op otherwise",
-        type: "string"
+        type: "string",
     },
     w: {
         alias: "whitelist",
@@ -135,7 +135,7 @@ const sharedOpts = {
     },
 } as const;
 
-names.forEach((name) =>
+names.forEach(name =>
     cli.command(
         name,
         `generates ${scase(name)} headers`,
@@ -143,7 +143,7 @@ names.forEach((name) =>
         ({ c, ch = [], d, du, e, h, g = [], i, l, lf, m = [], n, nf, q = [], o, p, r = "start", s, pretty, u, w = [], x = [] }) =>
             void generate<GrantOptions>(name, {
                 collapse: c,
-                // @ts-expect-error
+                // @ts-expect-error ignore next line
                 custom: ch,
                 direct: !!d,
                 downloadURL: du,
@@ -164,11 +164,11 @@ names.forEach((name) =>
                 spaces: s,
                 pretty,
                 updateURL: u,
-                whitelist: w.map(String)
+                whitelist: w.map(String),
             },
-            import.meta.url === pathToFileURL(process.argv[1]).href
-            )
-    )
+            import.meta.url === pathToFileURL(process.argv[1]).href,
+            ),
+    ),
 );
 
-cli.demandCommand().help().parse();
+void cli.demandCommand().help().parse();

@@ -2,7 +2,7 @@ import type {
     CommonGrantOptions,
     CommonGrants,
     CommonHeaders,
-    CommonRunAt
+    CommonRunAt,
 } from "../common/index.js";
 import type { CustomHeaders } from "../custom.js";
 
