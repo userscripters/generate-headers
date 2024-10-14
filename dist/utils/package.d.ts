@@ -3,7 +3,7 @@ export type PackagePerson = string | {
     email?: string;
     url?: string;
 };
-export type PackageInfo = {
+export interface PackageInfo {
     author: PackagePerson;
     contributors?: PackagePerson[];
     icon?: string;
@@ -20,5 +20,5 @@ export type PackageInfo = {
         type: "git" | "https";
         url: string;
     };
-};
+}
 export declare const getPackage: (path: string) => Promise<PackageInfo | null>;

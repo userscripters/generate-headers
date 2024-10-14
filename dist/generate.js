@@ -7,7 +7,7 @@ import { generateViolentmonkeyHeaders } from "./generators/violentmonkey/index.j
 import { lintHeaders } from "./linters/index.js";
 import { replaceFileContent } from "./utils/filesystem.js";
 import { getPackage } from "./utils/package.js";
-import { getExistingHeadersOffset, validateConnectHeaders, validateExcludeHeaders, validateMatchHeaders, validateOptionalHeaders, validateRequiredHeaders } from "./utils/validators.js";
+import { getExistingHeadersOffset, validateConnectHeaders, validateExcludeHeaders, validateMatchHeaders, validateOptionalHeaders, validateRequiredHeaders, } from "./utils/validators.js";
 export const managersSupportingHomepage = new Set(["tampermonkey", "violentmonkey"]);
 export const writeHeaders = async (content, options) => {
     const { cli, direct, eol, output } = options;
@@ -21,7 +21,7 @@ export const writeHeaders = async (content, options) => {
             await replaceFileContent(output, openOffset, closeOffset, content);
             return content;
         }
-        await replaceFileContent(output, 0, 0, `${content}${eol}`);
+        await replaceFileContent(output, 0, 0, `${content}${eol || ""}`);
         return content;
     }
     if (cli)
@@ -41,15 +41,15 @@ export const generate = async (type, options, cli = false) => {
             console.error(chulk.bgRed `missing or corrupted package`);
             return "";
         }
-        const { invalid: matchInvalid, status: matchStatus, valid: validMatches } = validateMatchHeaders(matches);
+        const { invalid: matchInvalid, status: matchStatus, valid: validMatches, } = validateMatchHeaders(matches);
         if (!matchStatus) {
             console.error(chulk.bgRed `Invalid @match headers:\n` + matchInvalid.join("\n"));
         }
-        const { invalid: excludeInvalid, status: excludeStatus, valid: validExcludes } = validateExcludeHeaders(excludes);
+        const { invalid: excludeInvalid, status: excludeStatus, valid: validExcludes, } = validateExcludeHeaders(excludes);
         if (!excludeStatus) {
             console.error(chulk.bgRed `Invalid @exclude headers:\n` + excludeInvalid.join("\n"));
         }
-        const { invalid: connectInvalid, status: connectStatus, valid: validConnects } = validateConnectHeaders(whitelist);
+        const { invalid: connectInvalid, status: connectStatus, valid: validConnects, } = validateConnectHeaders(whitelist);
         if (!connectStatus) {
             console.error(chulk.bgRed `Invalid @connect headers:\n` + connectInvalid.join("\n"));
         }
@@ -58,7 +58,7 @@ export const generate = async (type, options, cli = false) => {
             console.error(chulk.bgRed `Invalid homepage URL:\n` + parsedPackage.homepage);
         }
         const { isValidDownloadURL } = validateOptionalHeaders(options);
-        if (!isValidDownloadURL) {
+        if (!isValidDownloadURL && options.downloadURL) {
             console.error(chulk.bgRed `Invalid @downloadURL:\n` + options.downloadURL);
         }
         if (!isValidVersion) {
@@ -88,19 +88,20 @@ export const generate = async (type, options, cli = false) => {
             });
             if (error)
                 console.error(error);
-            return writeHeaders(headers, { cli, direct, eol, output });
+            return await writeHeaders(headers, { cli, direct, eol, output });
         }
-        return writeHeaders(content, { cli, direct, eol, output });
+        return await writeHeaders(content, { cli, direct, eol, output });
     }
     catch (error) {
         const exceptionObject = error;
         const { code, name } = exceptionObject;
         const errMap = {
-            ENOENT: ({ path }) => ["Missing path:", path],
+            ENOENT: ({ path }) => ["Missing path:", path || ""],
             ENOTFOUND: ({ message }) => ["Network failure:", message],
             default: ({ message }) => ["Something went wrong:", message],
         };
-        const handler = errMap[code || "default"] || errMap.default;
+        const key = code === "ENOENT" || code === "ENOTFOUND" ? code : "default";
+        const handler = errMap[key];
         const [postfix, message] = handler(exceptionObject);
         console.error(chulk.bgRed `[${name}] ${postfix}` + `\n\n${message}`);
         return "";

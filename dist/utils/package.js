@@ -4,7 +4,7 @@ export const getPackage = async (path) => {
         const contents = await readFile(path, { encoding: "utf-8" });
         return JSON.parse(contents);
     }
-    catch (error) {
+    catch {
         return null;
     }
 };

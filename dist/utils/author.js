@@ -6,7 +6,7 @@ export const parseAuthor = (info) => {
     const match = authorRegex.exec(info);
     if (!match)
         throw new Error(`unable to parse author field: ${info}`);
-    const [_full, name, email, url] = match;
+    const [, name, email, url] = match;
     return {
         name,
         email,

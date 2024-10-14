@@ -2,7 +2,7 @@ import { scrapeNetworkSites } from "../../utils/scraper.js";
 import { generateCommonHeaders } from "../common/index.js";
 import { finalizeMonkeyHeaders } from "../common/monkey.js";
 import { generateCustomHeaders } from "../custom.js";
-import { generateExcludeMatchHeaders, generateGrantHeaders, generateMatchHeaders, generateRequireHeaders, generateRunAtHeaders } from "../index.js";
+import { generateExcludeMatchHeaders, generateGrantHeaders, generateMatchHeaders, generateRequireHeaders, generateRunAtHeaders, } from "../index.js";
 export const generateViolentmonkeyHeaders = async (packageInfo, options) => {
     const { collapse = false, custom = [], downloadURL, excludes = [], grants = [], homepage, inject = "page", matches = [], namespace, noframes = false, pretty = false, requires = [], run = "start", spaces, } = options;
     const commonHeaders = generateCommonHeaders(packageInfo, { namespace, noframes, pretty });

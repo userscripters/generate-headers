@@ -20,11 +20,11 @@ export type CommonHeaders<T extends object = {}> = T & {
 export type CommonGrantOptions = "get" | "set" | "list" | "delete" | "unsafe";
 export type CommonGrants = "none" | "unsafeWindow";
 export type CommonRunAt = "document-start" | "document-end" | "document-idle";
-export type CommonGeneratorOptions = {
+export interface CommonGeneratorOptions {
     namespace?: string;
     noframes?: boolean;
     pretty?: boolean;
-};
+}
 export declare const generateCommonHeaders: (pkg: PackageInfo, options: CommonGeneratorOptions) => HeaderEntries<{
     author: PackagePerson;
     contributors?: PackagePerson[];

@@ -2,6 +2,9 @@ import { EOL } from "os";
 import semver from "semver";
 import validator from "validator";
 import { makeMonkeyTags } from "../generators/common/monkey.js";
+;
+;
+;
 export const getExistingHeadersOffset = async (path, eol = EOL) => {
     const { createInterface } = await import("readline");
     const { createReadStream } = await import("fs");
@@ -25,37 +28,39 @@ export const getExistingHeadersOffset = async (path, eol = EOL) => {
             currentOffset += bytesInLine + eolNumChars;
         });
         readline.on("error", reject);
-        readline.on("close", () => resolve([openTagOffset, closeTagOffset]));
+        readline.on("close", () => {
+            resolve([openTagOffset, closeTagOffset]);
+        });
     });
 };
 export const validateMatchHeaders = (matches) => {
     const validationRegex = /^((?:https?|file|ftp|\*)(?=:\/\/)|(?:urn(?=:))):(?:\/\/)?(?:((?:\*||.+?)(?=\/|$)))?(\/\*|(?:.+?\*?)+)?|<all_urls>|all|meta$/;
-    const invalid = matches.filter((match) => !validationRegex.test(match));
+    const invalid = matches.filter(match => !validationRegex.test(match));
     return {
         invalid,
         status: !invalid.length,
-        valid: matches.filter((m) => !invalid.includes(m)),
+        valid: matches.filter(m => !invalid.includes(m)),
     };
 };
 export const validateExcludeHeaders = (excludes) => {
     const validationRegex = /^((?:https?|file|ftp|\*)(?=:\/\/)|(?:urn(?=:))):(?:\/\/)?(?:((?:\*||.+?)(?=\/|$)))?(\/\*|(?:.+?\*?)+)?$/;
-    const invalid = excludes.filter((pattern) => !validationRegex.test(pattern));
+    const invalid = excludes.filter(pattern => !validationRegex.test(pattern));
     return {
         invalid,
         status: !invalid.length,
-        valid: excludes.filter((e) => !invalid.includes(e)),
+        valid: excludes.filter(e => !invalid.includes(e)),
     };
 };
 export const validateConnectHeaders = (whitelist) => {
     const specialWordRegex = /^localhost|self|\*$/;
     const ipv4Regex = /^((?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\.|$)){4}/;
-    const domainRegex = /^(?!.*?_.*?)(?!(?:[\w]+?\.)?\-[\w\.\-]*?)(?![\w]+?\-\.(?:[\w\.\-]+?))(?=[\w])(?=[\w\.\-]*?\.+[\w\.\-]*?)(?![\w\.\-]{254})(?!(?:\.?[\w\-\.]*?[\w\-]{64,}\.)+?)[\w\.\-]+?(?<![\w\-\.]*?\.[\d]+?)(?<=[\w\-]{2,})(?<![\w\-]{25})$/;
+    const domainRegex = /^(?!.*?_.*?)(?!(?:[\w]+?\.)?-[\w.-]*?)(?![\w]+?-\.(?:[\w.-]+?))(?=[\w])(?=[\w.-]*?\.+[\w.-]*?)(?![\w.-]{254})(?!(?:\.?[\w\-.]*?[\w-]{64,}\.)+?)[\w.-]+?(?<![\w\-.]*?\.[\d]+?)(?<=[\w-]{2,})(?<![\w-]{25})$/;
     const checks = [specialWordRegex, ipv4Regex, domainRegex];
-    const invalid = whitelist.filter((remote) => !checks.some((r) => r.test(remote)));
+    const invalid = whitelist.filter(remote => !checks.some(r => r.test(remote)));
     return {
         invalid,
         status: !invalid.length,
-        valid: whitelist.filter((r) => !invalid.includes(r))
+        valid: whitelist.filter(r => !invalid.includes(r)),
     };
 };
 export const validateRequiredHeaders = (packageInfo) => {
@@ -65,10 +70,10 @@ export const validateRequiredHeaders = (packageInfo) => {
         "version",
         "description",
     ];
-    const missing = required.filter((p) => !(p in packageInfo));
+    const missing = required.filter(p => !(p in packageInfo));
     const { homepage, version } = packageInfo;
     const isValidVersion = !!semver.valid(version);
-    const isValidHomepage = homepage === void 0 || validator.isURL(homepage);
+    const isValidHomepage = validator.isURL(homepage);
     const status = [isValidVersion, isValidHomepage, !missing.length].reduce((a, c) => a && c);
     return {
         status,
@@ -83,6 +88,6 @@ export const validateOptionalHeaders = (options) => {
     const isValidUpdateURL = updateURL === void 0 || validator.isURL(updateURL);
     return {
         isValidDownloadURL,
-        isValidUpdateURL
+        isValidUpdateURL,
     };
 };
