@@ -121,6 +121,26 @@ describe("common", () => {
         expect(matches).length.to.be.greaterThan(1);
     });
 
+    it('"match" with "all meta" should expand to all meta sites', async () => {
+        const headers = await generateMatchHeaders(
+            ["all", "meta", "https://domain/questions/*"],
+            (async () => [
+                { site: "stackoverflow.com" },
+                { site: "chess.stackexchange.com" },
+                { site: "meta.stackexchange.com" },
+                { site: "pt.meta.stackoverflow.com" }
+            ]) as typeof scrapeNetworkSites
+        );
+
+        const matches = headers.map(([, m]) => m);
+        expect(matches).to.include("https://*.stackexchange.com/questions/*");
+
+        expect(matches).to.not.include("https://pt.meta.meta.stackoverflow.com/questions/*");
+        expect(matches).to.include("https://pt.meta.stackoverflow.com/questions/*");
+
+        expect(matches.length).to.equal(3);
+    });
+
     it('@require headers should be generated', async () => {
         const content = await generate("tampermonkey", {
             ...directCommon,

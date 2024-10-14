@@ -86,17 +86,9 @@ export const generateMatchHeaders = async <T extends CommonHeaders>(
         const match
             = matches.find(m => m.includes("domain")) || "https://domain/*";
 
-        const sites = await networkSiteScraper();
-
-        if (matches.includes("meta")) {
-            const metaSites = sites.flatMap(({ site, ...rest }) => {
-                return collapse && (site.includes("stackexchange") || site.includes("stackapps"))
-                    ? []
-                    : [{ ...rest, site: site.replace(/^(.+?\.(?=.+\.)|)/, "$1meta.") }];
-            });
-
-            sites.push(...metaSites);
-        }
+        const sites = (await networkSiteScraper())
+            // only inclue meta sites if requested
+            .filter(({ isMeta }) => matches.includes("meta") || !isMeta);
 
         const all = sites.map(({ site }) => {
             const domain

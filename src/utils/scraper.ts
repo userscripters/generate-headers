@@ -2,11 +2,13 @@ export interface NetworkSiteInfo {
     icon: string;
     site: string;
     name: string;
+    isMeta: boolean;
 }
 
 interface ApiItems {
     icon_url: string;
     site_url: string;
+    site_type: "main_site" | "meta_site";
     name: string;
 }
 
@@ -23,7 +25,7 @@ export const scrapeNetworkSites = async () => {
     const url = new URL("https://api.stackexchange.com/2.3/sites");
     url.searchParams.set("key", "52HhpSRv*u6t*)tOFwEIHw((");
     url.searchParams.set("pagesize", "100");
-    url.searchParams.set("filter", "!SldCuNUOe7I(DQo2T0");
+    url.searchParams.set("filter", "!SldCsaEs0vkmNDgMK_");
 
     const siteInfo: NetworkSiteInfo[] = [];
 
@@ -42,11 +44,12 @@ export const scrapeNetworkSites = async () => {
         }
 
         items
-            .forEach(({ icon_url: icon, site_url: site, name }) => {
+            .forEach(({ icon_url: icon, site_url: site, name, site_type: siteType }) => {
                 siteInfo.push({
                     icon,
                     site: site.replace(/^https?:\/\//, "").replace(/\/$/, ""),
                     name,
+                    isMeta: siteType === "meta_site"
                 });
             });
 
