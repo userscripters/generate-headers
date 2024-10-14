@@ -38,10 +38,25 @@ export const finalizeMonkeyHeaders = <T extends CommonHeaders<CustomHeaders>>(
 
     const longest = getLongest(headers.map(([key]) => key)) + spaces - 1;
 
-    // @name header should come first, the rest are sorted alphabetically
-    const sortedHeaders: HeaderEntries<T> = headers.sort(
-        ([a], [b]) => a === "name" ? -1 : a < b ? -1 : 1,
-    );
+    // these should go first
+    const important = [
+        "name",
+        "namespace",
+        "version",
+        "author",
+        "contributor",
+        "contributors",
+    ];
+
+    const primary = important
+        .map(name => headers.find(([header]) => header === name))
+        .filter(Boolean) as HeaderEntries<T>;
+    const secondary = headers.filter(([header]) => !important.includes(header));
+
+    const sortedHeaders = [
+        ...primary,
+        ...secondary,
+    ];
 
     const indentedHeaders: HeaderEntries<T> = sortedHeaders.map(([key, val]) => [
         key.padEnd(longest),
