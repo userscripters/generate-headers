@@ -49,7 +49,7 @@ export const scrapeNetworkSites = async () => {
                     icon,
                     site: site.replace(/^https?:\/\//, "").replace(/\/$/, ""),
                     name,
-                    isMeta: siteType === "meta_site"
+                    isMeta: siteType === "meta_site",
                 });
             });
 
