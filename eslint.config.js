@@ -47,6 +47,7 @@ export default tseslint.config({
             { "checksVoidReturn": false }
         ],
         "@typescript-eslint/prefer-nullish-coalescing": "off",
+        "@typescript-eslint/consistent-indexed-object-style": "off",
 
         "@stylistic/arrow-parens": "error",
         "@stylistic/brace-style": ["error", "1tbs", { "allowSingleLine": true }],
