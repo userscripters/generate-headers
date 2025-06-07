@@ -47,7 +47,7 @@
         "@types/chai": "5.2.2",
         "@types/eslint": "^9.6.1",
         "@types/mocha": "^10.0.10",
-        "@types/node": "^22.15.29",
+        "@types/node": "^22.15.30",
         "@types/semver": "^7.7.0",
         "@types/sinon": "^17.0.4",
         "@types/tampermonkey": "^5.0.4",
@@ -60,7 +60,7 @@
         "sinon": "^19.0.5",
         "ts-node": "^10.9.2",
         "typescript": "^5.8.3",
-        "typescript-eslint": "^8.33.0"
+        "typescript-eslint": "^8.33.1"
     },
     "dependencies": {
         "chalk": "^5.4.1",
